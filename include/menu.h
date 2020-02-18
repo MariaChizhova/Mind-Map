@@ -9,9 +9,9 @@
 #include "scene.h"
 
 
-class SimpleMenu : public QMainWindow {
+class Menu : public QMainWindow {
 public:
-    SimpleMenu(QWidget *parent = 0);
+    Menu(QWidget *parent = 0);
     Scene scene;
     QGraphicsView view;
 };

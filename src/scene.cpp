@@ -4,50 +4,50 @@
 
 #include "scene.h"
 
-Scene::Scene(QObject *parent): QGraphicsScene(parent), m_activeItem(nullptr){}
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), m_activeItem(nullptr) {}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsScene::mousePressEvent(event);
+    QGraphicsScene::mousePressEvent(event);
 
-  /** Позиция мышки */
-  QPointF pos = event->scenePos();
+    /** Позиция мышки */
+    QPointF pos = event->scenePos();
 
-  /** Задаем цвет */
-  QColor color(225, 123, 239);
+    /** Задаем цвет */
+    QColor color(225, 123, 239);
 
-  /** Создаем активный элемент (прямоугольник) */
-  m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);
+    /** Создаем активный элемент (прямоугольник) */
+    m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);
 
-  /** Задаем цвет прямоугольнику */
-  static_cast<QGraphicsPolygonItem*>(m_activeItem)->setBrush(color);
+    /** Задаем цвет прямоугольнику */
+    static_cast<QGraphicsPolygonItem *>(m_activeItem)->setBrush(color);
 
-  if (!m_activeItem) return;
+    if (!m_activeItem) return;
 
-  /** Добавляем элемент в сцену */
-  addItem(m_activeItem);
-  m_activeItem->setPos(pos);
+    /** Добавляем элемент в сцену */
+    addItem(m_activeItem);
+    m_activeItem->setPos(pos);
 }
 
 
 void Scene::keyPressEvent(QKeyEvent *event) {
-  QGraphicsScene::keyPressEvent(event);
+    QGraphicsScene::keyPressEvent(event);
 
-  if (!m_activeItem)
-    return;
+    if (!m_activeItem)
+        return;
 
-  /** Движение с помощью клавиатуры */
-  switch (event->key()) {
-  case Qt::Key::Key_Left:
-    m_activeItem->moveBy(-5, 0);
-    break;
-  case Qt::Key::Key_Down:
-    m_activeItem->moveBy(0, 5);
-    break;
-  case Qt::Key::Key_Right:
-    m_activeItem->moveBy(5, 0);
-    break;
-  case Qt::Key::Key_Up:
-    m_activeItem->moveBy(0, -5);
-    break;
-  }
+    /** Движение с помощью клавиатуры */
+    switch (event->key()) {
+        case Qt::Key::Key_Left:
+            m_activeItem->moveBy(-5, 0);
+            break;
+        case Qt::Key::Key_Down:
+            m_activeItem->moveBy(0, 5);
+            break;
+        case Qt::Key::Key_Right:
+            m_activeItem->moveBy(5, 0);
+            break;
+        case Qt::Key::Key_Up:
+            m_activeItem->moveBy(0, -5);
+            break;
+    }
 }

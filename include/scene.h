@@ -6,13 +6,14 @@
 
 class Scene : public QGraphicsScene {
 public:
-  explicit Scene(QObject *parent = nullptr);
+    explicit Scene(QObject *parent = nullptr);
 
 protected:
-  void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-  void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-  QGraphicsItem *m_activeItem;
+    void keyPressEvent(QKeyEvent *event) override;
+
+    QGraphicsItem *m_activeItem;
 
 };
 

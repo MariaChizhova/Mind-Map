@@ -7,6 +7,7 @@
 class Scene : public QGraphicsScene {
 public:
   explicit Scene(QObject *parent = nullptr);
+
 protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
   void keyPressEvent(QKeyEvent *event) override;

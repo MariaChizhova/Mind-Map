@@ -4,25 +4,26 @@
 
 #include "scene.h"
 
-
-Scene::Scene(QObject *parent)
-  : QGraphicsScene(parent),
-    m_activeItem(nullptr){
-}
+Scene::Scene(QObject *parent): QGraphicsScene(parent), m_activeItem(nullptr){}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsScene::mousePressEvent(event);
 
+  /** Позиция мышки */
   QPointF pos = event->scenePos();
 
-  QColor color(255, 0, 0);
+  /** Задаем цвет */
+  QColor color(225, 123, 239);
 
-  m_activeItem = new QGraphicsRectItem(0, 0, 70, 40);
+  /** Создаем активный элемент (прямоугольник) */
+  m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);
+
+  /** Задаем цвет прямоугольнику */
   static_cast<QGraphicsPolygonItem*>(m_activeItem)->setBrush(color);
 
-  if (nullptr == m_activeItem)
-    return;
+  if (!m_activeItem) return;
 
+  /** Добавляем элемент в сцену */
   addItem(m_activeItem);
   m_activeItem->setPos(pos);
 }
@@ -31,9 +32,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 void Scene::keyPressEvent(QKeyEvent *event) {
   QGraphicsScene::keyPressEvent(event);
 
-  if (nullptr == m_activeItem)
+  if (!m_activeItem)
     return;
 
+  /** Движение с помощью клавиатуры */
   switch (event->key()) {
   case Qt::Key::Key_Left:
     m_activeItem->moveBy(-5, 0);

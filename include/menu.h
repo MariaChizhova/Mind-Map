@@ -10,12 +10,10 @@
 
 
 class SimpleMenu : public QMainWindow {
-
 public:
     SimpleMenu(QWidget *parent = 0);
     Scene scene;
     QGraphicsView view;
-private:
 };
 
 #endif //PROJECT_HSE_MENU_H

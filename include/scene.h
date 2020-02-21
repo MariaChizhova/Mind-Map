@@ -8,6 +8,10 @@ class Scene : public QGraphicsScene {
 public:
     explicit Scene(QObject *parent = nullptr);
 
+    void setColor(QColor newcolor);
+
+    QColor color;
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 

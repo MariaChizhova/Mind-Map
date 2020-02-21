@@ -9,8 +9,7 @@
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
-    view.setScene(&scene);
-    setCentralWidget(&view);
+
     /** Добавление иконок */
     QPixmap newpix("new.png");
     QPixmap savepix("open.png");
@@ -72,9 +71,14 @@ void Menu::colorButton() {
     mcolor = QColorDialog::getColor(Qt::yellow, this);
     if (mcolor.isValid())
         qDebug() << "Color Choosen : " << mcolor.name();
+    changeColor(mcolor);
 }
 
 QColor Menu::getColor() const {
     qDebug() << "Choosen : " << mcolor.name();
     return mcolor;
+}
+
+void Menu::changeColor(QColor newcolor) {
+    scene.setColor(newcolor);
 }

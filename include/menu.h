@@ -13,14 +13,22 @@
 class Menu : public QMainWindow {
 public:
     Menu(QWidget *parent = 0);
+
     Scene scene;
     QGraphicsView view;
+
     QColor getColor() const;
+
     QColor mcolor;
 
+    void changeColor(QColor newcolor);
+
 private slots:
+
     void clickButton();
+
     static void helpButton();
+
     void colorButton();
 
 private:

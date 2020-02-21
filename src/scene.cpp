@@ -11,8 +11,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     /** Позиция мышки */
     QPointF pos = event->scenePos();
-    /** Задаем цвет */
-    QColor color = menu.getColor(); // ДАЙТЕ МНЕ СЮДА МОЙ MCOLOR
 
     /** Создаем активный элемент (прямоугольник) */
     m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);
@@ -49,4 +47,8 @@ void Scene::keyPressEvent(QKeyEvent *event) {
             m_activeItem->moveBy(0, -5);
             break;
     }
+}
+
+void Scene::setColor(QColor newcolor) {
+    color = newcolor;
 }

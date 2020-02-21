@@ -6,10 +6,12 @@
 #include <QtWidgets/QLabel>
 #include <QColorDialog>
 #include <QDebug>
+#include <QtWidgets/QFontDialog>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
-
     /** Добавление иконок */
     QPixmap newpix("new.png");
     QPixmap savepix("open.png");
@@ -18,9 +20,12 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
+    QAction *open = new QAction(newpix, "&Open", this);
     QAction *save = new QAction(savepix, "&Save", this);
     QAction *quit = new QAction(quitpix, "&Quit", this);
     QAction *about = new QAction("&About", this);
+    QAction *color = new QAction("&Color", this);
+    QAction *font = new QAction("&Font", this);
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -29,34 +34,37 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QMenu *tools = menuBar()->addMenu("&Tools");
     QMenu *help = menuBar()->addMenu(helppix, "&Help");
 
-    /** Кнопка, на которую можно тыкать */
-    clickBtn = new QPushButton("Click", this);
-    clickBtn->setGeometry(QRect(QPoint(300, 50), QSize(70, 50)));
-    colorBtn = new QPushButton("Color", this);
-    colorBtn->setGeometry(QRect(QPoint(370, 50), QSize(70, 50)));
-
     /** Помещаем действие в меню с помощью метода addAction() */
     file->addAction(newfile);
+    file->addAction(open);
     file->addAction(save);
     file->addAction(quit);
     help->addAction(about);
+    edit->addAction(color);
+    edit->addAction(font);
 
     /** Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение */
-    connect(quit, &QAction::triggered, qApp, QApplication::quit);
-    connect(clickBtn, &QPushButton::clicked, this, &Menu::clickButton);
-    connect(about, &QAction::triggered, qApp, Menu::helpButton);
-    connect(colorBtn, &QPushButton::clicked, this, &Menu::colorButton);
+    connect(quit, &QAction::triggered, this, QApplication::quit);
+    connect(about, &QAction::triggered, this, &Menu::helpButton);
+    connect(color, &QAction::triggered, this, &Menu::colorButton);
+    connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
+    connect(font, &QAction::triggered, this, &Menu::fontButton);
+    connect(open, &QAction::triggered, this, &Menu::openButton);
+
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
 
     /** Сочетание клавиш */
     newfile->setShortcut(tr("CTRL+N"));
-    save->setShortcut(tr("CTRL+C"));
+    open->setShortcut(tr("CTRL+O"));
+    save->setShortcut(tr("CTRL+S"));
     quit->setShortcut(tr("CTRL+Q"));
+    color->setShortcut(tr("CTRL+C"));
+    font->setShortcut(tr("CTRL+F"));
 }
 
-void Menu::clickButton() {
+void Menu::newFileButton() {
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
@@ -74,11 +82,27 @@ void Menu::colorButton() {
     changeColor(mcolor);
 }
 
-QColor Menu::getColor() const {
-    qDebug() << "Choosen : " << mcolor.name();
-    return mcolor;
+void Menu::changeColor(QColor newColor) {
+    scene.setColor(newColor);
 }
 
-void Menu::changeColor(QColor newcolor) {
-    scene.setColor(newcolor);
+void Menu::fontButton() {
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, QFont("Arial", 18), this, tr("Pick a font"));
+    if (ok) {
+        qDebug() << "font           : " << font;
+        qDebug() << "font weight    : " << font.weight();
+        qDebug() << "font family    : " << font.family();
+        qDebug() << "font style     : " << font.style();
+        qDebug() << "font pointSize : " << font.pointSize();
+    }
+}
+
+void Menu::changeFont(QFont newFont) {
+    scene.setFont(newFont);
+}
+
+void Menu::openButton() {
+    /** Поставить другое расширение */
+    QString str = QFileDialog::getExistingDirectory(0, "Open Dialog", "");
 }

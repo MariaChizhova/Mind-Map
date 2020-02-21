@@ -15,26 +15,26 @@ public:
     Menu(QWidget *parent = 0);
 
     Scene scene;
-    QGraphicsView view;
 
-    QColor getColor() const;
+    QGraphicsView view;
 
     QColor mcolor;
 
-    void changeColor(QColor newcolor);
+    void changeColor(QColor newColor);
+
+    void changeFont(QFont newFont);
 
 private slots:
 
-    void clickButton();
+    void newFileButton();
 
-    static void helpButton();
+    void helpButton();
 
     void colorButton();
 
-private:
-    QPushButton *clickBtn;
-    QPushButton *colorBtn;
+    void fontButton();
 
+    void openButton();
 };
 
 #endif //PROJECT_HSE_MENU_H

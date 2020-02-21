@@ -49,6 +49,10 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void Scene::setColor(QColor newcolor) {
-    color = newcolor;
+void Scene::setColor(QColor newColor) {
+    color = newColor;
+}
+
+void Scene::setFont(QFont newFont) {
+    font = newFont;
 }

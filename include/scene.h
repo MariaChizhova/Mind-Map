@@ -8,9 +8,13 @@ class Scene : public QGraphicsScene {
 public:
     explicit Scene(QObject *parent = nullptr);
 
-    void setColor(QColor newcolor);
+    void setColor(QColor newColor);
+
+    void setFont(QFont newFont);
 
     QColor color;
+
+    QFont font;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

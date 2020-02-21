@@ -1,7 +1,7 @@
 #include <QGraphicsEllipseItem>
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
-
+#include "menu.h"
 #include "scene.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent), m_activeItem(nullptr) {}
@@ -11,9 +11,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     /** Позиция мышки */
     QPointF pos = event->scenePos();
-
     /** Задаем цвет */
-    QColor color(225, 123, 239);
+    QColor color = menu.getColor(); // ДАЙТЕ МНЕ СЮДА МОЙ MCOLOR
 
     /** Создаем активный элемент (прямоугольник) */
     m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);

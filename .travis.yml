@@ -4,6 +4,7 @@ compiler: gcc
 
 before_install:
   - chmod +x ./build.sh
+  - chmod +x ./build
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test # C++11
   - sudo apt-get update -qq
 

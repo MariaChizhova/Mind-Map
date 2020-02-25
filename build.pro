@@ -2,8 +2,8 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 
-SOURCES += main.cpp
-
+SOURCES += src/*
+SOURCES += include/*
 
 # C++11
 QMAKE_CXX = g++-5

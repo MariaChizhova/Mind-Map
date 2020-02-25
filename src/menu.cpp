@@ -1,6 +1,5 @@
 #include <QMenu>
 #include <QMenuBar>
-#include <QPushButton>
 #include <QtCore/QTextStream>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
@@ -71,8 +70,7 @@ void Menu::newFileButton() {
 }
 
 void Menu::helpButton() {
-    QTextStream out(stdout);
-    out << "HELP ME" << endl;
+    QMessageBox::information(this, tr("About"), tr("Помощи не будет"));
 }
 
 void Menu::colorButton() {

@@ -2,17 +2,8 @@ language: cpp
 sudo: required
 os: osx
 compiler: gcc
-
+osx_image: xcode10.1
 before_install:
-  - chmod +x ./build.sh
-  - chmod +x ./build.pro
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test # C++11
-  - sudo apt-get update -qq
-
-install: 
-  - sudo apt-get install -qq g++-5 # C++11
-
-before_script:
   - QT_VERSION_MM=56
   - QT_VERSION_FULL=562-trusty
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -27,13 +18,11 @@ before_script:
       brew install qt5;
       export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
     fi
-  # create a build folder for the out-of-source build
-  - mkdir build
-  # switch to build directory
-  - cd build
-  # run cmake; here we assume that the project's
-  # top-level CMakeLists.txt is located at '..'
-  - cmake ..
+ 
+before_script:
+   - mkdir build
+   - cd build
+   - cmake .. -DCMAKE_BUILD_TYPE=$CONFIG -DDISABLE_MAINTAINER_CFLAGS=off
 
 script: 
   - make

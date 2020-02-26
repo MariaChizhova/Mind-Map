@@ -1,6 +1,6 @@
 language: cpp
 sudo: required
-dist: xenial
+os: osx
 compiler: gcc
 
 before_install:

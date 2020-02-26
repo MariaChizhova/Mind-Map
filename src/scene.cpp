@@ -13,12 +13,17 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF pos = event->scenePos();
 
     /** Создаем активный элемент (прямоугольник) */
-    m_activeItem = new QGraphicsRectItem(event->lastPos().rx() - 30, event->lastPos().ry() - 20, 60, 40);
+    int width = 60;
+    int height = 40;
+    int originX = event->lastPos().rx() - width / 2;
+    int originY = event->lastPos().ry() - height / 2;
+    m_activeItem = new QGraphicsRectItem(originX, originY, width, height);
 
     /** Задаем цвет прямоугольнику */
     static_cast<QGraphicsPolygonItem *>(m_activeItem)->setBrush(color);
 
-    if (!m_activeItem) return;
+    if (!m_activeItem)
+        return;
 
     /** Добавляем элемент в сцену */
     addItem(m_activeItem);

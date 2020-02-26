@@ -10,6 +10,15 @@ before_install:
 
 install: 
   - sudo apt-get install -qq g++-5 # C++11
-  
+
+before_script:
+  # create a build folder for the out-of-source build
+  - mkdir build
+  # switch to build directory
+  - cd build
+  # run cmake; here we assume that the project's
+  # top-level CMakeLists.txt is located at '..'
+  - cmake ..
+
 script: 
-  - ./build.sh
+  - make

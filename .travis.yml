@@ -1,4 +1,5 @@
 language: cpp
+sudo: required
 dist: xenial
 compiler: gcc
 
@@ -12,6 +13,20 @@ install:
   - sudo apt-get install -qq g++-5 # C++11
 
 before_script:
+  - QT_VERSION_MM=56
+  - QT_VERSION_FULL=562-trusty
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    sudo apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL
+      && sudo apt-get update -qq
+      && sudo apt-get install -qq qt${QT_VERSION_MM}base qt${QT_VERSION_MM}tools
+      && export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM};
+    fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      brew update;
+      brew outdated cmake || brew upgrade cmake;
+      brew install qt5;
+      export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
+    fi
   # create a build folder for the out-of-source build
   - mkdir build
   # switch to build directory

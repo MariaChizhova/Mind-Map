@@ -27,7 +27,7 @@ before_script:
 script: 
   - make
   
-  notifications:
+notifications:
   email:
     recipients:
       - kirilenko_aa@mail.ru

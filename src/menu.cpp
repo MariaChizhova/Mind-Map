@@ -12,14 +12,14 @@
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Добавление иконок. Пропишите свой путь к иконкам */
-    QPixmap newpix("/home/maria/Mind-Map/icons/new.png");
-    QPixmap savepix("/home/maria/Mind-Map/icons/save.png");
-    QPixmap quitpix("/home/maria/Mind-Map/icons/quit.png");
-    QPixmap helppix("/home/maria/Mind-Map/icons/help.png");
-    QPixmap colorpix("/home/maria/Mind-Map/icons/color.png");
-    QPixmap fontpix("/home/maria/Mind-Map/icons/font.png");
-    QPixmap openpix("/home/maria/Mind-Map/icons/open.png");
-    QPixmap wincolorpix("/home/maria/Mind-Map/icons/wincolor.png");
+    QPixmap newpix(":/icons/new.png");
+    QPixmap savepix(":/icons/save.png");
+    QPixmap quitpix(":/icons/quit.png");
+    QPixmap helppix(":/icons/help.png");
+    QPixmap colorpix(":/icons/color.png");
+    QPixmap fontpix(":/icons/font.png");
+    QPixmap openpix(":/icons/open.png");
+    QPixmap wincolorpix(":/icons/wincolor.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);

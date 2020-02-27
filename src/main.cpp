@@ -1,18 +1,14 @@
-#include <QGraphicsView>
 #include <QApplication>
-
 #include "menu.h"
-#include "scene.h"
-
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    SimpleMenu window;
-
+    Menu window;
     window.scene.setSceneRect(0, 0, 900, 900);
-    window.resize(1024, 960);
-    window.setWindowTitle("Simple menu");
+    window.scene.setBackgroundBrush(Qt::white);
+    window.setStyleSheet("background-color: #13011E; color: white");
+    window.resize(1920, 1080);
+    window.setWindowTitle("Mind Map");
     window.show();
-
     return app.exec();
 }

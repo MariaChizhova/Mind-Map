@@ -18,6 +18,9 @@ configure_file(icons/new.png COPYONLY)
 configure_file(icons/open.png COPYONLY)
 configure_file(icons/help.png COPYONLY)
 configure_file(icons/quit.png COPYONLY)
+configure_file(icons/color.png COPYONLY)
+configure_file(icons/font.png COPYONLY)
+configure_file(icons/save.png COPYONLY)
 
 # specify which libraries to connect
 target_link_libraries(${PROJECT_NAME} Qt5::Core)

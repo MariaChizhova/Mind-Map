@@ -11,27 +11,32 @@
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
-    /** Добавление иконок */
-    QPixmap newpix("new.png");
-    QPixmap savepix("open.png");
-    QPixmap quitpix("quit.png");
-    QPixmap helppix("help.png");
+    /** Добавление иконок. Пропишите свой путь к иконкам */
+    QPixmap newpix("/home/maria/Mind-Map/icons/new.png");
+    QPixmap savepix("/home/maria/Mind-Map/icons/save.png");
+    QPixmap quitpix("/home/maria/Mind-Map/icons/quit.png");
+    QPixmap helppix("/home/maria/Mind-Map/icons/help.png");
+    QPixmap colorpix("/home/maria/Mind-Map/icons/color.png");
+    QPixmap fontpix("/home/maria/Mind-Map/icons/font.png");
+    QPixmap openpix("/home/maria/Mind-Map/icons/open.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
-    QAction *open = new QAction(newpix, "&Open", this);
+    QAction *open = new QAction(openpix, "&Open", this);
     QAction *save = new QAction(savepix, "&Save", this);
     QAction *quit = new QAction(quitpix, "&Quit", this);
-    QAction *about = new QAction("&About", this);
-    QAction *color = new QAction("&Color", this);
-    QAction *font = new QAction("&Font", this);
+    QAction *about = new QAction(helppix,"&About", this);
+    QAction *color = new QAction(colorpix, "&Color", this);
+    QAction *font = new QAction(fontpix, "&Font", this);
+
+
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
     QMenu *edit = menuBar()->addMenu("&Edit");
     QMenu *view = menuBar()->addMenu("&View");
     QMenu *tools = menuBar()->addMenu("&Tools");
-    QMenu *help = menuBar()->addMenu(helppix, "&Help");
+    QMenu *help = menuBar()->addMenu("&Help");
 
     /** Помещаем действие в меню с помощью метода addAction() */
     file->addAction(newfile);

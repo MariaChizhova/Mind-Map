@@ -9,13 +9,14 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Svg REQUIRED)
 
 include_directories(include)
 set(src src/main.cpp src/menu.cpp src/scene.cpp)
 add_executable(project_hse ${src} resources.qrc)
 
-
 # specify which libraries to connect
 target_link_libraries(${PROJECT_NAME} Qt5::Core)
 target_link_libraries(${PROJECT_NAME} Qt5::Gui)
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Svg)

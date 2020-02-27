@@ -1,13 +1,3 @@
-#include <QMenu>
-#include <QMenuBar>
-#include <QtCore/QTextStream>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QColorDialog>
-#include <QDebug>
-#include <QtWidgets/QFontDialog>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {

@@ -3,6 +3,9 @@
 
 #include <QGraphicsScene>
 #include <QMainWindow>
+#include <QGraphicsEllipseItem>
+#include <QKeyEvent>
+#include <QGraphicsSceneMouseEvent>
 
 class Scene : public QGraphicsScene {
 public:

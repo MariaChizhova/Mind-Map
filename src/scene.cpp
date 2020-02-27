@@ -1,6 +1,3 @@
-#include <QGraphicsEllipseItem>
-#include <QKeyEvent>
-#include <QGraphicsSceneMouseEvent>
 #include "menu.h"
 #include "scene.h"
 

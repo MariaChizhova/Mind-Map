@@ -7,6 +7,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPushButton>
+#include <QMenu>
+#include <QMenuBar>
+#include <QtCore/QTextStream>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QColorDialog>
+#include <QDebug>
+#include <QtWidgets/QFontDialog>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 #include "scene.h"
 
 

@@ -19,17 +19,17 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap colorpix("/home/maria/Mind-Map/icons/color.png");
     QPixmap fontpix("/home/maria/Mind-Map/icons/font.png");
     QPixmap openpix("/home/maria/Mind-Map/icons/open.png");
+    QPixmap wincolorpix("/home/maria/Mind-Map/icons/wincolor.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
     QAction *open = new QAction(openpix, "&Open", this);
     QAction *save = new QAction(savepix, "&Save", this);
     QAction *quit = new QAction(quitpix, "&Quit", this);
-    QAction *about = new QAction(helppix,"&About", this);
+    QAction *about = new QAction(helppix, "&About", this);
     QAction *color = new QAction(colorpix, "&Color", this);
+    QAction *wincolor = new QAction(wincolorpix, "&WinColor", this);
     QAction *font = new QAction(fontpix, "&Font", this);
-
-
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -46,11 +46,13 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     help->addAction(about);
     edit->addAction(color);
     edit->addAction(font);
+    edit->addAction(wincolor);
 
     /** Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение */
     connect(quit, &QAction::triggered, this, QApplication::quit);
     connect(about, &QAction::triggered, this, &Menu::helpButton);
     connect(color, &QAction::triggered, this, &Menu::colorButton);
+    connect(wincolor, &QAction::triggered, this, &Menu::windowColorButton);
     connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
     connect(font, &QAction::triggered, this, &Menu::fontButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
@@ -66,6 +68,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     quit->setShortcut(tr("CTRL+Q"));
     color->setShortcut(tr("CTRL+C"));
     font->setShortcut(tr("CTRL+F"));
+    wincolor->setShortcut(tr("CTRL+W"));
 }
 
 void Menu::newFileButton() {
@@ -108,4 +111,15 @@ void Menu::changeFont(QFont newFont) {
 void Menu::openButton() {
     /** Поставить другое расширение */
     QString str = QFileDialog::getExistingDirectory(0, "Open Dialog", "");
+}
+
+void Menu::changeWindowColor(QColor newColor) {
+    scene.setWindowColor(newColor);
+}
+
+void Menu::windowColorButton() {
+    wcolor = QColorDialog::getColor(Qt::white, this);
+    if (wcolor.isValid())
+        qDebug() << "Color Choosen : " << wcolor.name();
+    changeWindowColor(wcolor);
 }

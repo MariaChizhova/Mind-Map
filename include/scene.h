@@ -12,6 +12,8 @@ public:
 
     void setFont(QFont newFont);
 
+    void setWindowColor(QColor newColor);
+
     QColor color;
 
     QFont font;
@@ -22,7 +24,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
     QGraphicsItem *m_activeItem;
-
 };
 
 #endif

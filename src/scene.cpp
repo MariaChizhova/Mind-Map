@@ -30,7 +30,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     m_activeItem->setPos(pos);
 }
 
-
 void Scene::keyPressEvent(QKeyEvent *event) {
     QGraphicsScene::keyPressEvent(event);
 
@@ -60,4 +59,8 @@ void Scene::setColor(QColor newColor) {
 
 void Scene::setFont(QFont newFont) {
     font = newFont;
+}
+
+void Scene::setWindowColor(QColor newColor) {
+    setBackgroundBrush(newColor);
 }

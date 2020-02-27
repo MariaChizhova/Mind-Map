@@ -20,9 +20,13 @@ public:
 
     QColor mcolor;
 
+    QColor wcolor;
+
     void changeColor(QColor newColor);
 
     void changeFont(QFont newFont);
+
+    void changeWindowColor(QColor newColor);
 
 private slots:
 
@@ -35,6 +39,8 @@ private slots:
     void fontButton();
 
     void openButton();
+
+    void windowColorButton();
 };
 
 #endif //PROJECT_HSE_MENU_H

@@ -18,7 +18,9 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include "scene.h"
-
+#include <QSvgGenerator>
+#include <QFileDialog>
+#include <QPainter>
 
 class Menu : public QMainWindow {
 public:
@@ -51,6 +53,11 @@ private slots:
     void openButton();
 
     void windowColorButton();
+
+    void saveButton();
+
+private:
+    QString path;
 };
 
 #endif //PROJECT_HSE_MENU_H

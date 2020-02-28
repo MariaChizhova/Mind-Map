@@ -46,7 +46,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
     connect(font, &QAction::triggered, this, &Menu::fontButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
-
+    connect(save, &QAction::triggered, this, &Menu::saveButton);
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
@@ -59,6 +59,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     color->setShortcut(tr("CTRL+C"));
     font->setShortcut(tr("CTRL+F"));
     wincolor->setShortcut(tr("CTRL+W"));
+    about->setShortcut(tr("CTRL+A"));
 }
 
 void Menu::newFileButton() {
@@ -112,4 +113,32 @@ void Menu::windowColorButton() {
     if (wcolor.isValid())
         qDebug() << "Color Choosen : " << wcolor.name();
     changeWindowColor(wcolor);
+}
+
+void Menu::saveButton() {
+    /** Заберём путь к файлу и его имененем, который будем создавать */
+    QString newPath = QFileDialog::getSaveFileName(this, trUtf8("Save SVG"), path, tr("SVG files (*.svg)"));
+
+    if (newPath.isEmpty())
+        return;
+    path = newPath;
+
+    QSvgGenerator generator;
+
+    /** Устанавливаем путь к файлу  +  размер области */
+    generator.setFileName(path);
+    generator.setSize(QSize(scene.width(), scene.height()));
+    generator.setViewBox(QRect(0, 0, scene.width(), scene.height()));
+
+    /** Титульное название документа + описание  */
+    generator.setTitle(trUtf8("SVG Example"));
+    generator.setDescription(trUtf8("File created by SVG Example"));
+
+    QPainter painter;
+    /** Устанавливаем устройство/объект в котором будем производить отрисовку */
+    painter.begin(&generator);
+
+    /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
+    scene.render(&painter);
+    painter.end();
 }

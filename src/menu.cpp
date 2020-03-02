@@ -152,6 +152,7 @@ void Menu::saveButton() {
     /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
     scene.render(&painter);
     painter.end();
+}
 
 void Menu::change_state() {
     if (scene.state == SDRAW) {

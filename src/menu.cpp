@@ -68,9 +68,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
     toolbar->addAction(QIcon(colorpix), "Rectangle");
     toolbar->addAction(QIcon(helppix), "Rectangle");
-
-    /** TO DO: Пропиши вместо &QApplication::quit свою функцию */
-    connect(addRectangle, &QAction::triggered, this, &QApplication::quit);
+    connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
 }
 
 void Menu::newFileButton() {
@@ -90,8 +88,10 @@ void Menu::colorButton() {
     changeColor(mcolor);
 }
 
-void Menu::changeColor(QColor newColor) {
+void Menu::changeColor(const QColor &newColor) {
     scene.setColor(newColor);
+    QPainter edit;
+    edit.setBrush(QColor(newColor));
 }
 
 void Menu::fontButton() {
@@ -106,7 +106,7 @@ void Menu::fontButton() {
     }
 }
 
-void Menu::changeFont(QFont newFont) {
+void Menu::changeFont(const QFont &newFont) {
     scene.setFont(newFont);
 }
 
@@ -115,7 +115,7 @@ void Menu::openButton() {
     QString str = QFileDialog::getExistingDirectory(0, "Open Dialog", "");
 }
 
-void Menu::changeWindowColor(QColor newColor) {
+void Menu::changeWindowColor(const QColor &newColor) {
     scene.setWindowColor(newColor);
 }
 
@@ -152,4 +152,16 @@ void Menu::saveButton() {
     /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
     scene.render(&painter);
     painter.end();
+}
+
+void Menu::changeState() {
+    if (scene.state == SDRAW) {
+        scene.state = SMOVE;
+        for (auto &my_item : scene.myItems)
+            my_item->state = IMOVE;
+    } else {
+        scene.state = SDRAW;
+        for (auto &my_item : scene.myItems)
+            my_item->state = IDRAW;
+    }
 }

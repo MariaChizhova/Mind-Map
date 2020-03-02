@@ -1,63 +1,36 @@
 #include "menu.h"
 #include "scene.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), m_activeItem(nullptr) {}
+#include <utility>
+
+
+Scene::Scene(QObject *parent) : QGraphicsScene(parent) {}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 
-    /** Позиция мышки */
-    QPointF pos = event->scenePos();
+    if (state == SDRAW) {
+        QPointF pos = event->scenePos();
 
-    /** Создаем активный элемент (прямоугольник) */
-    int width = 60;
-    int height = 40;
-    int originX = event->lastPos().rx() - width / 2;
-    int originY = event->lastPos().ry() - height / 2;
-    m_activeItem = new QGraphicsRectItem(originX, originY, width, height);
+        auto *item = new MoveItem();
+        item->itemColor = color;
 
-    /** Задаем цвет прямоугольнику */
-    static_cast<QGraphicsPolygonItem *>(m_activeItem)->setBrush(color);
+        item->setPos(pos);
+        addItem(item);
 
-    if (!m_activeItem)
-        return;
-
-    /** Добавляем элемент в сцену */
-    addItem(m_activeItem);
-    m_activeItem->setPos(pos);
-}
-
-void Scene::keyPressEvent(QKeyEvent *event) {
-    QGraphicsScene::keyPressEvent(event);
-
-    if (!m_activeItem)
-        return;
-
-    /** Движение с помощью клавиатуры */
-    switch (event->key()) {
-        case Qt::Key::Key_Left:
-            m_activeItem->moveBy(-5, 0);
-            break;
-        case Qt::Key::Key_Down:
-            m_activeItem->moveBy(0, 5);
-            break;
-        case Qt::Key::Key_Right:
-            m_activeItem->moveBy(5, 0);
-            break;
-        case Qt::Key::Key_Up:
-            m_activeItem->moveBy(0, -5);
-            break;
+        myItems.emplace_back(item);
     }
 }
 
 void Scene::setColor(QColor newColor) {
-    color = newColor;
+    color = std::move(newColor);
 }
 
 void Scene::setFont(QFont newFont) {
-    font = newFont;
+    font = std::move(newFont);
 }
 
-void Scene::setWindowColor(QColor newColor) {
+void Scene::setWindowColor(const QColor& newColor) {
     setBackgroundBrush(newColor);
 }
+

@@ -34,11 +34,11 @@ public:
 
     QColor wcolor;
 
-    void changeColor(QColor newColor);
+    void changeColor(const QColor &newColor);
 
-    void changeFont(QFont newFont);
+    void changeFont(const QFont &newFont);
 
-    void changeWindowColor(QColor newColor);
+    void changeWindowColor(const QColor &newColor);
 
 private slots:
 
@@ -55,6 +55,8 @@ private slots:
     void windowColorButton();
 
     void saveButton();
+
+    void changeState();
 
 private:
     QString path;

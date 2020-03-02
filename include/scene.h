@@ -6,6 +6,14 @@
 #include <QGraphicsEllipseItem>
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <vector>
+#include <QPainter>
+#include "moveitem.h"
+
+
+enum sceneState {
+    SDRAW, SMOVE
+};
 
 class Scene : public QGraphicsScene {
 public:
@@ -15,18 +23,19 @@ public:
 
     void setFont(QFont newFont);
 
-    void setWindowColor(QColor newColor);
+    void setWindowColor(const QColor& newColor);
 
     QColor color;
 
     QFont font;
 
+    sceneState state = SDRAW;
+
+    std::vector<MoveItem *> myItems;
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-    void keyPressEvent(QKeyEvent *event) override;
-
-    QGraphicsItem *m_activeItem;
 };
 
 #endif

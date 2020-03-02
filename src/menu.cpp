@@ -1,5 +1,5 @@
-#include <QToolBar>
 #include "menu.h"
+#include "svgreader.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Добавление иконок. Пропишите свой путь к иконкам */
@@ -72,6 +72,8 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 }
 
 void Menu::newFileButton() {
+    scene.clear();
+    changeWindowColor(Qt::white);
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
@@ -108,11 +110,6 @@ void Menu::fontButton() {
 
 void Menu::changeFont(const QFont &newFont) {
     scene.setFont(newFont);
-}
-
-void Menu::openButton() {
-    /** Поставить другое расширение */
-    QString str = QFileDialog::getExistingDirectory(0, "Open Dialog", "");
 }
 
 void Menu::changeWindowColor(const QColor &newColor) {
@@ -164,4 +161,22 @@ void Menu::changeState() {
         for (auto &my_item : scene.myItems)
             my_item->state = IDRAW;
     }
+}
+
+void Menu::openButton() {
+    QString newPath = QFileDialog::getOpenFileName(this, trUtf8("Open SVG"), path, tr("SVG files (*.svg)"));
+    if (newPath.isEmpty())
+        return;
+
+    path = newPath;
+    scene.clear();
+
+    /** Зададим размеры графической сцены */
+    scene.setSceneRect(SvgReader::getSizes(path));
+
+    /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
+            foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
+            QGraphicsRectItem *rect = item;
+            scene.addItem(rect);
+        }
 }

@@ -21,6 +21,7 @@
 #include <QSvgGenerator>
 #include <QFileDialog>
 #include <QPainter>
+#include <QToolBar>
 
 class Menu : public QMainWindow {
 public:
@@ -40,6 +41,8 @@ public:
 
     void changeWindowColor(const QColor &newColor);
 
+    ~Menu() = default;
+
 private slots:
 
     void newFileButton();
@@ -50,13 +53,13 @@ private slots:
 
     void fontButton();
 
-    void openButton();
-
     void windowColorButton();
 
     void saveButton();
 
     void changeState();
+
+    void openButton();
 
 private:
     QString path;

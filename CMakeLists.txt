@@ -12,7 +12,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Svg REQUIRED)
 
 include_directories(include)
-set(src src/main.cpp src/menu.cpp src/scene.cpp)
+set(src src/main.cpp src/menu.cpp src/scene.cpp src/moveitem)
 add_executable(project_hse ${src} resources.qrc)
 
 # specify which libraries to connect

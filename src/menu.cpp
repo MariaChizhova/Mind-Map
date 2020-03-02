@@ -1,3 +1,4 @@
+#include <QToolBar>
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
@@ -10,6 +11,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap fontpix(":/icons/font.png");
     QPixmap openpix(":/icons/open.png");
     QPixmap wincolorpix(":/icons/wincolor.png");
+    QPixmap rectanglepix(":/icons/rectangle.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
@@ -46,7 +48,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
     connect(font, &QAction::triggered, this, &Menu::fontButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
-
+    connect(save, &QAction::triggered, this, &Menu::saveButton);
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
@@ -59,6 +61,16 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     color->setShortcut(tr("CTRL+C"));
     font->setShortcut(tr("CTRL+F"));
     wincolor->setShortcut(tr("CTRL+W"));
+    about->setShortcut(tr("CTRL+A"));
+
+    /** Панель ToolBar. Первая только рабочая, остальные  пока что для примера*/
+    QToolBar *toolbar = addToolBar("Menu");
+    QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
+    toolbar->addAction(QIcon(colorpix), "Rectangle");
+    toolbar->addAction(QIcon(helppix), "Rectangle");
+
+    /** TO DO: Пропиши вместо &QApplication::quit свою функцию */
+    connect(addRectangle, &QAction::triggered, this, &Menu::change_state);
 }
 
 void Menu::newFileButton() {
@@ -80,6 +92,8 @@ void Menu::colorButton() {
 
 void Menu::changeColor(QColor newColor) {
     scene.setColor(newColor);
+    QPainter edit;
+    edit.setBrush(QColor(newColor));
 }
 
 void Menu::fontButton() {
@@ -112,4 +126,40 @@ void Menu::windowColorButton() {
     if (wcolor.isValid())
         qDebug() << "Color Choosen : " << wcolor.name();
     changeWindowColor(wcolor);
+}
+
+void Menu::saveButton() {
+    /** Заберём путь к файлу и его имененем, который будем создавать */
+    QString newPath = QFileDialog::getSaveFileName(this, trUtf8("Save SVG"), path, tr("SVG files (*.svg)"));
+
+    if (newPath.isEmpty())
+        return;
+    path = newPath;
+
+    QSvgGenerator generator;
+
+    /** Устанавливаем путь к файлу  +  размер области */
+    generator.setFileName(path);
+    generator.setSize(QSize(scene.width(), scene.height()));
+    generator.setViewBox(QRect(0, 0, scene.width(), scene.height()));
+
+    /** Титульное название документа + описание  */
+    generator.setTitle(trUtf8("SVG Example"));
+    generator.setDescription(trUtf8("File created by SVG Example"));
+
+    QPainter painter;
+    /** Устанавливаем устройство/объект в котором будем производить отрисовку */
+    painter.begin(&generator);
+
+    /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
+    scene.render(&painter);
+    painter.end();
+}
+
+void Menu::change_state() {
+    if(scene.state == DRAW)  {
+        scene.state = MOVE;
+    } else {
+        scene.state = DRAW;
+    }
 }

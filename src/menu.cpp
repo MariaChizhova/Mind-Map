@@ -1,3 +1,4 @@
+#include <QToolBar>
 #include "menu.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
@@ -10,6 +11,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap fontpix(":/icons/font.png");
     QPixmap openpix(":/icons/open.png");
     QPixmap wincolorpix(":/icons/wincolor.png");
+    QPixmap rectanglepix(":/icons/rectangle.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
@@ -60,6 +62,15 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     font->setShortcut(tr("CTRL+F"));
     wincolor->setShortcut(tr("CTRL+W"));
     about->setShortcut(tr("CTRL+A"));
+
+    /** Панель ToolBar. Первая только рабочая, остальные  пока что для примера*/
+    QToolBar *toolbar = addToolBar("Menu");
+    QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
+    toolbar->addAction(QIcon(colorpix), "Rectangle");
+    toolbar->addAction(QIcon(helppix), "Rectangle");
+
+    /** TO DO: Пропиши вместо &QApplication::quit свою функцию */
+    connect(addRectangle, &QAction::triggered, this, &QApplication::quit);
 }
 
 void Menu::newFileButton() {

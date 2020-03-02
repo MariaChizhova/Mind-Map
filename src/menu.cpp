@@ -68,8 +68,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
     toolbar->addAction(QIcon(colorpix), "Rectangle");
     toolbar->addAction(QIcon(helppix), "Rectangle");
-
-    /** TO DO: Пропиши вместо &QApplication::quit свою функцию */
     connect(addRectangle, &QAction::triggered, this, &Menu::change_state);
 }
 
@@ -154,7 +152,6 @@ void Menu::saveButton() {
     /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
     scene.render(&painter);
     painter.end();
-}
 
 void Menu::change_state() {
     if (scene.state == SDRAW) {
@@ -168,5 +165,4 @@ void Menu::change_state() {
             my_item->state = IDRAW;
         }
     }
-
 }

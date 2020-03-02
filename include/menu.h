@@ -55,7 +55,7 @@ private slots:
     void windowColorButton();
 
     void saveButton();
-
+  
     void change_state();
 
 private:

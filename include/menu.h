@@ -24,7 +24,7 @@
 
 class Menu : public QMainWindow {
 public:
-    explicit Menu(QWidget *parent = nullptr);
+    Menu(QWidget *parent = 0);
 
     Scene scene;
 
@@ -34,11 +34,11 @@ public:
 
     QColor wcolor;
 
-    void changeColor(const QColor& newColor);
+    void changeColor(const QColor &newColor);
 
-    void changeFont(const QFont& newFont);
+    void changeFont(const QFont &newFont);
 
-    void changeWindowColor(const QColor& newColor);
+    void changeWindowColor(const QColor &newColor);
 
 private slots:
 
@@ -56,7 +56,7 @@ private slots:
 
     void saveButton();
 
-    void change_state();
+    void changeState();
 
 private:
     QString path;

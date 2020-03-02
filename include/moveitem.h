@@ -8,21 +8,32 @@
 #include <QDebug>
 #include <QCursor>
 
-class MoveItem : public QObject, public QGraphicsItem
-{
+enum item_state {
+    IDRAW, IMOVE
+};
+
+class MoveItem : public QObject, public QGraphicsItem {
 public:
     explicit MoveItem(QObject *parent = 0);
+
     ~MoveItem() override;
 
 signals:
 
 public:
-    QColor item_color = Qt::red;
-    QRectF boundingRect() const override ;
+    QColor item_color;
+
+    item_state state = IDRAW;
+
+    QRectF boundingRect() const override;
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override ;
+
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override ;
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 public slots:
 };

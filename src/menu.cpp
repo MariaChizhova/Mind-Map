@@ -157,9 +157,16 @@ void Menu::saveButton() {
 }
 
 void Menu::change_state() {
-    if(scene.state == DRAW)  {
-        scene.state = MOVE;
+    if (scene.state == SDRAW) {
+        scene.state = SMOVE;
+        for (auto &my_item : scene.my_items) {
+            my_item->state = IMOVE;
+        }
     } else {
-        scene.state = DRAW;
+        scene.state = SDRAW;
+        for (auto &my_item : scene.my_items) {
+            my_item->state = IDRAW;
+        }
     }
+
 }

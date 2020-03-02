@@ -10,6 +10,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if(state == DRAW) {
         QPointF pos = event->scenePos();
         auto *item = new MoveItem();
+        item->item_color = color;
         item->setPos(pos);
         addItem(item);
     }

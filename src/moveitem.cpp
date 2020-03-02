@@ -13,8 +13,8 @@ QRectF MoveItem::boundingRect() const {
 
 //отрисовка item
 void MoveItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->setPen(item_color);
-    painter->setBrush(item_color);
+    painter->setPen(itemColor);
+    painter->setBrush(itemColor);
     painter->drawRect(-30, -30, 60, 40);
     Q_UNUSED(option);
     Q_UNUSED(widget);

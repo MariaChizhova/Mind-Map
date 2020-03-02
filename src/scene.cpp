@@ -1,11 +1,10 @@
 #include "menu.h"
 #include "scene.h"
-#include "moveitem.h"
-#include <QPainter>
-#include <vector>
+
+#include <utility>
 
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), m_activeItem(nullptr) {}
+Scene::Scene(QObject *parent) : QGraphicsScene(parent) {}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
@@ -14,24 +13,24 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         QPointF pos = event->scenePos();
 
         auto *item = new MoveItem();
-        item->item_color = color;
+        item->itemColor = color;
 
         item->setPos(pos);
         addItem(item);
 
-        my_items.emplace_back(item);
+        myItems.emplace_back(item);
     }
 }
 
 void Scene::setColor(QColor newColor) {
-    color = newColor;
+    color = std::move(newColor);
 }
 
 void Scene::setFont(QFont newFont) {
-    font = newFont;
+    font = std::move(newFont);
 }
 
-void Scene::setWindowColor(QColor newColor) {
+void Scene::setWindowColor(const QColor& newColor) {
     setBackgroundBrush(newColor);
 }
 

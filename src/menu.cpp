@@ -158,10 +158,10 @@ void Menu::changeState() {
     if (scene.state == SDRAW) {
         scene.state = SMOVE;
         for (auto &my_item : scene.myItems)
-            my_item->state = IMOVE;
+            my_item->setFlag(QGraphicsItem::ItemIsMovable);
     } else {
         scene.state = SDRAW;
         for (auto &my_item : scene.myItems)
-            my_item->state = IDRAW;
+            my_item->setFlag(QGraphicsItem::ItemIsMovable);
     }
 }

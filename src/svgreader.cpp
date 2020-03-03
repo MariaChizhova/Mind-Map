@@ -1,4 +1,5 @@
 #include "svgreader.h"
+#include "scene.h"
 
 QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
     QList<QGraphicsRectItem *> rectList;
@@ -20,7 +21,7 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             QGraphicsRectItem *rect = new QGraphicsRectItem();
 
             /** Этот флаг делает объект перемещаемым */
-            rect->setFlag(QGraphicsItem::ItemIsMovable);
+          rect->setFlag(QGraphicsItem::ItemIsMovable);
 
             /** Забираем размеры из тега rect */
             QDomElement gElement = gNode.toElement();
@@ -28,6 +29,12 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
                           rectangle.attribute("y").toInt(),
                           rectangle.attribute("width").toInt(),
                           rectangle.attribute("height").toInt());
+            /** Не двигать фон */
+            if (rectangle.attribute("x").toInt() == 0 &&
+                rectangle.attribute("y").toInt() == 0 &&
+                rectangle.attribute("width").toInt() == 1920 &&
+                rectangle.attribute("height").toInt() == 1080)
+                rect->setFlag(QGraphicsItem::ItemIsMovable, false);
 
             /** Забираем из элемента ноды gNode параметры цветов. Эти параметры храняться в теге g */
             QColor fillColor(gElement.attribute("fill", "#ffffff"));

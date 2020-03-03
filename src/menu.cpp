@@ -154,12 +154,17 @@ void Menu::saveButton() {
 void Menu::changeState() {
     if (scene.state == SDRAW) {
         scene.state = SMOVE;
-        for (auto &my_item : scene.myItems)
-            my_item->setFlag(QGraphicsItem::ItemIsMovable);
+        for (auto &my_item : scene.myItems) {
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable)) {
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, 1);
+            }
+        }
     } else {
         scene.state = SDRAW;
         for (auto &my_item : scene.myItems)
-            my_item->setFlag(QGraphicsItem::ItemIsMovable);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable)) {
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, 0);
+            }
     }
 }
 

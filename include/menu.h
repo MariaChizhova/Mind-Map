@@ -23,6 +23,7 @@
 #include <QPainter>
 #include <QToolBar>
 #include <QGraphicsItem>
+#include <QFlags>
 
 class Menu : public QMainWindow {
 public:

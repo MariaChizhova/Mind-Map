@@ -51,15 +51,15 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             QTransform trans(rect->transform());
 
             /** Positions of rectanges */
-            qreal m11 = trans.m11();    // Horizontal scaling
-            qreal m12 = trans.m12();    // Vertical shearing
-            qreal m13 = trans.m13();    // Horizontal Projection
-            qreal m21 = trans.m21();    // Horizontal shearing
-            qreal m22 = trans.m22();    // vertical scaling
-            qreal m23 = trans.m23();    // Vertical Projection
-            qreal m31 = trans.m31();    // Horizontal Position (DX)
-            qreal m32 = trans.m32();    // Vertical Position (DY)
-            qreal m33 = trans.m33();    // Addtional Projection Factor
+            qreal m11 = trans.m11();    /** Horizontal scaling */
+            qreal m12 = trans.m12();    /** Vertical shearing */
+            qreal m13 = trans.m13();    /** Horizontal Projection */
+            qreal m21 = trans.m21();    /** Horizontal shearing */
+            qreal m22 = trans.m22();    /** vertical scaling */
+            qreal m23 = trans.m23();    /** Vertical Projection */
+            qreal m31 = trans.m31();    /** Horizontal Position (DX) */
+            qreal m32 = trans.m32();    /** Vertical Position (DY) */
+            qreal m33 = trans.m33();    /** Addtional Projection Factor */
 
             m11 = transList.at(0).toFloat();
             m12 = transList.at(1).toFloat();

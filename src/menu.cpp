@@ -167,6 +167,7 @@ void Menu::changeState() {
 }
 
 void Menu::openButton() {
+    newFileButton();
     QString newPath = QFileDialog::getOpenFileName(this, trUtf8("Open SVG"), path, tr("SVG files (*.svg)"));
     if (newPath.isEmpty())
         return;
@@ -180,6 +181,7 @@ void Menu::openButton() {
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
             foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
             QGraphicsRectItem *rect = item;
+            scene.myItems.emplace_back(rect);
             scene.addItem(rect);
         }
 }

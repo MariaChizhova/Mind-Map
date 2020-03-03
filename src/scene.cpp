@@ -10,7 +10,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF pos = event->scenePos();
 
     /** Создаем активный элемент (прямоугольник) */
-    if(state == SDRAW) {
+    if (state == SDRAW) {
         int width = 60;
         int height = 40;
         int originX = event->lastPos().rx() - width / 2;

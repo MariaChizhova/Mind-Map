@@ -21,6 +21,7 @@
 #include <QSvgGenerator>
 #include <QFileDialog>
 #include <QPainter>
+#include <QGraphicsItem>
 
 class Menu : public QMainWindow {
 public:

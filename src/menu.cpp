@@ -66,8 +66,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Панель ToolBar. Первая только рабочая, остальные  пока что для примера*/
     QToolBar *toolbar = addToolBar("Menu");
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
-    toolbar->addAction(QIcon(colorpix), "Rectangle");
-    toolbar->addAction(QIcon(helppix), "Rectangle");
     connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
 }
 
@@ -177,6 +175,9 @@ void Menu::openButton() {
 
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
+
+    /** TO DO: Вставить цвет из Svgreader */
+    scene.setWindowColor(Qt::blue);
 
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
             foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {

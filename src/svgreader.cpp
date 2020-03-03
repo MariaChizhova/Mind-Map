@@ -29,12 +29,6 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
                           rectangle.attribute("y").toInt(),
                           rectangle.attribute("width").toInt(),
                           rectangle.attribute("height").toInt());
-            /** Не двигать фон */
-            if (rectangle.attribute("x").toInt() == 0 &&
-                rectangle.attribute("y").toInt() == 0 &&
-                rectangle.attribute("width").toInt() == 1920 &&
-                rectangle.attribute("height").toInt() == 1080)
-                rect->setFlag(QGraphicsItem::ItemIsMovable, false);
 
             /** Забираем из элемента ноды gNode параметры цветов. Эти параметры храняться в теге g */
             QColor fillColor(gElement.attribute("fill", "#ffffff"));
@@ -71,7 +65,18 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             trans.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
             rect->setTransform(trans);
             rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
-            rectList.append(rect);
+
+            /** Не двигать фон */
+            if (rectangle.attribute("x").toInt() == 0 &&
+                rectangle.attribute("y").toInt() == 0 &&
+                rectangle.attribute("width").toInt() == 1920 &&
+                rectangle.attribute("height").toInt() == 1080) {
+                rect->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
+            else {
+                rectList.append(rect);
+                //lcolor = rectangle.attribute("fill");
+            }
         }
     }
     file.close();

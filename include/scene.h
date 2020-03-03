@@ -7,9 +7,6 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <vector>
-#include <QPainter>
-#include "moveitem.h"
-
 
 enum sceneState {
     SDRAW, SMOVE
@@ -23,7 +20,7 @@ public:
 
     void setFont(QFont newFont);
 
-    void setWindowColor(const QColor& newColor);
+    void setWindowColor(QColor newColor);
 
     QColor color;
 
@@ -31,9 +28,12 @@ public:
 
     sceneState state = SDRAW;
 
-    std::vector<MoveItem *> myItems;
+    std::vector<QGraphicsItem *> myItems;
+
+    QGraphicsItem *activeItem;
 
 protected:
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 };

@@ -22,6 +22,7 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QToolBar>
+#include <QGraphicsItem>
 
 class Menu : public QMainWindow {
 public:

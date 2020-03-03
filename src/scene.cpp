@@ -1,36 +1,42 @@
 #include "menu.h"
 #include "scene.h"
 
-#include <utility>
-
-
 Scene::Scene(QObject *parent) : QGraphicsScene(parent) {}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 
-    if (state == SDRAW) {
-        QPointF pos = event->scenePos();
+    /** Позиция мышки */
+    QPointF pos = event->scenePos();
 
-        auto *item = new MoveItem();
-        item->itemColor = color;
+    /** Создаем активный элемент (прямоугольник) */
+    if(state == SDRAW) {
+        int width = 60;
+        int height = 40;
+        int originX = event->lastPos().rx() - width / 2;
+        int originY = event->lastPos().ry() - height / 2;
+        activeItem = new QGraphicsRectItem(originX, originY, width, height);
+        if (!activeItem)
+            return;
 
-        item->setPos(pos);
-        addItem(item);
+        /** Задаем цвет прямоугольнику */
+        static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);
 
-        myItems.emplace_back(item);
+        /** Добавляем элемент в сцену */
+        addItem(activeItem);
+        activeItem->setPos(pos);
+        myItems.emplace_back(activeItem);
     }
 }
 
 void Scene::setColor(QColor newColor) {
-    color = std::move(newColor);
+    color = newColor;
 }
 
 void Scene::setFont(QFont newFont) {
-    font = std::move(newFont);
+    font = newFont;
 }
 
-void Scene::setWindowColor(const QColor& newColor) {
+void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
 }
-

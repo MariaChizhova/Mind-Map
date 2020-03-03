@@ -36,6 +36,34 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             QColor strokeColor(gElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(gElement.attribute("stroke-opacity").toFloat());
             rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
+
+            QString transString = gElement.attribute("transform");
+            transString.replace(QString("matrix("), QString(""));
+            transString.replace(QString(")"), QString(""));
+            QStringList transList = transString.split(",");
+            QTransform trans(rect->transform());
+
+            /** Positions of rectanges */
+            qreal m11 = trans.m11();    // Horizontal scaling
+            qreal m12 = trans.m12();    // Vertical shearing
+            qreal m13 = trans.m13();    // Horizontal Projection
+            qreal m21 = trans.m21();    // Horizontal shearing
+            qreal m22 = trans.m22();    // vertical scaling
+            qreal m23 = trans.m23();    // Vertical Projection
+            qreal m31 = trans.m31();    // Horizontal Position (DX)
+            qreal m32 = trans.m32();    // Vertical Position (DY)
+            qreal m33 = trans.m33();    // Addtional Projection Factor
+
+            m11 = transList.at(0).toFloat();
+            m12 = transList.at(1).toFloat();
+            m21 = transList.at(2).toFloat();
+            m22 = transList.at(3).toFloat();
+            m31 = transList.at(4).toFloat();
+            m32 = transList.at(5).toFloat();
+
+            trans.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            rect->setTransform(trans);
+            rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
             rectList.append(rect);
         }
     }

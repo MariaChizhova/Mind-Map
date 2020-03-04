@@ -43,6 +43,8 @@ public:
 
     void changeWindowColor(const QColor &newColor);
 
+    void newScene();
+
     ~Menu() = default;
 
 private slots:

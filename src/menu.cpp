@@ -69,12 +69,16 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
 }
 
-void Menu::newFileButton() {
+void Menu::newScene() {
     scene.clear();
     changeWindowColor(Qt::white);
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
+}
+
+void Menu::newFileButton() {
+    newScene();
 }
 
 void Menu::helpButton() {
@@ -165,7 +169,7 @@ void Menu::changeState() {
 }
 
 void Menu::openButton() {
-    newFileButton();
+    newScene();
     QString newPath = QFileDialog::getOpenFileName(this, trUtf8("Open SVG"), path, tr("SVG files (*.svg)"));
     if (newPath.isEmpty())
         return;
@@ -176,7 +180,7 @@ void Menu::openButton() {
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
 
-    /** TO DO: Вставить цвет из Svgreader */
+    /** TODO: Вставить цвет из Svgreader */
     scene.setWindowColor(Qt::blue);
 
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */

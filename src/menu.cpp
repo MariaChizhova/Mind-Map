@@ -66,17 +66,19 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Панель ToolBar. Первая только рабочая, остальные  пока что для примера*/
     QToolBar *toolbar = addToolBar("Menu");
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
-    toolbar->addAction(QIcon(colorpix), "Rectangle");
-    toolbar->addAction(QIcon(helppix), "Rectangle");
     connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
 }
 
-void Menu::newFileButton() {
+void Menu::newScene() {
     scene.clear();
     changeWindowColor(Qt::white);
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
+}
+
+void Menu::newFileButton() {
+    newScene();
 }
 
 void Menu::helpButton() {
@@ -155,20 +157,19 @@ void Menu::changeState() {
     if (scene.state == SDRAW) {
         scene.state = SMOVE;
         for (auto &my_item : scene.myItems) {
-            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable)) {
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
                 my_item->setFlag(QGraphicsItem::ItemIsMovable, 1);
-            }
         }
     } else {
         scene.state = SDRAW;
         for (auto &my_item : scene.myItems)
-            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable)) {
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
                 my_item->setFlag(QGraphicsItem::ItemIsMovable, 0);
-            }
     }
 }
 
 void Menu::openButton() {
+    newScene();
     QString newPath = QFileDialog::getOpenFileName(this, trUtf8("Open SVG"), path, tr("SVG files (*.svg)"));
     if (newPath.isEmpty())
         return;
@@ -179,9 +180,13 @@ void Menu::openButton() {
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
 
+    /** TODO: Вставить цвет из Svgreader */
+    scene.setWindowColor(Qt::blue);
+
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
             foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
             QGraphicsRectItem *rect = item;
+            scene.myItems.emplace_back(rect);
             scene.addItem(rect);
         }
 }

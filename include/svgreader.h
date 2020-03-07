@@ -16,6 +16,8 @@ public:
     static QList<QGraphicsRectItem *> getElements(const QString filename);
 
     static QRectF getSizes(const QString filename);
+
+    static QColor lcolor;
 };
 
 #endif //PROJECT_HSE_SVGREADER_H

@@ -17,13 +17,16 @@
 #include <QtWidgets/QFontDialog>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include "scene.h"
 #include <QSvgGenerator>
 #include <QFileDialog>
 #include <QPainter>
 #include <QToolBar>
 #include <QGraphicsItem>
 #include <QFlags>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QInputDialog>
+#include "scene.h"
 
 class Menu : public QMainWindow {
 public:
@@ -37,11 +40,15 @@ public:
 
     QColor wcolor;
 
+    QColor fcolor;
+
     void changeColor(const QColor &newColor);
 
     void changeFont(const QFont &newFont);
 
     void changeWindowColor(const QColor &newColor);
+
+    void changeFontColor(const QColor &newColor);
 
     void newScene();
 
@@ -64,6 +71,10 @@ private slots:
     void changeState();
 
     void openButton();
+
+    void fontColorButton();
+
+    void enterText();
 
 private:
     QString path;

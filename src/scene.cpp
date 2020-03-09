@@ -40,3 +40,19 @@ void Scene::setFont(QFont newFont) {
 void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
 }
+
+void Scene::setFontColor(QColor newColor) {
+    fontcolor = newColor;
+}
+
+void Scene::printText() {
+    QGraphicsTextItem *text = addText(textstr);
+    text->setPos(100, 200);
+    text->setFont(font);
+    text->setDefaultTextColor(fontcolor);
+}
+
+void Scene::setText(QString str) {
+    textstr = str;
+}
+

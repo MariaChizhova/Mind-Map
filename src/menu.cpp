@@ -12,6 +12,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap openpix(":/icons/open.png");
     QPixmap wincolorpix(":/icons/wincolor.png");
     QPixmap rectanglepix(":/icons/rectangle.png");
+    QPixmap textpix(":/icons/text.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
@@ -22,6 +23,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *color = new QAction(colorpix, "&Color", this);
     QAction *wincolor = new QAction(wincolorpix, "&WinColor", this);
     QAction *font = new QAction(fontpix, "&Font", this);
+    QAction *fontcolor = new QAction(colorpix, "&FontColor", this);
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -39,6 +41,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     edit->addAction(color);
     edit->addAction(font);
     edit->addAction(wincolor);
+    edit->addAction(fontcolor);
 
     /** Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение */
     connect(quit, &QAction::triggered, this, QApplication::quit);
@@ -49,6 +52,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(font, &QAction::triggered, this, &Menu::fontButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
     connect(save, &QAction::triggered, this, &Menu::saveButton);
+    connect(fontcolor, &QAction::triggered, this, &Menu::fontColorButton);
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
@@ -67,6 +71,9 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QToolBar *toolbar = addToolBar("Menu");
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
     connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
+
+    QAction *text = toolbar->addAction(QIcon(textpix), "Text");
+    connect(text, &QAction::triggered, this, &Menu::enterText);
 }
 
 void Menu::newScene() {
@@ -108,6 +115,7 @@ void Menu::fontButton() {
         qDebug() << "font style     : " << font.style();
         qDebug() << "font pointSize : " << font.pointSize();
     }
+    changeFont(font);
 }
 
 void Menu::changeFont(const QFont &newFont) {
@@ -189,4 +197,25 @@ void Menu::openButton() {
             scene.myItems.emplace_back(rect);
             scene.addItem(rect);
         }
+}
+
+void Menu::fontColorButton() {
+    fcolor = QColorDialog::getColor(Qt::black, this);
+    if (fcolor.isValid())
+        qDebug() << "Color Choosen : " << fcolor.name();
+    changeFontColor(fcolor);
+}
+
+void Menu::changeFontColor(const QColor &newColor) {
+    scene.setFontColor(newColor);
+}
+
+void Menu::enterText() {
+    scene.state = TEXT;
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"), tr("Enter text:"),
+            QLineEdit::Normal, "", &ok);
+    if (ok && !text.isEmpty())
+        scene.setText(text);
+    scene.printText();
 }

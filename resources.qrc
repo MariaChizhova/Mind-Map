@@ -10,5 +10,6 @@
         <file>icons/save.png</file>
         <file>icons/wincolor.png</file>
         <file>icons/rectangle.png</file>
+        <file>icons/text.png</file>
     </qresource>
 </RCC>

@@ -9,7 +9,7 @@
 #include <vector>
 
 enum sceneState {
-    SDRAW, SMOVE
+    SDRAW, SMOVE, TEXT
 };
 
 class Scene : public QGraphicsScene {
@@ -22,9 +22,19 @@ public:
 
     void setWindowColor(QColor newColor);
 
+    void printText();
+
+    void setFontColor(QColor newColor);
+
+    void setText(QString str);
+
     QColor color;
 
     QFont font;
+
+    QColor fontcolor;
+
+    QString textstr;
 
     sceneState state = SDRAW;
 
@@ -35,7 +45,6 @@ public:
 protected:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-
 };
 
 #endif

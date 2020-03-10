@@ -79,6 +79,13 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 void Menu::newScene() {
     scene.clear();
     changeWindowColor(Qt::white);
+    bool ok;
+    QString width = QInputDialog::getText(this, tr("Width"), tr("Enter:"),
+                                         QLineEdit::Normal, "", &ok);
+    QString height = QInputDialog::getText(this, tr("Height"), tr("Enter:"),
+                                         QLineEdit::Normal, "", &ok);
+    if (ok && !width.isEmpty() && !height.isEmpty())
+        scene.setSceneRect(0, 0, width.toInt(), height.toInt());
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
@@ -213,7 +220,7 @@ void Menu::changeFontColor(const QColor &newColor) {
 void Menu::enterText() {
     scene.state = TEXT;
     bool ok;
-    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"), tr("Enter text:"),
+    QString text = QInputDialog::getText(this, tr("Text"), tr("Enter:"),
             QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty())
         scene.setText(text);

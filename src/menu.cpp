@@ -218,4 +218,5 @@ void Menu::enterText() {
     if (ok && !text.isEmpty())
         scene.setText(text);
     scene.printText();
+
 }

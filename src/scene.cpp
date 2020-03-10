@@ -23,6 +23,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);
 
         /** Добавляем элемент в сцену */
+        activeItem->setZValue(1);
         addItem(activeItem);
         activeItem->setPos(pos);
         myItems.emplace_back(activeItem);
@@ -47,12 +48,14 @@ void Scene::setFontColor(QColor newColor) {
 
 void Scene::printText() {
     QGraphicsTextItem *text = addText(textstr);
+    text->setZValue(2);
     text->setPos(100, 200);
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);
+    text->setFlag(QGraphicsTextItem::ItemIsMovable);
+
 }
 
 void Scene::setText(QString str) {
     textstr = str;
 }
-

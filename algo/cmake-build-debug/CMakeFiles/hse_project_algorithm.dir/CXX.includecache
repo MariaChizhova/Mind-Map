@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/User/CLionProjects/hse_project_algorithm/include/path.h
+iostream
+-
+vector
+-
+
+C:/Users/User/CLionProjects/hse_project_algorithm/src/main.cpp
+iostream
+-
+../include/path.h
+C:/Users/User/CLionProjects/hse_project_algorithm/include/path.h
+

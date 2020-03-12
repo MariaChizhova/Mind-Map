@@ -88,7 +88,7 @@ void Menu::newFileButton() {
 }
 
 void Menu::helpButton() {
-    QMessageBox::information(this, tr("About"), tr("Пошел нахуй"));
+    QMessageBox::information(this, tr("About"), tr("Помощи не будет!"));
 }
 
 void Menu::colorButton() {

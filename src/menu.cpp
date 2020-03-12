@@ -22,8 +22,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *about = new QAction(helppix, "&About", this);
     QAction *color = new QAction(colorpix, "&Color", this);
     QAction *wincolor = new QAction(wincolorpix, "&WinColor", this);
-    QAction *font = new QAction(fontpix, "&Font", this);
-    QAction *fontcolor = new QAction(colorpix, "&FontColor", this);
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -39,9 +37,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     file->addAction(quit);
     help->addAction(about);
     edit->addAction(color);
-    edit->addAction(font);
     edit->addAction(wincolor);
-    edit->addAction(fontcolor);
 
     /** Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение */
     connect(quit, &QAction::triggered, this, QApplication::quit);
@@ -49,10 +45,8 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(color, &QAction::triggered, this, &Menu::colorButton);
     connect(wincolor, &QAction::triggered, this, &Menu::windowColorButton);
     connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
-    connect(font, &QAction::triggered, this, &Menu::fontButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
     connect(save, &QAction::triggered, this, &Menu::saveButton);
-    connect(fontcolor, &QAction::triggered, this, &Menu::fontColorButton);
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
@@ -63,7 +57,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     save->setShortcut(tr("CTRL+S"));
     quit->setShortcut(tr("CTRL+Q"));
     color->setShortcut(tr("CTRL+C"));
-    font->setShortcut(tr("CTRL+F"));
     wincolor->setShortcut(tr("CTRL+W"));
     about->setShortcut(tr("CTRL+A"));
 
@@ -96,7 +89,7 @@ void Menu::newFileButton() {
 }
 
 void Menu::helpButton() {
-    QMessageBox::information(this, tr("About"), tr("Помощи не будет"));
+    QMessageBox::information(this, tr("About"), tr("Пошел нахуй"));
 }
 
 void Menu::colorButton() {
@@ -110,19 +103,6 @@ void Menu::changeColor(const QColor &newColor) {
     scene.setColor(newColor);
     QPainter edit;
     edit.setBrush(QColor(newColor));
-}
-
-void Menu::fontButton() {
-    bool ok;
-    QFont font = QFontDialog::getFont(&ok, QFont("Arial", 18), this, tr("Pick a font"));
-    if (ok) {
-        qDebug() << "font           : " << font;
-        qDebug() << "font weight    : " << font.weight();
-        qDebug() << "font family    : " << font.family();
-        qDebug() << "font style     : " << font.style();
-        qDebug() << "font pointSize : " << font.pointSize();
-    }
-    changeFont(font);
 }
 
 void Menu::changeFont(const QFont &newFont) {
@@ -184,7 +164,10 @@ void Menu::changeState() {
 }
 
 void Menu::openButton() {
-    newScene();
+    scene.clear();
+    changeWindowColor(Qt::white);
+    view.setScene(&scene);
+    setCentralWidget(&view);
     QString newPath = QFileDialog::getOpenFileName(this, trUtf8("Open SVG"), path, tr("SVG files (*.svg)"));
     if (newPath.isEmpty())
         return;
@@ -196,7 +179,7 @@ void Menu::openButton() {
     scene.setSceneRect(SvgReader::getSizes(path));
 
     /** TODO: Вставить цвет из Svgreader */
-    scene.setWindowColor(Qt::blue);
+    scene.setWindowColor("#c7c7fa");
 
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
             foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
@@ -206,20 +189,26 @@ void Menu::openButton() {
         }
 }
 
-void Menu::fontColorButton() {
-    fcolor = QColorDialog::getColor(Qt::black, this);
-    if (fcolor.isValid())
-        qDebug() << "Color Choosen : " << fcolor.name();
-    changeFontColor(fcolor);
-}
-
 void Menu::changeFontColor(const QColor &newColor) {
     scene.setFontColor(newColor);
 }
 
 void Menu::enterText() {
-    scene.state = TEXT;
     bool ok;
+    QFont font = QFontDialog::getFont(&ok, QFont("Arial", 18), this, tr("Pick a font"));
+    if (ok) {
+        qDebug() << "font           : " << font;
+        qDebug() << "font weight    : " << font.weight();
+        qDebug() << "font family    : " << font.family();
+        qDebug() << "font style     : " << font.style();
+        qDebug() << "font pointSize : " << font.pointSize();
+    }
+    changeFont(font);
+    scene.state = TEXT;
+    fcolor = QColorDialog::getColor(Qt::black, this);
+    if (fcolor.isValid())
+        qDebug() << "Color Choosen : " << fcolor.name();
+    changeFontColor(fcolor);
     QString text = QInputDialog::getText(this, tr("Text"), tr("Enter:"),
             QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty())

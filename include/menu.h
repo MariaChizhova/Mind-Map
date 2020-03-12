@@ -62,8 +62,6 @@ private slots:
 
     void colorButton();
 
-    void fontButton();
-
     void windowColorButton();
 
     void saveButton();
@@ -71,8 +69,6 @@ private slots:
     void changeState();
 
     void openButton();
-
-    void fontColorButton();
 
     void enterText();
 

@@ -53,7 +53,6 @@ void Scene::printText() {
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);
     text->setFlag(QGraphicsTextItem::ItemIsMovable);
-
 }
 
 void Scene::setText(QString str) {

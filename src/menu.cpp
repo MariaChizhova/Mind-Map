@@ -8,7 +8,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap quitpix(":/icons/quit.png");
     QPixmap helppix(":/icons/help.png");
     QPixmap colorpix(":/icons/color.png");
-    QPixmap fontpix(":/icons/font.png");
     QPixmap openpix(":/icons/open.png");
     QPixmap wincolorpix(":/icons/wincolor.png");
     QPixmap rectanglepix(":/icons/rectangle.png");
@@ -155,7 +154,7 @@ void Menu::changeState() {
             if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
                 my_item->setFlag(QGraphicsItem::ItemIsMovable, 1);
         }
-    } else {
+    } else  {
         scene.state = SDRAW;
         for (auto &my_item : scene.myItems)
             if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))

@@ -13,20 +13,10 @@ Path::Path(int wid, int hei, int step) : step(step) {
     height = wid / step;
     size = width * height;
     occupied.resize(size + 1);
-    for (int i = 0; i < size; i++) {
-        occupied[i] = 0;
-    }
+    fill(occupied.begin(), occupied.end(), 0);
     data.resize(size + 1);
     pathCoord.resize(width);
     rectData.resize(width);
-}
-
-void Path::getData() { // функция для меня, чтобы втупую добавлять прямоугольники и тестить
-    int x = 0;
-    while  (x != -1) {
-        cin >> x; //
-        occupied[x] = 1;
-    }
 }
 
 void Path::fillGraph() { // нумерация построчно, начиная с единицы
@@ -97,10 +87,8 @@ void Path::showGraph() {
     char graph[size + 1];
     for (int i = 0; i < size; i++) {
         occupied[i] ? graph[i] = 'x' : graph[i] = '.';
-        //if (path_occ[i]) graph[i] = '-';
     }
-    for (auto i : path) { // сайз это плохо
-        //cout << i << ' ';
+    for (auto i : path) {
         graph[i] = '~';
     }
     for (int i = 0; i < size; i++) {
@@ -148,7 +136,7 @@ rectangle Path::getRect(int id, pair<int, int> centre_coord, int w, int h) {
 }
 
 void Path::getRectCoord() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         int x, y, w, h;
         static int id = 0;
         cin >> x >> y >> w >> h;
@@ -193,15 +181,20 @@ pair<int, int> Path::findBorderPoint(int id1, int id2) {
     if (cent1.first < cent2.first) {
         coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() - rect2.getWidth() / 2;
-    }
-    if (cent1.first > cent2.first) {
+    } else if (cent1.first < cent2.first) {
         coord1 = rect1.getCentre() - rect1.getWidth() / 2;
+        coord2 = rect2.getCentre() + rect2.getWidth() / 2;
+    }
+    else if (cent1.first == cent2.first) {
+        coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() + rect2.getWidth() / 2;
     }
     return (make_pair(convertToStep(coord1), convertToStep(coord2)));
 }
 
-void Path::createPath(int src, int dest) {
+void Path::createPath(int id1, int id2) {
+    int src = findBorderPoint(id1, id2).first;
+    int dest = findBorderPoint(id1, id2).second;
     queue<int> q;
     vector<int> dist(size, -1);
     vector<bool> is(size, false);
@@ -215,7 +208,7 @@ void Path::createPath(int src, int dest) {
         q.pop();
         for (int i = 0; i < data[cur].size(); i++) {
             int u = data[cur][i];
-            if (!is[u]) {
+            if (!is[u] && (!occupied[u] || u == dest)) {
                 is[u] = true;
                 q.push(u);
                 dist[u] = dist[cur] + 1;
@@ -226,6 +219,7 @@ void Path::createPath(int src, int dest) {
 
     for (int i = dest; i != -1; i = par[i]) {
         path.push_back(i);
+        //occupied[i] = 1;
     }
 }
 

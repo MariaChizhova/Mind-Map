@@ -101,29 +101,22 @@ void Path::showGraph() {
 }
 
 pair<int, int> Path::convertToPair(int x) {
-    int w = x, h = 0;
-    while (w > width) {
-        w -= width;
-        h++;
-    }
+    int w = x / width, h = x % width;
     return make_pair(w, h); // нумерация с нуля
 }
 
 int Path::convertToNum(pair<int, int> coord) {
-    int res;
-    res = coord.first * width + coord.second;
-    return res;
+    return coord.first * width + coord.second;
 }
 
 int Path::convertToStep(int x) {
     int res;
-    x % step == 0 ? res = x / step : res = x / step + 1;
+    res = x / step + (x % step != 0);
     return res;
 }
 
 int Path::convertFromStep(int x) {
-    int res = x * step;
-    return res;
+    return x * step;
 }
 
 rectangle Path::getRect(int id, pair<int, int> centre_coord, int w, int h) {
@@ -158,7 +151,7 @@ void Path::addShape(rectangle &rect) {
     }
 }
 
-void Path::deleteShape(const rectangle& rect) { // точно удаляет все, что нужно, ура
+void Path::deleteShape(const rectangle &rect) { // точно удаляет все, что нужно, ура
     for (auto i : rect.data) {
         occupied[i] = 0;
     }
@@ -184,12 +177,11 @@ pair<int, int> Path::findBorderPoint(int id1, int id2) {
     } else if (cent1.first < cent2.first) {
         coord1 = rect1.getCentre() - rect1.getWidth() / 2;
         coord2 = rect2.getCentre() + rect2.getWidth() / 2;
-    }
-    else if (cent1.first == cent2.first) {
+    } else if (cent1.first == cent2.first) {
         coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() + rect2.getWidth() / 2;
     }
-    return (make_pair(convertToStep(coord1), convertToStep(coord2)));
+    return make_pair(convertToStep(coord1), convertToStep(coord2));
 }
 
 void Path::createPath(int id1, int id2) {
@@ -198,7 +190,7 @@ void Path::createPath(int id1, int id2) {
     queue<int> q;
     vector<int> dist(size, -1);
     vector<bool> is(size, false);
-    int par [size];
+    int par[size];
     is[src] = true;
     dist[src] = 0;
     par[src] = -1;

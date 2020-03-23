@@ -1,3 +1,4 @@
+#include <iostream>
 #include "menu.h"
 #include "scene.h"
 
@@ -26,7 +27,27 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         activeItem->setZValue(1);
         addItem(activeItem);
         activeItem->setPos(pos);
+        activeItem->setFlag(QGraphicsItem::ItemIsFocusable);
         myItems.emplace_back(activeItem);
+    }
+    if (state == SLINE) {
+        focusItem()->setFlag(QGraphicsItem::ItemIsSelectable, 1);
+        focusItem()->setSelected(true);
+
+        if (this->selectedItems().count() == 2) {
+            addLine(this->selectedItems()[0]->pos().rx(), this->selectedItems()[0]->pos().ry(),
+                    this->selectedItems()[1]->pos().rx(), this->selectedItems()[1]->pos().ry(), QPen(Qt::black));
+
+            for (auto it:this->selectedItems()) {
+                it->setSelected(false);
+            }
+            this->selectedItems().clear();
+
+            for (auto it:myItems) {
+                it->setSelected(false);
+                it->setFlag(QGraphicsItem::ItemIsSelectable, 0);
+            }
+        }
     }
 }
 
@@ -57,4 +78,9 @@ void Scene::printText() {
 
 void Scene::setText(QString str) {
     textstr = str;
+}
+
+void Scene::printLine() {
+    QPointF posFirst;
+
 }

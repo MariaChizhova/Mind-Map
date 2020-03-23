@@ -7,9 +7,10 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <vector>
+#include <QPainterPath>
 
 enum sceneState {
-    SDRAW, SMOVE, TEXT
+    SDRAW, SMOVE, TEXT, SLINE
 };
 
 class Scene : public QGraphicsScene {
@@ -28,6 +29,8 @@ public:
 
     void setText(QString str);
 
+    void printLine();
+
     QColor color;
 
     QFont font;
@@ -41,6 +44,8 @@ public:
     std::vector<QGraphicsItem *> myItems;
 
     QGraphicsItem *activeItem;
+
+    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1,-1)};
 
 protected:
 

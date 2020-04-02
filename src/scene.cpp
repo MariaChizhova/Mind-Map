@@ -2,7 +2,11 @@
 #include "menu.h"
 #include "scene.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent) {}
+static int test = 0;
+
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1080, 1920, 1) {
+    algo.fillGraph();
+}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
@@ -16,7 +20,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         int height = 40;
         int originX = event->lastPos().rx() - width / 2;
         int originY = event->lastPos().ry() - height / 2;
-        activeItem = new QGraphicsRectItem(originX, originY, width, height);
+        activeItem = new QGraphicsRectItem(0, 0, width, height);
         if (!activeItem)
             return;
 
@@ -26,7 +30,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
         addItem(activeItem);
+        pos.rx() -= 30;
+        pos.ry() -= 20;
         activeItem->setPos(pos);
+        algo.getRectCoord(pos.rx(), pos.ry(), width, height); //Добавили центр прямоугольника Олесе
+
         activeItem->setFlag(QGraphicsItem::ItemIsFocusable);
         myItems.emplace_back(activeItem);
     }
@@ -35,14 +43,21 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         focusItem()->setSelected(true);
 
         if (this->selectedItems().count() == 2) {
-            addLine(this->selectedItems()[0]->pos().rx(), this->selectedItems()[0]->pos().ry(),
-                    this->selectedItems()[1]->pos().rx(), this->selectedItems()[1]->pos().ry(), QPen(Qt::black));
+            //Получили вектор с точками
+            vector<pair<int, int>> points = algo.createShortestPath(this->selectedItems()[0]->pos().rx(),
+                                                                    this->selectedItems()[0]->pos().ry(),
+                                                                    this->selectedItems()[1]->pos().rx(),
+                                                                    this->selectedItems()[1]->pos().ry());
+            //Соединяем точки пока просто линиями
+            for (int i = 1; i < points.size(); i++) {
+                addLine(points[i - 1].first, points[i - 1].second, points[i].first, points[i].second, QPen(Qt::black));
+            }
 
+            //Снимаем пометки с выбранных прямоугольников
             for (auto it:this->selectedItems()) {
                 it->setSelected(false);
             }
             this->selectedItems().clear();
-
             for (auto it:myItems) {
                 it->setSelected(false);
                 it->setFlag(QGraphicsItem::ItemIsSelectable, 0);
@@ -78,9 +93,4 @@ void Scene::printText() {
 
 void Scene::setText(QString str) {
     textstr = str;
-}
-
-void Scene::printLine() {
-    QPointF posFirst;
-
 }

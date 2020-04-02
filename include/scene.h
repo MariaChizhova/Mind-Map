@@ -8,6 +8,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <vector>
 #include <QPainterPath>
+#include <path.h>
 
 enum sceneState {
     SDRAW, SMOVE, TEXT, SLINE
@@ -45,7 +46,7 @@ public:
 
     QGraphicsItem *activeItem;
 
-    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1,-1)};
+    ShortestPath algo;
 
 protected:
 

@@ -4,7 +4,7 @@
 
 static int test = 0;
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1080, 1920, 1) {
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1920, 1080, 1) {
     algo.fillGraph();
 }
 
@@ -33,7 +33,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         pos.rx() -= 30;
         pos.ry() -= 20;
         activeItem->setPos(pos);
-        algo.getRectCoord(pos.rx(), pos.ry(), width, height); //Добавили центр прямоугольника Олесе
+        algo.getRectCoord(pos.rx() + 30, pos.ry() + 20, width, height); // Добавили центр прямоугольника Олесе
 
         activeItem->setFlag(QGraphicsItem::ItemIsFocusable);
         myItems.emplace_back(activeItem);

@@ -1,16 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-
-#include "../include/path.h"
+#include <cassert>
+#include "path.h"
 
 using namespace std;
-
+static int id = 0;
 // height - длина вертикального столбца, width - горизонтальной строчки
 
-Path::Path(int wid, int hei, int step) : step(step) {
-    width = hei / step;
-    height = wid / step;
+ShortestPath::ShortestPath(int wid, int hei, int step) : step(step) {
+    width = wid / step;
+    height = hei / step;
     size = width * height;
     occupied.resize(size + 1);
     fill(occupied.begin(), occupied.end(), 0);
@@ -19,7 +19,7 @@ Path::Path(int wid, int hei, int step) : step(step) {
     rectData.resize(width);
 }
 
-void Path::fillGraph() { // нумерация построчно, начиная с единицы
+void ShortestPath::fillGraph() { // нумерация построчно, начиная с единицы
     vector<int> used(size, 0);
 
     for (int i = 0; i < size; i++) {
@@ -82,7 +82,7 @@ void Path::fillGraph() { // нумерация построчно, начина�
     }
 }
 
-void Path::showGraph() {
+void ShortestPath::showGraph() {
     int cnt = width - 1;
     char graph[size + 1];
     for (int i = 0; i < size; i++) {
@@ -100,26 +100,26 @@ void Path::showGraph() {
     }
 }
 
-pair<int, int> Path::convertToPair(int x) {
+pair<int, int> ShortestPath::convertToPair(int x) {
     int w = x / width, h = x % width;
     return make_pair(w, h); // нумерация с нуля
 }
 
-int Path::convertToNum(pair<int, int> coord) {
+int ShortestPath::convertToNum(pair<int, int> coord) {
     return coord.first * width + coord.second;
 }
 
-int Path::convertToStep(int x) {
+int ShortestPath::convertToStep(int x) {
     int res;
     res = x / step + (x % step != 0);
     return res;
 }
 
-int Path::convertFromStep(int x) {
+int ShortestPath::convertFromStep(int x) {
     return x * step;
 }
 
-rectangle Path::getRect(int id, pair<int, int> centre_coord, int w, int h) {
+rectangle ShortestPath::getRect(int id, pair<int, int> centre_coord, int w, int h) {
     int centre = convertToStep(convertToNum(centre_coord));
     int wid = convertToStep(w);
     int hei = convertToStep(h);
@@ -128,36 +128,34 @@ rectangle Path::getRect(int id, pair<int, int> centre_coord, int w, int h) {
     return rect;
 }
 
-void Path::getRectCoord() {
-    for (int i = 0; i < 3; i++) {
-        int x, y, w, h;
-        static int id = 0;
-        cin >> x >> y >> w >> h;
-        rectData[id] = getRect(id, make_pair(x, y), w, h);
-        addShape(rectData[id]);
-        ++id;
-    }
+void ShortestPath::getRectCoord(int x, int y, int w, int h) {
+    shapeId[{x, y}] = id;
+    rectData[id] = getRect(id, make_pair(x, y), w, h);
+    addShape(rectData[id]);
+    ++id;
 }
 
-void Path::addShape(rectangle &rect) {
-    int left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
-    int right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2); // тут погрешность
+void ShortestPath::addShape(rectangle &rect) {
+    long long left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    long long right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2); // тут погрешность
     int cnt = 0;
     for (int i = 0; i < rect.getHeight(); i++) {
         for (int j = left_up + width * i; j < right_up + width * i; j++) {
+            assert(j <= size);
             occupied[j] = 1;
+            assert(cnt <= rect.data.size());
             rect.data[cnt++] = j;
         }
     }
 }
 
-void Path::deleteShape(const rectangle &rect) { // точно удаляет все, что нужно, ура
+void ShortestPath::deleteShape(const rectangle &rect) { // точно удаляет все, что нужно, ура
     for (auto i : rect.data) {
         occupied[i] = 0;
     }
 }
 
-void Path::dragShape(int id, pair<int, int> new_centre) {
+void ShortestPath::dragShape(int id, pair<int, int> new_centre) {
     deleteShape(rectData[id]);
     int new_converted_centre = convertToStep(convertToNum(new_centre));
     rectangle new_rect(rectData[id].getId(), new_converted_centre, rectData[id].getWidth(), rectData[id].getHeight());
@@ -165,7 +163,7 @@ void Path::dragShape(int id, pair<int, int> new_centre) {
     addShape(rectData[id]);
 }
 
-pair<int, int> Path::findBorderPoint(int id1, int id2) {
+pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
     int coord1, coord2;
     rectangle rect1 = getRectData(id1);
     rectangle rect2 = getRectData(id2);
@@ -174,7 +172,7 @@ pair<int, int> Path::findBorderPoint(int id1, int id2) {
     if (cent1.first < cent2.first) {
         coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() - rect2.getWidth() / 2;
-    } else if (cent1.first < cent2.first) {
+    } else if (cent1.first > cent2.first) {
         coord1 = rect1.getCentre() - rect1.getWidth() / 2;
         coord2 = rect2.getCentre() + rect2.getWidth() / 2;
     } else if (cent1.first == cent2.first) {
@@ -184,7 +182,9 @@ pair<int, int> Path::findBorderPoint(int id1, int id2) {
     return make_pair(convertToStep(coord1), convertToStep(coord2));
 }
 
-void Path::createPath(int id1, int id2) {
+vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
+    int id1 = shapeId[{x1, y1}];
+    int id2 = shapeId[{x2, y2}];
     int src = findBorderPoint(id1, id2).first;
     int dest = findBorderPoint(id1, id2).second;
     queue<int> q;
@@ -209,14 +209,10 @@ void Path::createPath(int id1, int id2) {
         }
     }
 
+    vector<pair<int, int>> ans;
     for (int i = dest; i != -1; i = par[i]) {
-        path.push_back(i);
+        ans.push_back(convertToPair(convertFromStep(i)));
         //occupied[i] = 1;
     }
-}
-
-void Path::returnPath() {
-    for (auto i : path) {
-        pathCoord.push_back(convertToPair(convertFromStep(i)));
-    }
+    return ans;
 }

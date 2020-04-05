@@ -7,9 +7,11 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <vector>
+#include <QPainterPath>
+#include <path.h>
 
 enum sceneState {
-    SDRAW, SMOVE, TEXT
+    SDRAW, SMOVE, TEXT, SLINE
 };
 
 class Scene : public QGraphicsScene {
@@ -28,6 +30,8 @@ public:
 
     void setText(QString str);
 
+    void printLine();
+
     QColor color;
 
     QFont font;
@@ -41,6 +45,8 @@ public:
     std::vector<QGraphicsItem *> myItems;
 
     QGraphicsItem *activeItem;
+
+    ShortestPath algo;
 
 protected:
 

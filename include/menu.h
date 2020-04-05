@@ -72,6 +72,8 @@ private slots:
 
     void enterText();
 
+    void addLine();
+
 private:
     QString path;
 };

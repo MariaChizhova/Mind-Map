@@ -27,6 +27,7 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QInputDialog>
 #include "scene.h"
+#include <QGraphicsItemGroup>
 
 class Menu : public QMainWindow {
 public:

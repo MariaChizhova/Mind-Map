@@ -9,9 +9,11 @@
 #include <vector>
 #include <QPainterPath>
 #include <path.h>
+#include <map>
+#include <sceneMenu.h>
 
 enum sceneState {
-    SDRAW, SMOVE, TEXT, SLINE
+    SDRAW, SMOVE, STEXT, SLINE
 };
 
 class Scene : public QGraphicsScene {
@@ -24,13 +26,9 @@ public:
 
     void setWindowColor(QColor newColor);
 
-    void printText();
+    QGraphicsTextItem* printText();
 
     void setFontColor(QColor newColor);
-
-    void setText(QString str);
-
-    void printLine();
 
     QColor color;
 
@@ -38,15 +36,19 @@ public:
 
     QColor fontcolor;
 
-    QString textstr;
-
     sceneState state = SDRAW;
 
-    std::vector<QGraphicsItem *> myItems;
+    std::vector<QGraphicsItemGroup*> myItems;
+
+    std::map<QGraphicsItem*, QGraphicsItemGroup*> itemGroup;
 
     QGraphicsItem *activeItem;
 
     ShortestPath algo;
+
+    sceneMenu inText;
+
+    std::pair<QGraphicsItem*, QGraphicsItem*> selectedItem = make_pair(nullptr, nullptr);
 
 protected:
 

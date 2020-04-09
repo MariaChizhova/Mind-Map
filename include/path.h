@@ -1,5 +1,5 @@
-#ifndef HSE_PROJECT_ALGORITHM_PATH_H
-#define HSE_PROJECT_ALGORITHM_PATH_H
+#ifndef HSE_PROJECT_ALGORITHM_ShortestPath_H
+#define HSE_PROJECT_ALGORITHM_ShortestPath_H
 
 #include <iostream>
 #include <vector>
@@ -12,21 +12,17 @@ public:
     rectangle(int id, int cent, int wid, int hei) : id(id), centre(cent), width(wid), height(hei) {
         data.resize(width * height);
     }
-
-    rectangle() = default;
+    rectangle()=default;
 
     inline int getWidth() {
         return width;
     }
-
     inline int getHeight() {
         return height;
     }
-
     inline int getCentre() {
         return centre;
     }
-
     inline int getId() {
         return id;
     }
@@ -47,18 +43,15 @@ public:
     void showGraph(); // локально для меня отображает результат
 
     /** SHAPE **/
-    void
-    getRectCoord(int x, int y, int w, int h);// по идее должна получать данные от Киры и создавать по ним прямоугольник
+    void getRectCoord(int x, int y, int w, int h); // по идее должна получать данные от Киры и создавать по ним прямоугольник
     rectangle getRect(int id, pair<int, int> centre_coord, int w, int h); // по входным данным создает прямоугольник
-    void addShape(rectangle &rect); // добавляет на поле фигуру
-    void deleteShape(const rectangle &rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
-    void dragShape(int id,
-                   pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
+    void addShape(rectangle& rect); // добавляет на поле фигуру
+    void deleteShape(const rectangle& rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
+    void dragShape(int id, pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
 
-    /** PATH **/
+    /** ShortestPath **/
     pair<int, int> findBorderPoint(int id1, int id2); // находит точки, из которых строить путь
     vector<pair<int, int>> createShortestPath(int x1, int y1, int x2, int y2); // находит путь
-    //void bfs(int src, int dst);
 
     /** CONVERSION **/
     pair<int, int> convertToPair(int x); // приводит координаты к номеру вершины
@@ -70,15 +63,12 @@ public:
     inline int getWidth() const {
         return width;
     }
-
     inline int getHeight() const {
         return height;
     }
-
     inline int getSize() const {
         return size;
     }
-
     inline rectangle getRectData(int idx) const {
         return rectData[idx];
     }
@@ -87,14 +77,12 @@ private:
     int width;
     int height;
     int size;
-    int step = 5;
-    map<pair<int, int>, int> shapeId;
+    int step = 1;
     vector<vector<int>> data; // тут все вершины и их соседи
-    vector<int> path; // сами пути, надо додумать, как хранить
-    vector<pair<int, int>> pathCoord; // координаты пути, которые  передаю
     vector<int> occupied; // занятые ячейки
-    vector<rectangle> rectData; // хранение прямоугольнриков по айдишникам
-    vector<pair<int, int>> rectCentreCoord;
+    map<pair<int, int>, int> shapeId;
+    vector<int> path;
+    vector<rectangle> rectData;
 };
 
-#endif //HSE_PROJECT_ALGORITHM_PATH_H
+#endif //HSE_PROJECT_ALGORITHM_ShortestPath_H

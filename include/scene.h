@@ -44,6 +44,8 @@ public:
 
     QGraphicsItem *activeItem;
 
+    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1,-1)};
+
     ShortestPath algo;
 
     sceneMenu inText;

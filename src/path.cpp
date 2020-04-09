@@ -29,6 +29,7 @@ void ShortestPath::fillGraph() { // нумерация построчно, на�
 
     data[0].push_back(data[1][0]); // справа
     data[0].push_back(data[height][0]); // под
+    data[0].push_back(data[height][1]); // под
     used[0] = 1;
 
     data[width - 1].push_back(data[width - 2][0]); // слева
@@ -47,6 +48,7 @@ void ShortestPath::fillGraph() { // нумерация построчно, на�
         data[i].push_back(data[i + 1][0]); // справа
         data[i].push_back(data[i - 1][0]); // слева
         data[i].push_back(data[i + height][0]); // снизу !?
+
         used[i] = 1;
     }
 

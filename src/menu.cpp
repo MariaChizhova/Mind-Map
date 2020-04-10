@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "svgreader.h"
+#include "svgsaver.h"
 
 Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Добавление иконок. Пропишите свой путь к иконкам */
@@ -120,29 +121,10 @@ void Menu::windowColorButton() {
 void Menu::saveButton() {
     /** Заберём путь к файлу и его имененем, который будем создавать */
     QString newPath = QFileDialog::getSaveFileName(this, trUtf8("Save SVG"), path, tr("SVG files (*.svg)"));
-
     if (newPath.isEmpty())
         return;
     path = newPath;
-
-    QSvgGenerator generator;
-
-    /** Устанавливаем путь к файлу  +  размер области */
-    generator.setFileName(path);
-    generator.setSize(QSize(scene.width(), scene.height()));
-    generator.setViewBox(QRect(0, 0, scene.width(), scene.height()));
-
-    /** Титульное название документа + описание  */
-    generator.setTitle(trUtf8("SVG Example"));
-    generator.setDescription(trUtf8("File created by SVG Example"));
-
-    QPainter painter;
-    /** Устанавливаем устройство/объект в котором будем производить отрисовку */
-    painter.begin(&generator);
-
-    /** Отрисовываем содержимое сцены с помощью painter в целевое устройство/объект */
-    scene.render(&painter);
-    painter.end();
+    SvgSaver::save(&scene, path, scene.width(), scene.height());
 }
 
 void Menu::changeState() {

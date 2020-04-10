@@ -71,6 +71,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(line, &QAction::triggered, this, &Menu::addLine);
 }
 
+
 void Menu::newScene() {
     scene.clear();
     changeWindowColor(Qt::white);
@@ -97,7 +98,7 @@ void Menu::helpButton() {
 void Menu::colorButton() {
     mcolor = QColorDialog::getColor(Qt::yellow, this);
     if (mcolor.isValid())
-        qDebug() << "Color Choosen : " << mcolor.name();
+        qDebug() << "Color Chosen : " << mcolor.name();
     changeColor(mcolor);
 }
 
@@ -155,13 +156,18 @@ void Menu::changeState() {
         scene.state = SMOVE;
         for (auto &my_item : scene.myItems) {
             if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-                my_item->setFlag(QGraphicsItem::ItemIsMovable, 1);
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         }
     } else {
         scene.state = SDRAW;
-        for (auto &my_item : scene.myItems)
+        for (auto &my_item : scene.myItems) {
             if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-                my_item->setFlag(QGraphicsItem::ItemIsMovable, 0);
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        }
     }
 }
 
@@ -186,7 +192,11 @@ void Menu::openButton() {
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
             foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
             QGraphicsRectItem *rect = item;
-            scene.myItems.emplace_back(rect);
+            QGraphicsItemGroup *group = scene.createItemGroup({});
+            group->addToGroup(rect);
+            group->setHandlesChildEvents(true);
+            group->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            scene.myItems.emplace_back(group);
             scene.addItem(rect);
         }
 }
@@ -196,38 +206,21 @@ void Menu::changeFontColor(const QColor &newColor) {
 }
 
 void Menu::enterText() {
-    bool ok;
-    QFont font = QFontDialog::getFont(&ok, QFont("Arial", 18), this, tr("Pick a font"));
-    if (ok) {
-        qDebug() << "font           : " << font;
-        qDebug() << "font weight    : " << font.weight();
-        qDebug() << "font family    : " << font.family();
-        qDebug() << "font style     : " << font.style();
-        qDebug() << "font pointSize : " << font.pointSize();
+    for (auto &my_item : scene.myItems) {
+        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
     }
-    changeFont(font);
-    scene.state = TEXT;
-    fcolor = QColorDialog::getColor(Qt::black, this);
-    if (fcolor.isValid())
-        qDebug() << "Color Choosen : " << fcolor.name();
-    changeFontColor(fcolor);
-    QString text = QInputDialog::getText(this, tr("Text"), tr("Enter:"),
-                                         QLineEdit::Normal, "", &ok);
-    if (ok && !text.isEmpty())
-        scene.setText(text);
-    scene.printText();
-
+    scene.state = STEXT;
 }
 
 void Menu::addLine() {
-    if (scene.state != SLINE) {
-        for (auto &my_item : scene.myItems)
-            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-                my_item->setFlag(QGraphicsItem::ItemIsSelectable, 1);
-    } else {
-        for (auto &my_item : scene.myItems)
-            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-                my_item->setFlag(QGraphicsItem::ItemIsSelectable, 0);
+    for (auto &my_item : scene.myItems) {
+        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
     }
     scene.state = SLINE;
 }

@@ -14,7 +14,7 @@ find_package(Qt5Xml REQUIRED)
 
 include_directories(include)
 
-set(src src/main.cpp src/menu.cpp src/scene.cpp src/svgreader.cpp src/path.cpp)
+set(src src/main.cpp src/menu.cpp src/scene.cpp src/svgreader.cpp src/path.cpp src/sceneMenu.cpp)
 add_executable(project_hse ${src} resources.qrc)
 
 # specify which libraries to connect

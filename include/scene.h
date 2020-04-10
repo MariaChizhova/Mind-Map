@@ -11,6 +11,8 @@
 #include <path.h>
 #include <map>
 #include <sceneMenu.h>
+#include <QFontDialog>
+#include <iostream>
 
 enum sceneState {
     SDRAW, SMOVE, STEXT, SLINE
@@ -22,13 +24,9 @@ public:
 
     void setColor(QColor newColor);
 
-    void setFont(QFont newFont);
-
     void setWindowColor(QColor newColor);
 
     QGraphicsTextItem *printText();
-
-    void setFontColor(QColor newColor);
 
     QColor color;
 
@@ -40,11 +38,7 @@ public:
 
     std::vector<QGraphicsItemGroup *> myItems;
 
-    std::map<QGraphicsItem *, QGraphicsItemGroup *> itemGroup;
-
     QGraphicsItem *activeItem;
-
-    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1, -1)};
 
     ShortestPath algo;
 

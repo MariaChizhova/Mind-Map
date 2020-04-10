@@ -106,10 +106,6 @@ void Menu::changeColor(const QColor &newColor) {
     edit.setBrush(QColor(newColor));
 }
 
-void Menu::changeFont(const QFont &newFont) {
-    scene.setFont(newFont);
-}
-
 void Menu::changeWindowColor(const QColor &newColor) {
     scene.setWindowColor(newColor);
 }
@@ -197,10 +193,6 @@ void Menu::openButton() {
             scene.myItems.emplace_back(group);
             scene.addItem(rect);
         }
-}
-
-void Menu::changeFontColor(const QColor &newColor) {
-    scene.setFontColor(newColor);
 }
 
 void Menu::enterText() {

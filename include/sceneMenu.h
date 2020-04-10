@@ -18,20 +18,17 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QInputDialog>
 #include <QLayout>
+#include <QtWidgets/QDialogButtonBox>
 
 class sceneMenu : public QMainWindow {
 public:
     explicit sceneMenu(QWidget *parent = 0);
-
-    QGraphicsView view;
 
     ~sceneMenu() = default;
 
 public:
     QString textstr;
     QColor sceneTextColor;
-
-    QGridLayout *layout;
 
 public slots:
 

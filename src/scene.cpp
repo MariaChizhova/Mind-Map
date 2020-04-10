@@ -1,9 +1,5 @@
-#include <iostream>
 #include "menu.h"
 #include "scene.h"
-#include <QFontDialog>
-
-static int test = 0;
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1920, 1080, 1) {
     algo.fillGraph();
@@ -22,8 +18,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        int originX = event->lastPos().rx() - width / 2;
-        int originY = event->lastPos().ry() - height / 2;
         activeItem = new QGraphicsRectItem(0, 0, width, height);
         if (!activeItem)
             return;
@@ -56,14 +50,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         else {
             selectedItem.second = selectedItems()[0];
             //Получили вектор с точками
-            vector<pair < int, int>>
-            points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
-                                             this->selectedItem.first->pos().ry(),
-                                             this->selectedItem.second->pos().rx(),
-                                             this->selectedItem.second->pos().ry());
+            vector<pair<int, int>>
+                    points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
+                                                     this->selectedItem.first->pos().ry(),
+                                                     this->selectedItem.second->pos().rx(),
+                                                     this->selectedItem.second->pos().ry());
 
-            vector<pair < int, int>>
-            find_points; // массив с угловыми точками
+            vector<pair<int, int>>
+                    find_points; // массив с угловыми точками
             for (int i = 2; i < points.size(); i++) {
                 if (points[i].first != points[i - 2].first && points[i].second != points[i - 2].second)
                     find_points.push_back({points[i - 1].first, points[i - 1].second});
@@ -122,16 +116,9 @@ void Scene::setColor(QColor newColor) {
     color = newColor;
 }
 
-void Scene::setFont(QFont newFont) {
-    font = newFont;
-}
 
 void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
-}
-
-void Scene::setFontColor(QColor newColor) {
-    fontcolor = newColor;
 }
 
 QGraphicsTextItem *Scene::printText() {

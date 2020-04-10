@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <cassert>
 #include "path.h"
 
 using namespace std;

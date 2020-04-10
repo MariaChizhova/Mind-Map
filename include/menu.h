@@ -41,15 +41,9 @@ public:
 
     QColor wcolor;
 
-    QColor fcolor;
-
     void changeColor(const QColor &newColor);
 
-    void changeFont(const QFont &newFont);
-
     void changeWindowColor(const QColor &newColor);
-
-    void changeFontColor(const QColor &newColor);
 
     void newScene();
 

@@ -1,4 +1,3 @@
-#include <QtWidgets/QDialogButtonBox>
 #include "sceneMenu.h"
 
 sceneMenu::sceneMenu(QWidget *parent) : QMainWindow(parent) {};

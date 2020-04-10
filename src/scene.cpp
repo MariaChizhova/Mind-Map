@@ -126,6 +126,6 @@ QGraphicsTextItem *Scene::printText() {
     text->setPos(this->selectedItems()[0]->pos());
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);
-    text->setFlag(QGraphicsTextItem::ItemIsMovable
+    text->setFlag(QGraphicsTextItem::ItemIsMovable);
     return text;
 }

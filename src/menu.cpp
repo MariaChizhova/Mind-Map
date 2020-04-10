@@ -27,7 +27,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QMenu *file = menuBar()->addMenu("&File");
     QMenu *edit = menuBar()->addMenu("&Edit");
     QMenu *view = menuBar()->addMenu("&View");
-    QMenu *tools = menuBar()->addMenu("&Tools");
     QMenu *help = menuBar()->addMenu("&Help");
 
     /** Помещаем действие в меню с помощью метода addAction() */
@@ -60,7 +59,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     wincolor->setShortcut(tr("CTRL+W"));
     about->setShortcut(tr("CTRL+A"));
 
-    /** Панель ToolBar. Первая только рабочая, остальные  пока что для примера*/
+    /** Панель ToolBar*/
     QToolBar *toolbar = addToolBar("Menu");
     QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
     connect(addRectangle, &QAction::triggered, this, &Menu::changeState);

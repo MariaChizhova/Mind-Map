@@ -12,17 +12,21 @@ public:
     rectangle(int id, int cent, int wid, int hei) : id(id), centre(cent), width(wid), height(hei) {
         data.resize(width * height);
     }
-    rectangle()=default;
+
+    rectangle() = default;
 
     inline int getWidth() {
         return width;
     }
+
     inline int getHeight() {
         return height;
     }
+
     inline int getCentre() {
         return centre;
     }
+
     inline int getId() {
         return id;
     }
@@ -43,11 +47,13 @@ public:
     void showGraph(); // локально для меня отображает результат
 
     /** SHAPE **/
-    void getRectCoord(int x, int y, int w, int h); // по идее должна получать данные от Киры и создавать по ним прямоугольник
+    void
+    getRectCoord(int x, int y, int w, int h); // по идее должна получать данные от Киры и создавать по ним прямоугольник
     rectangle getRect(int id, pair<int, int> centre_coord, int w, int h); // по входным данным создает прямоугольник
-    void addShape(rectangle& rect); // добавляет на поле фигуру
-    void deleteShape(const rectangle& rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
-    void dragShape(int id, pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
+    void addShape(rectangle &rect); // добавляет на поле фигуру
+    void deleteShape(const rectangle &rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
+    void dragShape(int id,
+                   pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
 
     /** ShortestPath **/
     pair<int, int> findBorderPoint(int id1, int id2); // находит точки, из которых строить путь
@@ -63,12 +69,15 @@ public:
     inline int getWidth() const {
         return width;
     }
+
     inline int getHeight() const {
         return height;
     }
+
     inline int getSize() const {
         return size;
     }
+
     inline rectangle getRectData(int idx) const {
         return rectData[idx];
     }

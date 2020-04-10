@@ -76,10 +76,8 @@ void Menu::newScene() {
     scene.clear();
     changeWindowColor(Qt::white);
     bool ok;
-    QString width = QInputDialog::getText(this, tr("Width"), tr("Enter:"),
-                                          QLineEdit::Normal, "", &ok);
-    QString height = QInputDialog::getText(this, tr("Height"), tr("Enter:"),
-                                           QLineEdit::Normal, "", &ok);
+    QString width = "1920"; // QInputDialog::getText(this, tr("Width"), tr("Enter:"), QLineEdit::Normal, "", &ok);
+    QString height = "1080"; //QInputDialog::getText(this, tr("Height"), tr("Enter:"), QLineEdit::Normal, "", &ok);
     if (ok && !width.isEmpty() && !height.isEmpty())
         scene.setSceneRect(0, 0, width.toInt(), height.toInt());
     /** Добавляем сцену в основное окно */

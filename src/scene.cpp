@@ -20,8 +20,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     /** Создаем активный элемент (прямоугольник) */
     if (state == SDRAW) {
-        int width = 60;
-        int height = 40;
+        int width = 80;
+        int height = 50;
         int originX = event->lastPos().rx() - width / 2;
         int originY = event->lastPos().ry() - height / 2;
         activeItem = new QGraphicsRectItem(0, 0, width, height);
@@ -34,13 +34,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
         addItem(activeItem);
-        pos.rx() -= 30;
-        pos.ry() -= 20;
+        pos.rx() -= width / 2;
+        pos.ry() -= height / 2;
         activeItem->setPos(pos);
-        algo.getRectCoord(pos.rx() + 30, pos.ry() + 20, width, height); // Добавили центр прямоугольника Олесе
+        algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width,
+                          height); // Добавили центр прямоугольника Олесе
 
         activeItem->setFlag(QGraphicsItem::ItemIsFocusable);
-        QGraphicsItemGroup* group = createItemGroup({});
+        QGraphicsItemGroup *group = createItemGroup({});
         group->setPos(activeItem->pos());
         group->addToGroup(activeItem);
         group->setHandlesChildEvents(true);
@@ -51,23 +52,37 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SLINE) {
         focusItem()->setFlag(QGraphicsItem::ItemIsSelectable, 1);
         focusItem()->setSelected(true);
-        if(selectedItem.first == nullptr) selectedItem.first = selectedItems()[0];
-        else{
+        if (selectedItem.first == nullptr) selectedItem.first = selectedItems()[0];
+        else {
             selectedItem.second = selectedItems()[0];
             //Получили вектор с точками
-            vector<pair<int, int>> points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
-                                                                    this->selectedItem.first->pos().ry(),
-                                                                    this->selectedItem.second->pos().rx(),
-                                                                    this->selectedItem.second->pos().ry());
-            //Соединяем точки пока просто линиями
-            for (int i = 1; i < points.size(); i++) {
-                addLine(points[i - 1].first, points[i - 1].second, points[i].first, points[i].second, QPen(Qt::black));
+            vector<pair < int, int>>
+            points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
+                                             this->selectedItem.first->pos().ry(),
+                                             this->selectedItem.second->pos().rx(),
+                                             this->selectedItem.second->pos().ry());
+
+            vector<pair < int, int>>
+            find_points; // массив с угловыми точками
+            for (int i = 2; i < points.size(); i++) {
+                if (points[i].first != points[i - 2].first && points[i].second != points[i - 2].second)
+                    find_points.push_back({points[i - 1].first, points[i - 1].second});
             }
+
+            QPainterPath path;
+            path.moveTo(find_points[0].first, find_points[0].second);
+            for (int i = 1; i < points.size() - 1; i++) {
+                QPointF p(points[i].first, points[i].second);
+                QPointF c1 = QPointF((points[i].first + points[i + 1].first) / 2, points[i].second);
+                QPointF c2 = QPointF((points[i].first + points[i + 1].first) / 2, points[i + 1].second);
+                path.cubicTo(c1, c2, p);
+            }
+            addPath(path, QPen(Qt::red, 5));
 
             //Снимаем пометки с выбранных прямоугольников
             selectedItem = make_pair(nullptr, nullptr);
             for (auto &my_item : myItems) {
-                if (my_item->isSelected()){
+                if (my_item->isSelected()) {
                     my_item->setSelected(false);
                 }
             }
@@ -87,7 +102,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         //Создание текстового объекта и объединение в группу
         QGraphicsTextItem *text = printText();
         QGraphicsItem *rect = this->selectedItems()[0];
-        QGraphicsItemGroup* group = dynamic_cast<QGraphicsItemGroup *>(this->selectedItems()[0]);
+        QGraphicsItemGroup *group = dynamic_cast<QGraphicsItemGroup *>(this->selectedItems()[0]);
         rect->setSelected(false);
         focusItem()->setSelected(false);
         group->addToGroup(text);
@@ -96,7 +111,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         group->setFlag(QGraphicsItem::ItemIsMovable, false);
         selectedItems().clear();
         for (auto &my_item : myItems) {
-            if (my_item->isSelected()){
+            if (my_item->isSelected()) {
                 my_item->setSelected(false);
             }
         }

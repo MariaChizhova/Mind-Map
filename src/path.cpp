@@ -169,7 +169,8 @@ void ShortestPath::deleteShape(const rectangle &rect) {
 void ShortestPath::dragShape(int new_id, pair<int, int> new_centre) {
     deleteShape(rectData[new_id]);
     int new_converted_centre = convertToStep(convertToNum(new_centre));
-    rectangle new_rect(rectData[new_id].getId(), new_converted_centre, rectData[id].getWidth(), rectData[id].getHeight());
+    rectangle new_rect(rectData[new_id].getId(), new_converted_centre, rectData[id].getWidth(),
+                       rectData[id].getHeight());
     rectData[new_id] = new_rect;
     addShape(rectData[new_id]);
 }
@@ -194,8 +195,8 @@ pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
 }
 
 vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
-    int id1 = shapeId[{x1 + 30, y1 + 20}];
-    int id2 = shapeId[{x2 + 30, y2 + 20}];
+    int id1 = shapeId[{x1 + 40, y1 + 25}];
+    int id2 = shapeId[{x2 + 40, y2 + 25}];
     int src = findBorderPoint(id1, id2).first;
     int dest = findBorderPoint(id1, id2).second;
     queue<int> q;

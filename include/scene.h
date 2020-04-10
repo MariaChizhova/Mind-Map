@@ -26,7 +26,7 @@ public:
 
     void setWindowColor(QColor newColor);
 
-    QGraphicsTextItem* printText();
+    QGraphicsTextItem *printText();
 
     void setFontColor(QColor newColor);
 
@@ -38,19 +38,19 @@ public:
 
     sceneState state = SDRAW;
 
-    std::vector<QGraphicsItemGroup*> myItems;
+    std::vector<QGraphicsItemGroup *> myItems;
 
-    std::map<QGraphicsItem*, QGraphicsItemGroup*> itemGroup;
+    std::map<QGraphicsItem *, QGraphicsItemGroup *> itemGroup;
 
     QGraphicsItem *activeItem;
 
-    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1,-1)};
+    std::pair<QPointF, QPointF> posLine = {QPoint(-1, -1), QPoint(-1, -1)};
 
     ShortestPath algo;
 
     sceneMenu inText;
 
-    std::pair<QGraphicsItem*, QGraphicsItem*> selectedItem = make_pair(nullptr, nullptr);
+    std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
 
 protected:
 

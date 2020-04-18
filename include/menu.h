@@ -47,6 +47,8 @@ public:
 
     void newScene();
 
+    void addImage();
+
     ~Menu() = default;
 
 private slots:

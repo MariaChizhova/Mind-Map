@@ -18,12 +18,22 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        activeItem = new QGraphicsRectItem(0, 0, width, height);
+        QPixmap pix(":/icons/f.png");
+        QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
+        image->setPixmap(pix);
+        image->setScale(0.2);
+        /*
+        QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
+        rectItem->setPen( QPen( Qt::gray, 3 ) );
+        rectItem->setBrush( Qt::gray );
+        rectItem->boundingRect();
+        activeItem = rectItem;*/
+        activeItem = image;
         if (!activeItem)
             return;
 
         /** Задаем цвет прямоугольнику */
-        static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);
+      /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
 
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
@@ -50,26 +60,18 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         else {
             selectedItem.second = selectedItems()[0];
             //Получили вектор с точками
-            vector<pair<int, int>>
-                    points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
-                                                     this->selectedItem.first->pos().ry(),
-                                                     this->selectedItem.second->pos().rx(),
-                                                     this->selectedItem.second->pos().ry());
+            vector<pair<int, int>> points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
+                                                                    this->selectedItem.first->pos().ry(),
+                                                                    this->selectedItem.second->pos().rx(),
+                                                                    this->selectedItem.second->pos().ry());
 
-            vector<pair<int, int>>
-                    find_points; // массив с угловыми точками
-            for (int i = 2; i < points.size(); i++) {
-                if (points[i].first != points[i - 2].first && points[i].second != points[i - 2].second)
-                    find_points.push_back({points[i - 1].first, points[i - 1].second});
-            }
-
+            int step = 3;
             QPainterPath path;
-            path.moveTo(find_points[0].first, find_points[0].second);
-            for (int i = 1; i < points.size() - 1; i++) {
+            path.moveTo(points[step].first, points[step].second);
+            for (int i = step; i < points.size() - 2 * step; i++) {
                 QPointF p(points[i].first, points[i].second);
-                QPointF c1 = QPointF((points[i].first + points[i + 1].first) / 2, points[i].second);
-                QPointF c2 = QPointF((points[i].first + points[i + 1].first) / 2, points[i + 1].second);
-                path.cubicTo(c1, c2, p);
+                QPointF k(points[i + 1].first, points[i + 1].second);
+                path.quadTo(p, k);
             }
             addPath(path, QPen(Qt::red, 5));
 

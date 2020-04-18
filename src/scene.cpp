@@ -18,12 +18,22 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        activeItem = new QGraphicsRectItem(0, 0, width, height);
+        QPixmap pix(":/icons/f.png");
+        QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
+        image->setPixmap(pix);
+        image->setScale(0.2);
+        /*
+        QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
+        rectItem->setPen( QPen( Qt::gray, 3 ) );
+        rectItem->setBrush( Qt::gray );
+        rectItem->boundingRect();
+        activeItem = rectItem;*/
+        activeItem = image;
         if (!activeItem)
             return;
 
         /** Задаем цвет прямоугольнику */
-        static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);
+      /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
 
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
@@ -50,10 +60,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         else {
             selectedItem.second = selectedItems()[0];
             //Получили вектор с точками
-            vector<pair<int, int>>points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
-                                                     this->selectedItem.first->pos().ry(),
-                                                     this->selectedItem.second->pos().rx(),
-                                                     this->selectedItem.second->pos().ry());
+            vector<pair<int, int>> points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
+                                                                    this->selectedItem.first->pos().ry(),
+                                                                    this->selectedItem.second->pos().rx(),
+                                                                    this->selectedItem.second->pos().ry());
 
             int step = 3;
             QPainterPath path;

@@ -38,7 +38,8 @@ public:
 
     std::vector<QGraphicsItemGroup *> myItems;
 
-    QGraphicsItem *activeItem;
+   // QGraphicsItem *activeItem;
+    QGraphicsPixmapItem *activeItem;
 
     ShortestPath algo;
 

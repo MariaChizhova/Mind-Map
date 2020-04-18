@@ -69,6 +69,9 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 
     QAction *line = toolbar->addAction("Line");
     connect(line, &QAction::triggered, this, &Menu::addLine);
+
+    QAction *pix = toolbar->addAction("Pix");
+    connect(pix, &QAction::triggered, this, &Menu::addImage);
 }
 
 
@@ -194,4 +197,10 @@ void Menu::addLine() {
             my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
     }
     scene.state = SLINE;
+}
+
+void Menu::addImage() {
+    scene.clear();
+    QPixmap pixmap(":/icons/hruu.jpg");
+    scene.setBackgroundBrush(pixmap);
 }

@@ -1,8 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <queue>
 #include "path.h"
-
 using namespace std;
 static int id = 0;
 // height - длина вертикального столбца, width - горизонтальной строчки
@@ -193,6 +189,109 @@ pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
     return make_pair(convertToStep(coord1), convertToStep(coord2));
 }
 
+struct {
+    bool operator()(pair<int, int> a, pair<int, int> b) const {
+        if (a.first != b.first) {
+            return a.first < b.first;
+        } else {
+            return a.second < b.second;
+        }
+    }
+} comparator;
+
+vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
+    vector<pair<int, int>> angles;
+    vector<vector<pair<int, int>>> coords;
+    coords.resize(way.size());
+    int delta = 1;
+    int way_step = 60;
+    int cnt = 0;
+    for (int i = 1; i < way.size() - 1; i++) {
+        if (i < 15 or i > way.size() - 15) continue;
+        bool is_draww = false;
+        if ((way[i - 1].first != way[i + 1].first) and (way[i - 1].second != way[i + 1].second)) {
+            cout << "NEQ " << way[i - 1].first << ' ' << way[i + 1].first << ' ' <<  way[i - 1].second << ' ' << way[i + 1].second << '\n';
+            angles.emplace_back(way[i]);
+            //i++;
+            pair<int, int> fir, sec;
+            fir = way[i - way_step]; sec = way[i + way_step];
+            coords[cnt].emplace_back(fir);
+            coords[cnt].emplace_back(sec);
+            int radius = abs(fir.second - sec.second);
+            pair<int, int> centre;
+            bool change_delta = false;
+            bool is_upper_angle = false;
+            bool is_draw = false;
+            for (int cn = 0; cn < 15; cn++) {
+                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or occupied[convertToNum(way[i + cn])]) is_draw = true;
+            }
+            if (is_draw) continue;
+            if (way[i - 1].second < way[i].second and way[i + 1].first > way[i].first) { // LD
+                centre = {sec.first, fir.second};
+                change_delta = true;
+            } else if (way[i - 1].first < way[i].first and way[i + 1].second > way[i].second) { // RU
+                centre = {fir.first, sec.second};
+                is_upper_angle = true;
+            } else if (way[i - 1].first < way[i].first and way[i + 1].second < way[i].second) { // RD
+                centre = {fir.first, sec.second};
+            } else if (way[i - 1].second > way[i].second and way[i + 1].first > way[i].first) { // LU
+                centre = {sec.first, fir.second};
+                change_delta = true;
+                is_upper_angle = true;
+            }
+            int tmp = delta;
+            for (int k = 0; k < radius / tmp - tmp; k++) {
+                int y = 0;
+                if (change_delta and is_upper_angle) { // LU
+                    y = centre.second - (int) sqrt(radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
+                } else if (!change_delta and is_upper_angle) { // RU
+                    y = centre.second - (int) sqrt(radius * radius - delta * delta);
+                } else if (change_delta and !is_upper_angle) { // LD
+                    y = (int) sqrt(radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) + centre.second;
+                } else if (!change_delta and !is_upper_angle) {
+                    y = (int) sqrt(radius * radius - delta * delta) + centre.second;
+                }
+
+                if (abs(y - sec.second) >= 2) coords[cnt].emplace_back(fir.first + delta, y);
+                delta += tmp;
+            }
+            sort(coords[cnt].begin(), coords[cnt].end(), [](pair<int, int> a, pair<int, int> b){return a.first < b.first;});
+            if (coords[cnt][0].first > coords[cnt][coords[cnt].size() - 1].first) {
+                reverse(coords[cnt].begin(), coords[cnt].end());
+            }
+            delta = tmp;
+            cout << "OAOAOAOAOA CNT" << cnt << '\n';
+            while (way[i].second != coords[cnt][coords[cnt].size() - 1].second) {
+                i++;
+            }
+            //i--;
+            cnt++;
+        }
+    }
+    coords[cnt].resize(10);
+    coords[cnt][0] = {-1, -1};
+    int i = 0;
+    vector<pair<int, int>> new_way;
+    for (int init = 0; init < way.size(); init++) {
+        if ((i < cnt and way[init] == coords[i][0])) {
+            for (auto iter : coords[i]) {
+                new_way.emplace_back(iter);
+                //cout << iter.first << ' ' << iter.second << '\n';
+            }
+            while (way[init] != coords[i][coords[i].size() - 1]) {
+                init++;
+                //cout << way[init].first << ' ' << way[init].second << '\n';
+            }
+            i++;
+        } else if (coords[i][0].first == -1 or (i < cnt and way[init] != coords[i][0])) {
+            new_way.emplace_back(way[init]);
+            //cout << way[init].first << ' ' << way[init].second << '\n';
+        }
+    }
+    sort(new_way.begin(), new_way.end(), comparator);
+    return new_way;
+}
+
 vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
     int id1 = shapeId[{x1 + 40, y1 + 25}];
     int id2 = shapeId[{x2 + 40, y2 + 25}];
@@ -226,5 +325,11 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
         ans.push_back(convertToPair(convertFromStep(i)));
         //occupied[i] = 1;
     }
-    return ans;
+    if (ans[0].first > ans[ans.size() - 1].first) {
+        reverse(ans.begin(), ans.end());
+    }
+    //sort(ans.begin(), ans.end(), [](pair<int, int> a, pair<int, int> b) {return a.first < b.first;});
+    vector<pair<int, int>> smooth_ans = SmoothAngle(ans);
+    pathId[{id1, id2}] = smooth_ans;
+    return smooth_ans;
 }

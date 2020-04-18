@@ -3,6 +3,11 @@
 
 #include <iostream>
 #include <vector>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <cmath>
 #include <map>
 
 using namespace std;
@@ -58,6 +63,7 @@ public:
     /** ShortestPath **/
     pair<int, int> findBorderPoint(int id1, int id2); // находит точки, из которых строить путь
     vector<pair<int, int>> createShortestPath(int x1, int y1, int x2, int y2); // находит путь
+    vector<pair<int, int>> SmoothAngle(vector<pair<int, int>> way);
 
     /** CONVERSION **/
     pair<int, int> convertToPair(int x); // приводит координаты к номеру вершины
@@ -90,6 +96,7 @@ private:
     vector<vector<int>> data; // тут все вершины и их соседи
     vector<int> occupied; // занятые ячейки
     map<pair<int, int>, int> shapeId;
+    map<pair<int, int>, vector<pair<int, int>>> pathId;
     vector<int> path;
     vector<rectangle> rectData;
 };

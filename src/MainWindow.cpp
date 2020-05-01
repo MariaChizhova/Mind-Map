@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::newProject() {
-    this->hide();
+    this->close();
     window = new Menu();
     window->setStyleSheet("background-color: #13011E; color: white");
     window->resize(screenSize.width(), screenSize.height());

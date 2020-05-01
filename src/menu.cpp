@@ -26,7 +26,6 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
     QMenu *edit = menuBar()->addMenu("&Edit");
-    QMenu *view = menuBar()->addMenu("&View");
     QMenu *help = menuBar()->addMenu("&Help");
 
     /** Помещаем действие в меню с помощью метода addAction() */

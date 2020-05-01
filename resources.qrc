@@ -11,6 +11,8 @@
         <file>icons/rectangle.png</file>
         <file>icons/text.png</file>
         <file>icons/f.png</file>
+        <file>icons/z.png</file>
         <file>icons/hruu.jpg</file>
+        <file>icons/123.jpg</file>
     </qresource>
 </RCC>

@@ -18,10 +18,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        QPixmap pix(":/icons/f.png");
+        QPixmap pix(":/icons/z.png");
         QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
         image->setPixmap(pix);
-        image->setScale(0.2);
+        image->setScale(0.45);
         /*
         QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
         rectItem->setPen( QPen( Qt::gray, 3 ) );
@@ -33,7 +33,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             return;
 
         /** Задаем цвет прямоугольнику */
-      /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
+        /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
 
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
@@ -65,15 +65,15 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                                                                     this->selectedItem.second->pos().rx(),
                                                                     this->selectedItem.second->pos().ry());
 
-            int step = 3;
+            int step = 5;
             QPainterPath path;
             path.moveTo(points[step].first, points[step].second);
-            for (int i = step; i < points.size() - 2 * step; i++) {
+            for (int i = step; i < points.size() - step; i++) {
                 QPointF p(points[i].first, points[i].second);
                 QPointF k(points[i + 1].first, points[i + 1].second);
                 path.quadTo(p, k);
             }
-            addPath(path, QPen(Qt::red, 5));
+            addPath(path, QPen(Qt::darkCyan, 5));
 
             //Снимаем пометки с выбранных прямоугольников
             selectedItem = make_pair(nullptr, nullptr);
@@ -118,7 +118,6 @@ void Scene::setColor(QColor newColor) {
     color = newColor;
 }
 
-
 void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
 }
@@ -127,7 +126,9 @@ QGraphicsTextItem *Scene::printText() {
     QGraphicsTextItem *text = addText(inText.textstr);
     text->setSelected(true);
     text->setZValue(2);
-    text->setPos(this->selectedItems()[0]->pos());
+    auto tmp = this->selectedItems()[0]->pos();
+    tmp.ry() += 30;
+    text->setPos(tmp);
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);
     text->setFlag(QGraphicsTextItem::ItemIsMovable);

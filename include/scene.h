@@ -13,6 +13,7 @@
 #include <sceneMenu.h>
 #include <QFontDialog>
 #include <iostream>
+#include <QScreen>
 
 enum sceneState {
     SDRAW, SMOVE, STEXT, SLINE

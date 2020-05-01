@@ -54,9 +54,9 @@ public:
     ~Menu() = default;
 
 
-private slots:
-
     void newFileButton();
+
+private slots:
 
     void helpButton();
 

@@ -1,7 +1,9 @@
 #include "menu.h"
 #include "scene.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1920, 1080, 1) {
+Scene::Scene(QObject *parent) : QGraphicsScene(parent),
+    algo(QGuiApplication::primaryScreen()->physicalSize().width() * 9,
+        QGuiApplication::primaryScreen()->physicalSize().height() * 9, 1) {
     algo.fillGraph();
     inText.setStyleSheet("background-color: #13011E; color: white");
     inText.resize(500, 500);
@@ -18,12 +20,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        algo.set_rect_height(height);
         algo.set_rect_width(width);
-        QPixmap pix(":/icons/z.png");
+        algo.set_rect_height(height);
+        QPixmap pix(":/icons/rectangle-png.png");
         QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
         image->setPixmap(pix);
-        image->setScale(0.45);
+        image->setScale(0.15);
         /*
         QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
         rectItem->setPen( QPen( Qt::gray, 3 ) );

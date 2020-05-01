@@ -7,6 +7,8 @@
 #include <QApplication>
 #include <menu.h>
 #include "MainWindow.h"
+#include <QScreen>
+
 
 
 class MainWindow: public QMainWindow {

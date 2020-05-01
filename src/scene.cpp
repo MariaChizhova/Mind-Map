@@ -2,8 +2,8 @@
 #include "scene.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent),
-    algo(1920, /**QGuiApplication::primaryScreen()->physicalSize().width() * 9,
-        QGuiApplication::primaryScreen()->physicalSize().height() * 9*/ 1080, 1) {
+    algo(QGuiApplication::primaryScreen()->size().width() * 0.9,
+        QGuiApplication::primaryScreen()->size().height() * 0.9, 1) {
     algo.fillGraph();
     inText.setStyleSheet("background-color: #13011E; color: white");
     inText.resize(500, 500);

@@ -1,10 +1,11 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    screenSize = QGuiApplication::primaryScreen()->physicalSize();
-    qreal w2 =  1920 * 0.45;//screenSize.width() * 2.5;
+    screenSize = QGuiApplication::primaryScreen()->size();
+    qreal w2 = screenSize.width() * 0.45;
     qDebug() << "ScreenSize.width           : " << screenSize.width();
-    qreal h2 = 1080 * 0.3;//screenSize.height() * 2;
+    qreal h2 = screenSize.height() * 0.3;
+    qDebug() << "ScreenSize.width           : " << screenSize.height();
     qreal wr = 200;
     qreal hr = 80;
     QPushButton *newFile = new QPushButton("New File", this);

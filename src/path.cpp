@@ -222,27 +222,23 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
             bool is_upper_angle = false;
             bool is_draw = false;
             bool change_made = false;
-            if (!change_made) {
-                for (int cn = 0; cn < MIN_DIFF; cn++) {
-                    if ((occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
-                         occupied[convertToNum(way[i + cn])])
-                        or ((way[i + cn].first != way[i + cn + 2].first) and
-                            (way[i + cn].second != way[i + cn + 2].second))) {
-                        cout << "MD" << '\n';
-                        is_draw = true;
-                        change_made = true;
-                        break;
-                    }
+            for (int cn = 0; cn < 15; cn++) {
+                cout << convertToNum(way[i - cn]) << '\n';
+                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
+                    occupied[convertToNum(way[i + cn])]) {
+                    is_draw = true;
+                    break;
                 }
             }
-            if (!change_made) {
-                for (int cn = 1; cn < MIN_DIFF + 2; cn++) {
-                    if ((way[i + cn].first != way[i + cn + 2].first) and
-                        (way[i + cn].second != way[i + cn + 2].second)) {
-                        is_draw = true;
-                        change_made = true;
-                        break;
-                    }
+            if (is_draw) continue;
+            for (int cn = 0; cn < MIN_DIFF + 2; cn++) {
+                if ((occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
+                     occupied[convertToNum(way[i + cn])])
+                    or ((way[i + cn].first != way[i + cn + 2].first) and
+                        (way[i + cn].second != way[i + cn + 2].second))) {
+                    is_draw = true;
+                    change_made = true;
+                    break;
                 }
             }
             if (!change_made) {
@@ -259,7 +255,7 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
                 for (int cn = 1; cn < MIN_DIFF * 3 + 2; cn++) {
                     if (((way[i + cn].first != way[i + cn + 2].first) and
                          (way[i + cn].second != way[i + cn + 2].second))) {
-                        WAY_STEP = MIN_DIFF + MIN_DIFF / 2 - 2;
+                        WAY_STEP = MIN_DIFF + MIN_DIFF / 2;
                         change_made = true;
                         break;
                     }
@@ -281,11 +277,6 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
             coords[cnt].emplace_back(sec);
             int radius = abs(fir.second - sec.second);
             pair<int, int> centre;
-            for (int cn = 0; cn < 15; cn++) {
-                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
-                    occupied[convertToNum(way[i + cn])])
-                    is_draw = true;
-            }
             if (is_draw) continue;
             if (way[i - 1].second < way[i].second and way[i + 1].first > way[i].first) { // LD
                 centre = {sec.first, fir.second};

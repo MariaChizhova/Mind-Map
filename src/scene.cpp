@@ -18,6 +18,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
+        algo.set_rect_height(height);
+        algo.set_rect_width(width);
         QPixmap pix(":/icons/z.png");
         QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
         image->setPixmap(pix);

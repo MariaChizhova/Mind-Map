@@ -17,6 +17,8 @@ public:
 
     ~MainWindow() = default;
 
+    QSizeF screenSize;
+
 private slots:
     void newFileButton();
 

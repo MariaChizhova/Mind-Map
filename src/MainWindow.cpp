@@ -26,6 +26,7 @@ void MainWindow::newProject() {
     window->resize(screenSize.width(), screenSize.height());
     window->setWindowTitle("Mind Map");
     window->scene.setBackgroundBrush(Qt::white);
+    window->scene.setSceneRect(0,0, screenSize.width(), screenSize.height());
     window->show();
 }
 

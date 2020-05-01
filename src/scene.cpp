@@ -4,6 +4,8 @@
 Scene::Scene(QObject *parent) : QGraphicsScene(parent),
     algo(QGuiApplication::primaryScreen()->size().width(),
         QGuiApplication::primaryScreen()->size().height(), 1) {
+    qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
+    qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
     algo.fillGraph();
     inText.setStyleSheet("background-color: #13011E; color: white");
     inText.resize(500, 500);

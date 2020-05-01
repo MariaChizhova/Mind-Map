@@ -2,16 +2,16 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     screenSize = QGuiApplication::primaryScreen()->physicalSize();
-    qreal w2 = screenSize.width();
-    qreal h2 = screenSize.height();
+    qreal w2 = screenSize.width() * 2.5;
+    qreal h2 = screenSize.height() * 2;
     QPushButton *newFile = new QPushButton("New File", this);
-    newFile->setGeometry(w2 + 500, h2 + 100, 200, 80);
+    newFile->setGeometry(w2, h2, 200, 80);
     connect(newFile, &QPushButton::clicked, this, &MainWindow::newFileButton);
     QPushButton *openFile = new QPushButton("Open File", this);
-    openFile->setGeometry(w2 + 500, h2 + 180 , 200, 80);
+    openFile->setGeometry(w2, h2 + 80 , 200, 80);
     connect(openFile, &QPushButton::clicked, this, &MainWindow::openFileButton);
     QPushButton *quitBtn = new QPushButton("Quit", this);
-    quitBtn->setGeometry(w2 + 500, h2 + 260, 200, 80);
+    quitBtn->setGeometry(w2, h2 + 160, 200, 80);
     connect(quitBtn, &QPushButton::clicked, this, QApplication::quit);
 }
 

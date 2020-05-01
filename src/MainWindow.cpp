@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     qreal w2 = screenSize.width() * 0.45;
     qDebug() << "ScreenSize.width           : " << screenSize.width();
     qreal h2 = screenSize.height() * 0.3;
-    qDebug() << "ScreenSize.width           : " << screenSize.height();
+    qDebug() << "ScreenSize.height           : " << screenSize.height();
     qreal wr = 200;
     qreal hr = 80;
     QPushButton *newFile = new QPushButton("New File", this);
@@ -23,7 +23,7 @@ void MainWindow::newProject() {
     this->hide();
     window = new Menu();
     window->setStyleSheet("background-color: #13011E; color: white");
-    window->resize(screenSize.width() * 9, screenSize.height() * 9);
+    window->resize(screenSize.width() * 0.9, screenSize.height() * 0.9);
     window->setWindowTitle("Mind Map");
     window->scene.setBackgroundBrush(Qt::white);
     window->show();

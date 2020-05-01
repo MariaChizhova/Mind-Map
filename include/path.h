@@ -88,11 +88,21 @@ public:
         return rectData[idx];
     }
 
+    inline void set_rect_width(int w) {
+        rect_width = w;
+    }
+
+    inline void set_rect_height(int h) {
+        rect_height = h;
+    }
+
 private:
     int width;
     int height;
     int size;
     int step = 1;
+    int rect_width = 0;
+    int rect_height = 0;
     vector<vector<int>> data; // тут все вершины и их соседи
     vector<int> occupied; // занятые ячейки
     map<pair<int, int>, int> shapeId;

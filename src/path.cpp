@@ -1,4 +1,11 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <cmath>
+#include <cassert>
 #include "path.h"
+
 using namespace std;
 static int id = 0;
 // height - длина вертикального столбца, width - горизонтальной строчки
@@ -136,17 +143,18 @@ void ShortestPath::getRectCoord(int x, int y, int w, int h) {
 void ShortestPath::addShape(rectangle &rect) {
     int left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
     int right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
-    for (int i = -5; i < rect.getHeight() + 5; i++) {
-        for (int j = left_up + width * i - 5; j < right_up + width * i + 5; j++) {
+    int GAP = 5;
+    for (int i = GAP * -1; i < rect.getHeight() + GAP; i++) {
+        for (int j = left_up + width * i - GAP; j < right_up + width * i + GAP; j++) {
             occupied[j] = 1;
         }
     }
     int left_mid = rect.getCentre() - rect.getWidth() / 2;
     int right_mid = rect.getCentre() + rect.getWidth() / 2;
-    for (int i = -4; i < 4; i++) {
+    for (int i = -1 * GAP + 1; i < GAP - 1; i++) {
         int left_cur = left_mid + width * i;
         int right_cur = right_mid + width * i;
-        for (int j = 0; j < 11; j++) {
+        for (int j = 0; j < GAP + GAP + 1; j++) {
             occupied[left_cur] = 0;
             occupied[right_cur] = 0;
             left_cur--;
@@ -200,30 +208,83 @@ struct {
 } comparator;
 
 vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
-    vector<pair<int, int>> angles;
     vector<vector<pair<int, int>>> coords;
     coords.resize(way.size());
     int delta = 1;
-    int way_step = 60;
+    int DEFAULT_WAY_STEP = 60;
+    int WAY_STEP = DEFAULT_WAY_STEP;
+    int MIN_DIFF = 15;
     int cnt = 0;
     for (int i = 1; i < way.size() - 1; i++) {
-        if (i < 15 or i > way.size() - 15) continue;
-        bool is_draww = false;
+        if (i < MIN_DIFF or i > (int) way.size() - MIN_DIFF) continue;
         if ((way[i - 1].first != way[i + 1].first) and (way[i - 1].second != way[i + 1].second)) {
-            cout << "NEQ " << way[i - 1].first << ' ' << way[i + 1].first << ' ' <<  way[i - 1].second << ' ' << way[i + 1].second << '\n';
-            angles.emplace_back(way[i]);
-            //i++;
+            bool change_delta = false;
+            bool is_upper_angle = false;
+            bool is_draw = false;
+            bool change_made = false;
+            if (!change_made) {
+                for (int cn = 0; cn < MIN_DIFF; cn++) {
+                    if ((occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
+                         occupied[convertToNum(way[i + cn])])
+                        or ((way[i + cn].first != way[i + cn + 2].first) and
+                            (way[i + cn].second != way[i + cn + 2].second))) {
+                        cout << "MD" << '\n';
+                        is_draw = true;
+                        change_made = true;
+                        break;
+                    }
+                }
+            }
+            if (!change_made) {
+                for (int cn = 1; cn < MIN_DIFF + 2; cn++) {
+                    if ((way[i + cn].first != way[i + cn + 2].first) and
+                        (way[i + cn].second != way[i + cn + 2].second)) {
+                        is_draw = true;
+                        change_made = true;
+                        break;
+                    }
+                }
+            }
+            if (!change_made) {
+                for (int cn = 1; cn < MIN_DIFF * 2 + 2; cn++) {
+                    if ((way[i + cn].first != way[i + cn + 2].first) and
+                        (way[i + cn].second != way[i + cn + 2].second)) {
+                        WAY_STEP = MIN_DIFF;
+                        change_made = true;
+                        break;
+                    }
+                }
+            }
+            if (!change_made) {
+                for (int cn = 1; cn < MIN_DIFF * 3 + 2; cn++) {
+                    if (((way[i + cn].first != way[i + cn + 2].first) and
+                         (way[i + cn].second != way[i + cn + 2].second))) {
+                        WAY_STEP = MIN_DIFF + MIN_DIFF / 2 - 2;
+                        change_made = true;
+                        break;
+                    }
+                }
+            }
+            if (!change_made) {
+                for (int cn = 1; cn < MIN_DIFF * 4 + 2; cn++) {
+                    if ((way[i + cn].first != way[i + cn + 2].first) and
+                        (way[i + cn].second != way[i + cn + 2].second)) {
+                        WAY_STEP = MIN_DIFF * 2 - 2;
+                        break;
+                    }
+                }
+            }
             pair<int, int> fir, sec;
-            fir = way[i - way_step]; sec = way[i + way_step];
+            fir = way[i - WAY_STEP];
+            sec = way[i + WAY_STEP];
             coords[cnt].emplace_back(fir);
             coords[cnt].emplace_back(sec);
             int radius = abs(fir.second - sec.second);
             pair<int, int> centre;
-            bool change_delta = false;
-            bool is_upper_angle = false;
-            bool is_draw = false;
             for (int cn = 0; cn < 15; cn++) {
-                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or occupied[convertToNum(way[i + cn])]) is_draw = true;
+                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
+                    occupied[convertToNum(way[i + cn])])
+                    is_draw = true;
             }
             if (is_draw) continue;
             if (way[i - 1].second < way[i].second and way[i + 1].first > way[i].first) { // LD
@@ -243,11 +304,14 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
             for (int k = 0; k < radius / tmp - tmp; k++) {
                 int y = 0;
                 if (change_delta and is_upper_angle) { // LU
-                    y = centre.second - (int) sqrt(radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
+                    y = centre.second - (int) sqrt(
+                            radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
                 } else if (!change_delta and is_upper_angle) { // RU
                     y = centre.second - (int) sqrt(radius * radius - delta * delta);
                 } else if (change_delta and !is_upper_angle) { // LD
-                    y = (int) sqrt(radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) + centre.second;
+                    y = (int) sqrt(
+                            radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) +
+                        centre.second;
                 } else if (!change_delta and !is_upper_angle) {
                     y = (int) sqrt(radius * radius - delta * delta) + centre.second;
                 }
@@ -255,12 +319,14 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
                 if (abs(y - sec.second) >= 2) coords[cnt].emplace_back(fir.first + delta, y);
                 delta += tmp;
             }
-            sort(coords[cnt].begin(), coords[cnt].end(), [](pair<int, int> a, pair<int, int> b){return a.first < b.first;});
+            sort(coords[cnt].begin(), coords[cnt].end(),
+                 [](pair<int, int> a, pair<int, int> b) { return a.first < b.first; });
             if (coords[cnt][0].first > coords[cnt][coords[cnt].size() - 1].first) {
                 reverse(coords[cnt].begin(), coords[cnt].end());
             }
             delta = tmp;
-            cout << "OAOAOAOAOA CNT" << cnt << '\n';
+            WAY_STEP = DEFAULT_WAY_STEP;
+            change_made = false;
             while (way[i].second != coords[cnt][coords[cnt].size() - 1].second) {
                 i++;
             }
@@ -268,24 +334,21 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
             cnt++;
         }
     }
-    coords[cnt].resize(10);
+    coords[cnt].resize(100);
     coords[cnt][0] = {-1, -1};
     int i = 0;
     vector<pair<int, int>> new_way;
-    for (int init = 0; init < way.size(); init++) {
+    for (int init = 0; init < (int) way.size(); init++) {
         if ((i < cnt and way[init] == coords[i][0])) {
             for (auto iter : coords[i]) {
                 new_way.emplace_back(iter);
-                //cout << iter.first << ' ' << iter.second << '\n';
             }
             while (way[init] != coords[i][coords[i].size() - 1]) {
                 init++;
-                //cout << way[init].first << ' ' << way[init].second << '\n';
             }
             i++;
         } else if (coords[i][0].first == -1 or (i < cnt and way[init] != coords[i][0])) {
             new_way.emplace_back(way[init]);
-            //cout << way[init].first << ' ' << way[init].second << '\n';
         }
     }
     sort(new_way.begin(), new_way.end(), comparator);
@@ -293,8 +356,8 @@ vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
 }
 
 vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
-    int id1 = shapeId[{x1 + 40, y1 + 25}];
-    int id2 = shapeId[{x2 + 40, y2 + 25}];
+    int id1 = shapeId[{x1 + rect_width / 2, y1 + rect_height / 2}];
+    int id2 = shapeId[{x2 + rect_width / 2, y2 + rect_height / 2}];
     int src = findBorderPoint(id1, id2).first;
     int dest = findBorderPoint(id1, id2).second;
     queue<int> q;
@@ -323,12 +386,10 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
     ans.clear();
     for (int i = dest; i != -1; i = par[i]) {
         ans.push_back(convertToPair(convertFromStep(i)));
-        //occupied[i] = 1;
     }
     if (ans[0].first > ans[ans.size() - 1].first) {
         reverse(ans.begin(), ans.end());
     }
-    //sort(ans.begin(), ans.end(), [](pair<int, int> a, pair<int, int> b) {return a.first < b.first;});
     vector<pair<int, int>> smooth_ans = SmoothAngle(ans);
     pathId[{id1, id2}] = smooth_ans;
     return smooth_ans;

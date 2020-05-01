@@ -23,7 +23,7 @@ void MainWindow::newProject() {
     this->hide();
     window = new Menu();
     window->setStyleSheet("background-color: #13011E; color: white");
-    window->resize(screenSize.width() * 0.9, screenSize.height() * 0.9);
+    window->resize(screenSize.width(), screenSize.height());
     window->setWindowTitle("Mind Map");
     window->scene.setBackgroundBrush(Qt::white);
     window->show();

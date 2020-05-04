@@ -18,10 +18,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == SDRAW) {
         int width = 80;
         int height = 50;
-        QPixmap pix(":/icons/f.png");
+        algo.set_rect_width(width);
+        algo.set_rect_height(height);
+        QPixmap pix(":/icons/rectangle-png.png");
         QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
         image->setPixmap(pix);
-        image->setScale(0.2);
+        image->setScale(0.15);
         /*
         QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
         rectItem->setPen( QPen( Qt::gray, 3 ) );
@@ -73,7 +75,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 QPointF k(points[i + 1].first, points[i + 1].second);
                 path.quadTo(p, k);
             }
-            addPath(path, QPen(Qt::red, 5));
+            addPath(path, QPen(Qt::darkBlue, 5));
 
             //Снимаем пометки с выбранных прямоугольников
             selectedItem = make_pair(nullptr, nullptr);

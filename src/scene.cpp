@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "scene.h"
+#include <QtWidgets/QComboBox>
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent),
     algo(QGuiApplication::primaryScreen()->size().width(),
@@ -19,14 +20,24 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF pos = event->scenePos();
 
     /** Создаем активный элемент (прямоугольник) */
+    int width = 80;
+    int height = 50;
+    algo.set_rect_width(width);
+    algo.set_rect_height(height);
     if (state == SDRAW) {
-        int width = 80;
-        int height = 50;
-        algo.set_rect_width(width);
-        algo.set_rect_height(height);
         QPixmap pix(":/icons/rectangle-png.png");
+        QPixmap pix1(":/icons/exp1.png");
+        QPixmap pix2(":/icons/exp2.png");
+        QPixmap pix3(":/icons/exp3.png");
         QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
-        image->setPixmap(pix);
+        if (pixstate == PIX)
+             image->setPixmap(pix);
+        else if (pixstate == PIX1)
+            image->setPixmap(pix1);
+        else if (pixstate == PIX2)
+            image->setPixmap(pix2);
+        else if (pixstate == PIX3)
+            image->setPixmap(pix3);
         image->setScale(0.15);
         /*
         QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
@@ -79,7 +90,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 QPointF k(points[i + 1].first, points[i + 1].second);
                 path.quadTo(p, k);
             }
-            addPath(path, QPen(Qt::darkCyan, 5));
+            addPath(path, QPen(linecolor, 5));
 
             //Снимаем пометки с выбранных прямоугольников
             selectedItem = make_pair(nullptr, nullptr);
@@ -126,6 +137,10 @@ void Scene::setColor(QColor newColor) {
 
 void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
+}
+
+void Scene::setLineColor(QColor newColor) {
+    linecolor = newColor;
 }
 
 QGraphicsTextItem *Scene::printText() {

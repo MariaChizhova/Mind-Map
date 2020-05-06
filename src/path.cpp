@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <queue>
 #include <algorithm>
@@ -205,152 +206,240 @@ struct {
             return a.second < b.second;
         }
     }
-} comparator;
+} way_comparator;
+
+class SafeVec {
+public:
+    vector<pair<int, int>> inner_way;
+
+    SafeVec(vector<pair<int, int>> inner_way) : inner_way(std::move(inner_way)) {}
+
+    pair<int, int> operator[](int idx) {
+        if (idx < 0 or idx >= inner_way.size()) {
+            cerr << "OutOfBounds: " << idx << " " << inner_way.size() << endl;
+            throw out_of_range("INDEX IS OUT OF BOUNDS");
+        }
+        return inner_way[idx];
+    }
+
+    int size() {
+        return inner_way.size();
+    }
+};
 
 vector<pair<int, int>> ShortestPath::SmoothAngle(vector<pair<int, int>> way) {
     vector<vector<pair<int, int>>> coords;
+    SafeVec my_way(way);
     coords.resize(way.size());
     int delta = 1;
     int DEFAULT_WAY_STEP = 60;
     int WAY_STEP = DEFAULT_WAY_STEP;
     int MIN_DIFF = 15;
     int cnt = 0;
-    for (int i = 1; i < way.size() - 1; i++) {
-        if (i < MIN_DIFF or i > (int) way.size() - MIN_DIFF) continue;
-        if ((way[i - 1].first != way[i + 1].first) and (way[i - 1].second != way[i + 1].second)) {
-            bool change_delta = false;
-            bool is_upper_angle = false;
-            bool is_draw = false;
-            bool change_made = false;
-            for (int cn = 0; cn < 15; cn++) {
-                cout << convertToNum(way[i - cn]) << '\n';
-                if (occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
-                    occupied[convertToNum(way[i + cn])]) {
-                    is_draw = true;
-                    break;
+    bool changes_existance = false;
+    bool got_to_cycle = false;
+    try {
+        for (int i = 1; i < my_way.size() - 1; i++) {
+            if (i < max(MIN_DIFF * 2 + 2, WAY_STEP) or
+                i > (int) my_way.size() - max(MIN_DIFF * 2 + 2, WAY_STEP))
+                continue;
+            if ((my_way[i - 1].first != my_way[i + 1].first) and (my_way[i - 1].second != way[i + 1].second)) {
+                bool change_delta = false;
+                bool is_upper_angle = false;
+                bool is_draw = false;
+                bool change_made = false;
+                for (int cn = 0; cn < MIN_DIFF + 4; cn++) {
+                    cout << convertToNum(my_way[i + cn]) << '\n';
+                    //cout << way[i + cn].first << ' ' << way[i + cn].second << '\n';
+                    if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                        (occupied[convertToNum(my_way[i - cn])] or
+                         occupied[convertToNum(my_way[i])] or
+                         occupied[convertToNum(my_way[i + cn])] or
+                         ((my_way[i - cn].first != my_way[i - cn - 2].first) and
+                          (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                          (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                          (my_way[i + cn].second != my_way[i + cn + 2].second)))) {
+                        if (occupied[convertToNum(my_way[i - cn])]) cout << 1 << '\n';
+                        else if (occupied[convertToNum(my_way[i])]) cout << 2 << '\n';
+                        else if (occupied[convertToNum(my_way[i + cn])]) cout << 3 << '\n';
+                        else if (my_way[i - cn].first != my_way[i - cn - 2].first) cout << 4 << '\n';
+                        else if (my_way[i - cn].second != my_way[i - cn - 2].second) cout << 5 << '\n';
+                        else if (my_way[i + cn].first != my_way[i + cn + 2].first) cout << 6 << '\n';
+                        else if (my_way[i + cn].second != my_way[i + cn + 2].second) cout << 7 << '\n';
+                        is_draw = true;
+                        break;
+                    }
                 }
-            }
-            if (is_draw) continue;
-            for (int cn = 0; cn < MIN_DIFF + 2; cn++) {
-                if ((occupied[convertToNum(way[i - cn])] or occupied[convertToNum(way[i])] or
-                     occupied[convertToNum(way[i + cn])])
-                    or ((way[i + cn].first != way[i + cn + 2].first) and
-                        (way[i + cn].second != way[i + cn + 2].second))) {
-                    is_draw = true;
-                    change_made = true;
-                    break;
-                }
-            }
-            if (!change_made) {
-                for (int cn = 1; cn < MIN_DIFF * 2 + 2; cn++) {
-                    if ((way[i + cn].first != way[i + cn + 2].first) and
-                        (way[i + cn].second != way[i + cn + 2].second)) {
+                if (is_draw) continue;
+                cout << "HERE_1" << endl;
+                for (int cn = 0; cn < 2 * MIN_DIFF + 4; cn++) {
+                    if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                        (my_way[i - cn].first != my_way[i - cn - 2].first) and
+                        (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                        (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                        (my_way[i + cn].second != my_way[i + cn + 2].second)) {
                         WAY_STEP = MIN_DIFF;
                         change_made = true;
                         break;
                     }
                 }
-            }
-            if (!change_made) {
-                for (int cn = 1; cn < MIN_DIFF * 3 + 2; cn++) {
-                    if (((way[i + cn].first != way[i + cn + 2].first) and
-                         (way[i + cn].second != way[i + cn + 2].second))) {
-                        WAY_STEP = MIN_DIFF + MIN_DIFF / 2;
-                        change_made = true;
-                        break;
+                if (!change_made) {
+                    cout << "HERE_2" << endl;
+                    for (int cn = 1; cn < 3 * MIN_DIFF + 4; cn++) {
+                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
+                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                            WAY_STEP = 2 * MIN_DIFF;
+                            change_made = true;
+                            break;
+                        }
                     }
                 }
-            }
-            if (!change_made) {
-                for (int cn = 1; cn < MIN_DIFF * 4 + 2; cn++) {
-                    if ((way[i + cn].first != way[i + cn + 2].first) and
-                        (way[i + cn].second != way[i + cn + 2].second)) {
-                        WAY_STEP = MIN_DIFF * 2 - 2;
-                        break;
+                if (!change_made) {
+                    cout << "HERE_3" << endl;
+                    for (int cn = 1; cn < 4 * MIN_DIFF; cn++) {
+                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
+                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                            WAY_STEP = 2 * MIN_DIFF;
+                            change_made = true;
+                            break;
+                        }
                     }
                 }
-            }
-            pair<int, int> fir, sec;
-            fir = way[i - WAY_STEP];
-            sec = way[i + WAY_STEP];
-            coords[cnt].emplace_back(fir);
-            coords[cnt].emplace_back(sec);
-            int radius = abs(fir.second - sec.second);
-            pair<int, int> centre;
-            if (is_draw) continue;
-            if (way[i - 1].second < way[i].second and way[i + 1].first > way[i].first) { // LD
-                centre = {sec.first, fir.second};
-                change_delta = true;
-            } else if (way[i - 1].first < way[i].first and way[i + 1].second > way[i].second) { // RU
-                centre = {fir.first, sec.second};
-                is_upper_angle = true;
-            } else if (way[i - 1].first < way[i].first and way[i + 1].second < way[i].second) { // RD
-                centre = {fir.first, sec.second};
-            } else if (way[i - 1].second > way[i].second and way[i + 1].first > way[i].first) { // LU
-                centre = {sec.first, fir.second};
-                change_delta = true;
-                is_upper_angle = true;
-            }
-            int tmp = delta;
-            for (int k = 0; k < radius / tmp - tmp; k++) {
-                int y = 0;
-                if (change_delta and is_upper_angle) { // LU
-                    y = centre.second - (int) sqrt(
-                            radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
-                } else if (!change_delta and is_upper_angle) { // RU
-                    y = centre.second - (int) sqrt(radius * radius - delta * delta);
-                } else if (change_delta and !is_upper_angle) { // LD
-                    y = (int) sqrt(
-                            radius * radius - (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) +
-                        centre.second;
-                } else if (!change_delta and !is_upper_angle) {
-                    y = (int) sqrt(radius * radius - delta * delta) + centre.second;
+                if (!change_made) {
+                    cout << "HERE_4" << endl;
+                    for (int cn = 1; cn < 6 * MIN_DIFF; cn++) {
+                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
+                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                            WAY_STEP = 3 * MIN_DIFF;
+                            break;
+                        }
+                    }
                 }
+                if (!change_made) {
+                    cout << "HERE_5" << endl;
+                    for (int cn = 1; cn < 8 * MIN_DIFF; cn++) {
+                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
+                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
+                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
+                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
+                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                            WAY_STEP = 4 * MIN_DIFF;
+                            break;
+                        }
+                    }
+                }
+                cout << "HERE_6" << endl;
+                changes_existance = true;
+                pair<int, int> fir, sec;
+                fir = my_way[i - WAY_STEP];
+                sec = my_way[i + WAY_STEP];
+                coords[cnt].emplace_back(fir);
+                coords[cnt].emplace_back(sec);
+                int radius = abs(fir.second - sec.second);
+                pair<int, int> centre;
+                if (is_draw) continue;
+                if (my_way[i - 1].second < my_way[i].second and my_way[i + 1].first > my_way[i].first) { // LD
+                    centre = {sec.first, fir.second};
+                    change_delta = true;
+                } else if (my_way[i - 1].first < my_way[i].first and my_way[i + 1].second > my_way[i].second) { // RU
+                    centre = {fir.first, sec.second};
+                    is_upper_angle = true;
+                } else if (my_way[i - 1].first < my_way[i].first and my_way[i + 1].second < my_way[i].second) { // RD
+                    centre = {fir.first, sec.second};
+                } else if (my_way[i - 1].second > my_way[i].second and my_way[i + 1].first > my_way[i].first) { // LU
+                    centre = {sec.first, fir.second};
+                    change_delta = true;
+                    is_upper_angle = true;
+                }
+                int tmp = delta;
+                for (int k = 0; k < radius / tmp - tmp; k++) {
+                    int y = 0;
+                    if (change_delta and is_upper_angle) { // LU
+                        y = centre.second - (int) sqrt(
+                                radius * radius -
+                                (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
+                    } else if (!change_delta and is_upper_angle) { // RU
+                        y = centre.second - (int) sqrt(radius * radius - delta * delta);
+                    } else if (change_delta and !is_upper_angle) { // LD
+                        y = (int) sqrt(
+                                radius * radius -
+                                (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) +
+                            centre.second;
+                    } else if (!change_delta and !is_upper_angle) { // RD
+                        y = (int) sqrt(radius * radius - delta * delta) + centre.second;
+                    }
 
-                if (abs(y - sec.second) >= 2) coords[cnt].emplace_back(fir.first + delta, y);
-                delta += tmp;
+                    if (abs(y - sec.second) >= 2) coords[cnt].emplace_back(fir.first + delta, y);
+                    delta += tmp;
+                }
+                sort(coords[cnt].begin(), coords[cnt].end(),
+                     [](pair<int, int> a, pair<int, int> b) { return a.first < b.first; });
+                if (coords[cnt][0].first > coords[cnt][coords[cnt].size() - 1].first) {
+                    reverse(coords[cnt].begin(), coords[cnt].end());
+                }
+                delta = tmp;
+                WAY_STEP = DEFAULT_WAY_STEP;
+                while (my_way[i].second != coords[cnt][coords[cnt].size() - 1].second) {
+                    i++;
+                }
+                cnt++;
             }
-            sort(coords[cnt].begin(), coords[cnt].end(),
-                 [](pair<int, int> a, pair<int, int> b) { return a.first < b.first; });
-            if (coords[cnt][0].first > coords[cnt][coords[cnt].size() - 1].first) {
-                reverse(coords[cnt].begin(), coords[cnt].end());
-            }
-            delta = tmp;
-            WAY_STEP = DEFAULT_WAY_STEP;
-            change_made = false;
-            while (way[i].second != coords[cnt][coords[cnt].size() - 1].second) {
-                i++;
-            }
-            //i--;
-            cnt++;
         }
-    }
-    coords[cnt].resize(100);
-    coords[cnt][0] = {-1, -1};
-    int i = 0;
-    vector<pair<int, int>> new_way;
-    for (int init = 0; init < (int) way.size(); init++) {
-        if ((i < cnt and way[init] == coords[i][0])) {
-            for (auto iter : coords[i]) {
-                new_way.emplace_back(iter);
+        try {
+            coords[cnt].resize(100);
+            coords[cnt][0] = {-1, -1}; // страшный костыль
+            int i = 0;
+            vector<pair<int, int>> new_way;
+            for (int init = 0; init < (int) my_way.size(); init++) {
+                if ((i < cnt and way[init] == coords[i][0])) {
+                    got_to_cycle = true;
+                    for (auto iter : coords[i]) {
+                        new_way.emplace_back(iter);
+                    }
+                    while (init < my_way.size() and my_way[init] != coords[i][coords[i].size() - 1]) {
+                        init++;
+                        if (init > my_way.size()) { throw logic_error("ENDLESS CYCLE"); }
+                    }
+                    i++;
+                } else if (coords[i][0].first == -1 or (i < cnt and my_way[init] != coords[i][0])) {
+                    new_way.emplace_back(my_way[init]);
+                }
+                if (!changes_existance and got_to_cycle) {
+                    throw logic_error("NO SMOOTHING OCCURRED BUT SMOOTHED WAY WAS FOUND");
+                }
             }
-            while (way[init] != coords[i][coords[i].size() - 1]) {
-                init++;
+            if (changes_existance and !got_to_cycle) {
+                throw logic_error("SMOOTHING OCCURRED BUT THE PATH WAS NOT CHANGED");
             }
-            i++;
-        } else if (coords[i][0].first == -1 or (i < cnt and way[init] != coords[i][0])) {
-            new_way.emplace_back(way[init]);
-        }
-    }
-    sort(new_way.begin(), new_way.end(), comparator);
-    return new_way;
+            sort(new_way.begin(), new_way.end(), way_comparator);
+            return new_way;
+        } catch (logic_error &e) { throw; }
+    } catch (out_of_range &e) { throw; }
 }
 
 vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
     int id1 = shapeId[{x1 + rect_width / 2, y1 + rect_height / 2}];
     int id2 = shapeId[{x2 + rect_width / 2, y2 + rect_height / 2}];
+    try {
+        if (id1 == id2) {
+            throw logic_error("PATH FROM RECTANGLE TO ITSELF WAS REQUIRED");
+        }
+    } catch (logic_error) { throw; }
+    cerr << "Ids: " << id1 << " " << id2 << endl;
     int src = findBorderPoint(id1, id2).first;
     int dest = findBorderPoint(id1, id2).second;
+    cerr << "Border points: " << src << "    " << dest << endl;
+    cerr << "Size: " << size << endl;
+    cerr << "Data Size: " << data.size() << endl;
     queue<int> q;
     vector<int> dist(size, -1);
     vector<bool> is(size, false);
@@ -375,13 +464,19 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
 
     vector<pair<int, int>> ans;
     ans.clear();
+
+    cerr << "backward: ";
     for (int i = dest; i != -1; i = par[i]) {
+        cerr << i << " ";
         ans.push_back(convertToPair(convertFromStep(i)));
     }
+    cerr << "-1\n";
     if (ans[0].first > ans[ans.size() - 1].first) {
         reverse(ans.begin(), ans.end());
     }
+    cerr << "Started Smooth, way size = " << ans.size() << endl;
     vector<pair<int, int>> smooth_ans = SmoothAngle(ans);
     pathId[{id1, id2}] = smooth_ans;
+    cerr << "Completed" << endl;
     return smooth_ans;
 }

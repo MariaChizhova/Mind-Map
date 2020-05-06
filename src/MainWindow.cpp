@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::newProject() {
-    this->close();
     window = new Menu();
     window->setStyleSheet("background-color: #13011E; color: white");
     window->resize(screenSize.width(), screenSize.height());
@@ -28,6 +27,7 @@ void MainWindow::newProject() {
     window->scene.setBackgroundBrush(Qt::white);
     window->scene.setSceneRect(0,0, screenSize.width(), screenSize.height());
     window->show();
+    this->close();
 }
 
 void MainWindow::newFileButton() {

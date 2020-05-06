@@ -15,5 +15,8 @@
         <file>icons/hruu.jpg</file>
         <file>icons/123.jpg</file>
         <file>icons/rectangle-png.png</file>
+        <file>icons/exp1.png</file>
+        <file>icons/exp2.png</file>
+        <file>icons/exp3.png</file>
     </qresource>
 </RCC>

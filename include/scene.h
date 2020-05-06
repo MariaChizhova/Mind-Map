@@ -19,6 +19,10 @@ enum sceneState {
     SDRAW, SMOVE, STEXT, SLINE
 };
 
+enum pixState {
+    PIX, PIX1, PIX2, PIX3
+};
+
 class Scene : public QGraphicsScene {
 public:
     explicit Scene(QObject *parent = nullptr);
@@ -26,6 +30,8 @@ public:
     void setColor(QColor newColor);
 
     void setWindowColor(QColor newColor);
+
+    void setLineColor(QColor newColor);
 
     QGraphicsTextItem *printText();
 
@@ -35,7 +41,11 @@ public:
 
     QColor fontcolor;
 
+    QColor linecolor;
+
     sceneState state = SDRAW;
+
+    pixState pixstate = PIX;
 
     std::vector<QGraphicsItemGroup *> myItems;
 

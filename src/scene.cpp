@@ -79,7 +79,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 QPointF k(points[i + 1].first, points[i + 1].second);
                 path.quadTo(p, k);
             }
-            addPath(path, QPen(Qt::darkCyan, 5));
+            addPath(path, QPen(Qt::darkBlue, 5));
 
             //Снимаем пометки с выбранных прямоугольников
             selectedItem = make_pair(nullptr, nullptr);

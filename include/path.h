@@ -45,7 +45,7 @@ private:
 
 class ShortestPath {
 public:
-    ShortestPath(int width, int height, int step);
+    ShortestPath(int width, int height, int step = 1);
 
     /** DATA **/
     void fillGraph(); // создает сетку

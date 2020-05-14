@@ -64,15 +64,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         focusItem()->setSelected(true);
         if (selectedItem.first == nullptr) selectedItem.first = selectedItems()[0];
         else {
-            if (selectedItems().empty()) {
-                std:: cerr << "Crashed due to no selected items";
-                return;
-            }
-
             selectedItem.second = selectedItems()[0];
             //Получили вектор с точками
-            std::cerr << "Pos_1: (" << this->selectedItem.first->pos().rx() << "; " << this->selectedItem.first->pos().ry() << ")\n";
-            std::cerr << "Pos_2: (" << this->selectedItem.second->pos().rx() << "; " << this->selectedItem.second->pos().ry() << ")\n";
             vector<pair<int, int>> points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
                                                                     this->selectedItem.first->pos().ry(),
                                                                     this->selectedItem.second->pos().rx(),
@@ -80,7 +73,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
             int step = 5;
             QPainterPath path;
-            std::cerr << "Path constructed, size=" << points.size() << std::endl;
             path.moveTo(points[step].first, points[step].second);
             for (int i = step; i < points.size() - step; i++) {
                 QPointF p(points[i].first, points[i].second);

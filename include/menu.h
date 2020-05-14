@@ -47,13 +47,16 @@ public:
 
     void newScene();
 
+    void openButton();
+
     void addImage();
 
     ~Menu() = default;
 
-private slots:
 
     void newFileButton();
+
+private slots:
 
     void helpButton();
 
@@ -64,8 +67,6 @@ private slots:
     void saveButton();
 
     void changeState();
-
-    void openButton();
 
     void enterText();
 

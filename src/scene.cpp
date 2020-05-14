@@ -1,7 +1,11 @@
 #include "menu.h"
 #include "scene.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), algo(1920, 1080, 1) {
+Scene::Scene(QObject *parent) : QGraphicsScene(parent),
+    algo(QGuiApplication::primaryScreen()->size().width(),
+        QGuiApplication::primaryScreen()->size().height(), 1) {
+    qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
+    qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
     algo.fillGraph();
     inText.setStyleSheet("background-color: #13011E; color: white");
     inText.resize(500, 500);
@@ -35,7 +39,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             return;
 
         /** Задаем цвет прямоугольнику */
-      /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
+        /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
 
         /** Добавляем элемент в сцену */
         activeItem->setZValue(1);
@@ -67,10 +71,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                                                                     this->selectedItem.second->pos().rx(),
                                                                     this->selectedItem.second->pos().ry());
 
-            int step = 3;
+            int step = 5;
             QPainterPath path;
             path.moveTo(points[step].first, points[step].second);
-            for (int i = step; i < points.size() - 2 * step; i++) {
+            for (int i = step; i < points.size() - step; i++) {
                 QPointF p(points[i].first, points[i].second);
                 QPointF k(points[i + 1].first, points[i + 1].second);
                 path.quadTo(p, k);
@@ -120,7 +124,6 @@ void Scene::setColor(QColor newColor) {
     color = newColor;
 }
 
-
 void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
 }
@@ -129,7 +132,9 @@ QGraphicsTextItem *Scene::printText() {
     QGraphicsTextItem *text = addText(inText.textstr);
     text->setSelected(true);
     text->setZValue(2);
-    text->setPos(this->selectedItems()[0]->pos());
+    auto tmp = this->selectedItems()[0]->pos();
+    tmp.ry() += 30;
+    text->setPos(tmp);
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);
     text->setFlag(QGraphicsTextItem::ItemIsMovable);

@@ -59,6 +59,7 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             rect->setTransform(trans);
             rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
 
+//TODO Поменять размеры и про фон!!!
             /** Не двигать фон */
             if (rectangle.attribute("x").toInt() == 0 &&
                 rectangle.attribute("y").toInt() == 0 &&

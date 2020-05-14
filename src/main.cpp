@@ -1,12 +1,13 @@
-#include "menu.h"
+#include "MainWindow.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    Menu window;
-    window.setStyleSheet("background-color: #13011E; color: white");
-    window.resize(1920, 1080);
+    MainWindow window;
+    window.setStyleSheet("color: white; background-image: url(:/icons/123.jpg)");
+    window.resize(window.screenSize.width(), window.screenSize.height());
+    qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
+    qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
     window.setWindowTitle("Mind Map");
-    window.scene.setBackgroundBrush(Qt::white);
     window.show();
     return app.exec();
 }

@@ -164,19 +164,24 @@ void ShortestPath::addShape(rectangle &rect) {
     }
 }
 
-void ShortestPath::deleteShape(const rectangle &rect) {
+void ShortestPath::deleteShape(rectangle rect) {
     for (auto i : rect.data) {
         occupied[i] = 0;
     }
+    int left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int GAP = 5;
+    for (int i = GAP * -1; i < rect.getHeight() + GAP; i++) {
+        for (int j = left_up + width * i - GAP; j < right_up + width * i + GAP; j++) {
+            occupied[j] = 0;
+        }
+    }
 }
 
-void ShortestPath::dragShape(int new_id, pair<int, int> new_centre) {
-    deleteShape(rectData[new_id]);
-    int new_converted_centre = convertToStep(convertToNum(new_centre));
-    rectangle new_rect(rectData[new_id].getId(), new_converted_centre, rectData[id].getWidth(),
-                       rectData[id].getHeight());
-    rectData[new_id] = new_rect;
-    addShape(rectData[new_id]);
+void ShortestPath::dragShape(pair<int, int> old_centre, pair<int, int> new_centre) {
+    int old_id = shapeId[old_centre];
+    deleteShape(rectData[old_id]);
+    getRectCoord(new_centre.first, new_centre.second, rectData[old_id].getWidth(), rectData[old_id].getHeight());
 }
 
 pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {

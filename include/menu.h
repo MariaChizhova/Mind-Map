@@ -71,7 +71,9 @@ private slots:
 
     void saveButton();
 
-    void changeState();
+    void addRect();
+
+    void moveRect();
 
     void enterText();
 

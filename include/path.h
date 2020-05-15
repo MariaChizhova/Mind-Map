@@ -56,9 +56,8 @@ public:
     getRectCoord(int x, int y, int w, int h); // по идее должна получать данные от Киры и создавать по ним прямоугольник
     rectangle getRect(int id, pair<int, int> centre_coord, int w, int h); // по входным данным создает прямоугольник
     void addShape(rectangle &rect); // добавляет на поле фигуру
-    void deleteShape(const rectangle &rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
-    void dragShape(int id,
-                   pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
+    void deleteShape(rectangle rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
+    void dragShape(pair<int, int> old_centre, pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
 
     /** ShortestPath **/
     pair<int, int> findBorderPoint(int id1, int id2); // находит точки, из которых строить путь

@@ -30,7 +30,11 @@ public:
     void setColor(QColor newColor);
 
     void setWindowColor(QColor newColor);
+    void drawRect(QPointF pos);
 
+    void addLin();
+
+    void text();
     void setLineColor(QColor newColor);
 
     QGraphicsTextItem *printText();
@@ -40,7 +44,7 @@ public:
     QFont font;
 
     QColor fontcolor;
-
+    QPointF last_pos;
     QColor linecolor;
 
     sceneState state = SDRAW;
@@ -48,6 +52,7 @@ public:
     pixState pixstate = PIX;
 
     std::vector<QGraphicsItemGroup *> myItems;
+    //std::map<QGraphicsItemGroup *, int> indexItems;
 
    // QGraphicsItem *activeItem;
     QGraphicsPixmapItem *activeItem;
@@ -55,12 +60,17 @@ public:
     ShortestPath algo;
 
     sceneMenu inText;
+    QPointF point;
 
     std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
 
 protected:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif

@@ -63,8 +63,11 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 
     /** Панель ToolBar*/
     QToolBar *toolbar = addToolBar("Menu");
-    QAction *addRectangle = toolbar->addAction(QIcon(rectanglepix), "Rectangle");
-    connect(addRectangle, &QAction::triggered, this, &Menu::changeState);
+    QAction *addRectangle = toolbar->addAction("Add");
+    connect(addRectangle, &QAction::triggered, this, &Menu::addRect);
+
+    QAction *moveRectangle = toolbar->addAction("Move");
+    connect(moveRectangle, &QAction::triggered, this, &Menu::moveRect);
 
     QAction *text = toolbar->addAction(QIcon(textpix), "Text");
     connect(text, &QAction::triggered, this, &Menu::enterText);
@@ -99,8 +102,8 @@ void Menu::newScene() {
     changeWindowColor(Qt::white);
     bool ok;
     qreal width = QGuiApplication::primaryScreen()->size().width();
-   // QString width = "1920"; // QInputDialog::getText(this, tr("Width"), tr("Enter:"), QLineEdit::Normal, "", &ok);
-  //  QString height = "1080"; //QInputDialog::getText(this, tr("Height"), tr("Enter:"), QLineEdit::Normal, "", &ok);
+    // QString width = "1920"; // QInputDialog::getText(this, tr("Width"), tr("Enter:"), QLineEdit::Normal, "", &ok);
+    //  QString height = "1080"; //QInputDialog::getText(this, tr("Height"), tr("Enter:"), QLineEdit::Normal, "", &ok);
     qreal height = QGuiApplication::primaryScreen()->size().height();
     qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
     qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
@@ -152,23 +155,23 @@ void Menu::saveButton() {
     SvgSaver::save(&scene, path, scene.width(), scene.height());
 }
 
-void Menu::changeState() {
-    if (scene.state == SDRAW) {
-        scene.state = SMOVE;
-        for (auto &my_item : scene.myItems) {
-            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-                my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
-            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        }
-    } else {
-        scene.state = SDRAW;
-        for (auto &my_item : scene.myItems) {
-            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        }
+void Menu::addRect() {
+    scene.state = SDRAW;
+    for (auto &my_item : scene.myItems) {
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    }
+}
+
+void Menu::moveRect() {
+    scene.state = SMOVE;
+    for (auto &my_item : scene.myItems) {
+        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+            my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
     }
 }
 

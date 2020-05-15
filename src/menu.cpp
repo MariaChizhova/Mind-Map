@@ -22,6 +22,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *about = new QAction(helppix, "&About", this);
     QAction *color = new QAction(colorpix, "&Color", this);
     QAction *wincolor = new QAction(wincolorpix, "&WinColor", this);
+    QAction *linecolor = new QAction(wincolorpix, "&LineColor", this);
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -36,6 +37,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     help->addAction(about);
     edit->addAction(color);
     edit->addAction(wincolor);
+    edit->addAction(linecolor);
 
     /** Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение */
     connect(quit, &QAction::triggered, this, QApplication::quit);
@@ -45,6 +47,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(newfile, &QAction::triggered, this, &Menu::newFileButton);
     connect(open, &QAction::triggered, this, &Menu::openButton);
     connect(save, &QAction::triggered, this, &Menu::saveButton);
+    connect(linecolor, &QAction::triggered, this, &Menu::lineColorButton);
 
     /**  Штука, чтобы отображались иконки */
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
@@ -74,6 +77,23 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 
     QAction *pix = toolbar->addAction("Pix");
     connect(pix, &QAction::triggered, this, &Menu::addImage);
+
+    QPixmap exp(":/icons/rectangle-png.png");
+    QPixmap exp1(":/icons/exp1.png");
+    QPixmap exp2(":/icons/exp2.png");
+    QPixmap exp3(":/icons/exp3.png");
+    QToolBar *lefttoolbar = addToolBar("Cells");
+    this->addToolBar(Qt::LeftToolBarArea, lefttoolbar);
+    lefttoolbar->setFixedWidth(70);
+    lefttoolbar->setIconSize(QSize(70, 70));
+    QAction *rect = lefttoolbar->addAction(QIcon(exp), "Rectangle");
+    connect(rect, &QAction::triggered, this, &Menu::setCellsPix);
+    QAction *rect1 = lefttoolbar->addAction(QIcon(exp1), "Rectangle");
+    connect(rect1, &QAction::triggered, this, &Menu::setCellsPix1);
+    QAction *rect2 = lefttoolbar->addAction(QIcon(exp2), "Rectangle");
+    connect(rect2, &QAction::triggered, this, &Menu::setCellsPix2);
+    QAction *rect3 = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
+    connect(rect3, &QAction::triggered, this, &Menu::setCellsPix3);
 }
 
 
@@ -210,3 +230,30 @@ void Menu::addImage() {
     QPixmap pixmap(":/icons/hruu.jpg");
     scene.setBackgroundBrush(pixmap);
 }
+
+void Menu::setCellsPix() {
+    scene.pixstate = PIX;
+}
+void Menu::setCellsPix1() {
+    scene.pixstate = PIX1;
+}
+
+void Menu::setCellsPix2() {
+    scene.pixstate = PIX2;
+}
+
+void Menu::setCellsPix3() {
+    scene.pixstate = PIX3;
+}
+
+void Menu::lineColorButton() {
+    lcolor = QColorDialog::getColor(Qt::white, this);
+    if (lcolor.isValid())
+        qDebug() << "Color Choosen : " << lcolor.name();
+    changeLineColor(lcolor);
+}
+
+void Menu::changeLineColor(const QColor &newColor) {
+    scene.setLineColor(newColor);
+}
+

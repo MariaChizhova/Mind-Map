@@ -485,10 +485,3 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
     cerr << "Completed" << endl;
     return smooth_ans;
 }
-vector<pair<int, int>> ShortestPath::returnToKira () {
-    vector<pair<int, int>> ret;
-    for (auto i : occupied) {
-        ret.push_back(convertToPair(i));
-    }
-    return ret;
-}

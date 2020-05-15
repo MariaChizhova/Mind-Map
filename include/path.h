@@ -45,7 +45,6 @@ private:
 
 class ShortestPath {
 public:
-    vector<pair<int, int>> returnToKira();
     ShortestPath(int width, int height, int step = 1);
 
     /** DATA **/

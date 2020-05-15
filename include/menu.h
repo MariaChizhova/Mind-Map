@@ -41,9 +41,13 @@ public:
 
     QColor wcolor;
 
+    QColor lcolor;
+
     void changeColor(const QColor &newColor);
 
     void changeWindowColor(const QColor &newColor);
+
+    void changeLineColor(const QColor &newColor);
 
     void newScene();
 
@@ -52,7 +56,6 @@ public:
     void addImage();
 
     ~Menu() = default;
-
 
     void newFileButton();
 
@@ -64,6 +67,8 @@ private slots:
 
     void windowColorButton();
 
+    void lineColorButton();
+
     void saveButton();
 
     void addRect();
@@ -73,6 +78,13 @@ private slots:
     void enterText();
 
     void addLine();
+
+    void setCellsPix();
+    void setCellsPix1();
+    void setCellsPix2();
+    void setCellsPix3();
+
+
 
 private:
     QString path;

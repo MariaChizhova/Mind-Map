@@ -17,8 +17,18 @@ void Scene::drawRect(QPointF pos) {
     algo.set_rect_width(width);
     algo.set_rect_height(height);
     QPixmap pix(":/icons/rectangle-png.png");
+    QPixmap pix1(":/icons/exp1.png");
+    QPixmap pix2(":/icons/exp2.png");
+    QPixmap pix3(":/icons/exp3.png");
     QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
-    image->setPixmap(pix);
+    if (pixstate == PIX)
+    	image->setPixmap(pix);
+    else if (pixstate == PIX1)
+        image->setPixmap(pix1);
+    else if (pixstate == PIX2)
+        image->setPixmap(pix2);
+    else if (pixstate == PIX3)
+        image->setPixmap(pix3);
     image->setScale(0.15);
     /*
     QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
@@ -53,7 +63,7 @@ void Scene::drawRect(QPointF pos) {
     myItems.emplace_back(group);
 }
 
-void Scene::addLin() {
+void Scene::addLine() {
     focusItem()->setFlag(QGraphicsItem::ItemIsSelectable, 1);
     focusItem()->setSelected(true);
     if (selectedItem.first == nullptr) selectedItem.first = selectedItems()[0];
@@ -75,7 +85,7 @@ void Scene::addLin() {
             QPointF k(points[i + 1].first, points[i + 1].second);
             path.quadTo(p, k);
         }
-        addPath(path, QPen(Qt::darkCyan, 5));
+        addPath(path, QPen(linecolor, 5));
 
         //Снимаем пометки с выбранных прямоугольников
         selectedItem = make_pair(nullptr, nullptr);
@@ -123,7 +133,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF pos = event->scenePos();
 
     if (state == SDRAW) drawRect(pos);
-    if (state == SLINE) addLin();
+    if (state == SLINE) addLine();
     if (state == STEXT) text();
     if (state == SMOVE) {
         focusItem()->setCursor(QCursor(Qt::ClosedHandCursor));
@@ -156,12 +166,17 @@ void Scene::setWindowColor(QColor newColor) {
     setBackgroundBrush(newColor);
 }
 
+void Scene::setLineColor(QColor newColor) {
+    linecolor = newColor;
+}
+
 QGraphicsTextItem *Scene::printText() {
     QGraphicsTextItem *text = addText(inText.textstr);
     text->setSelected(true);
     text->setZValue(2);
     auto tmp = this->selectedItems()[0]->pos();
-    tmp.ry() += 30;
+    tmp.ry() += 15;
+    tmp.rx() += 13;
     text->setPos(tmp);
     text->setFont(font);
     text->setDefaultTextColor(fontcolor);

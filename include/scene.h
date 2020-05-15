@@ -32,7 +32,7 @@ public:
     void setWindowColor(QColor newColor);
     void drawRect(QPointF pos);
 
-    void addLin();
+    void addLine();
 
     void text();
     void setLineColor(QColor newColor);

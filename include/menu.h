@@ -83,6 +83,7 @@ private slots:
     void setCellsPix1();
     void setCellsPix2();
     void setCellsPix3();
+    void setCellsMyPix();
 
 
 

@@ -20,7 +20,7 @@ enum sceneState {
 };
 
 enum pixState {
-    PIX, PIX1, PIX2, PIX3
+    PIX, PIX1, PIX2, PIX3, MYPIX
 };
 
 class Scene : public QGraphicsScene {
@@ -30,11 +30,13 @@ public:
     void setColor(QColor newColor);
 
     void setWindowColor(QColor newColor);
+
     void drawRect(QPointF pos);
 
     void addLine();
 
     void text();
+
     void setLineColor(QColor newColor);
 
     QGraphicsTextItem *printText();
@@ -54,7 +56,6 @@ public:
     std::vector<QGraphicsItemGroup *> myItems;
     //std::map<QGraphicsItemGroup *, int> indexItems;
 
-   // QGraphicsItem *activeItem;
     QGraphicsPixmapItem *activeItem;
 
     ShortestPath algo;

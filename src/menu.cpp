@@ -101,6 +101,8 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(rect2, &QAction::triggered, this, &Menu::setCellsPix2);
     QAction *rect3 = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
     connect(rect3, &QAction::triggered, this, &Menu::setCellsPix3);
+    QAction *myrect = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
+    connect(myrect, &QAction::triggered, this, &Menu::setCellsMyPix);
 }
 
 
@@ -114,8 +116,9 @@ void Menu::newScene() {
     qreal height = QGuiApplication::primaryScreen()->size().height();
     qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
     qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
+    int diffsize = 60;
     if (ok && width && height)
-        scene.setSceneRect(0, 0, width, height);
+        scene.setSceneRect(0, 0, width - diffsize, height - diffsize);
     /** Добавляем сцену в основное окно */
     view.setScene(&scene);
     setCentralWidget(&view);
@@ -252,6 +255,11 @@ void Menu::setCellsPix2() {
 void Menu::setCellsPix3() {
     scene.pixstate = PIX3;
 }
+
+void Menu::setCellsMyPix() {
+    scene.pixstate = MYPIX;
+}
+
 
 void Menu::lineColorButton() {
     lcolor = QColorDialog::getColor(Qt::white, this);

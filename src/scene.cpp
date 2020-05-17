@@ -7,7 +7,8 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent),
     qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
     algo.fillGraph();
     inText.setStyleSheet("background-color: #13011E; color: white");
-    inText.resize(1920, 1080);
+    int diffsize = 0;
+    inText.resize(1920 - diffsize, 1080 - diffsize);
     inText.setWindowTitle("Mind Map");
 }
 
@@ -16,32 +17,38 @@ void Scene::drawRect(QPointF pos) {
     int height = 50;
     algo.set_rect_width(width);
     algo.set_rect_height(height);
-    QPixmap pix(":/icons/rectangle-png.png");
-    QPixmap pix1(":/icons/exp1.png");
-    QPixmap pix2(":/icons/exp2.png");
-    QPixmap pix3(":/icons/exp3.png");
     QGraphicsPixmapItem *image = new QGraphicsPixmapItem();
-    if (pixstate == PIX)
-    	image->setPixmap(pix);
-    else if (pixstate == PIX1)
+
+    if (pixstate == MYPIX) {
+        QGraphicsRectItem *rectItem = new QGraphicsRectItem(QRect(0, 0, width, height));
+        rectItem->setPen(QPen(Qt::gray, 3));
+        rectItem->setBrush(Qt::gray);
+        rectItem->boundingRect();
+        rectItem->setBrush(color);
+        activeItem = reinterpret_cast<QGraphicsPixmapItem *>(rectItem);
+    } else if (pixstate == PIX) {
+        QPixmap pix(":/icons/rectangle-png.png");
+        image->setPixmap(pix);
+        image->setScale(0.15);
+        activeItem = image;
+    } else if (pixstate == PIX1) {
+        QPixmap pix1(":/icons/exp1.png");
         image->setPixmap(pix1);
-    else if (pixstate == PIX2)
+        image->setScale(0.15);
+        activeItem = image;
+    } else if (pixstate == PIX2) {
+        QPixmap pix2(":/icons/exp2.png");
         image->setPixmap(pix2);
-    else if (pixstate == PIX3)
+        image->setScale(0.15);
+        activeItem = image;
+    } else if (pixstate == PIX3) {
+        QPixmap pix3(":/icons/exp3.png");
         image->setPixmap(pix3);
-    image->setScale(0.15);
-    /*
-    QGraphicsRectItem *rectItem = new QGraphicsRectItem( QRect( 0, 0, width, height ));
-    rectItem->setPen( QPen( Qt::gray, 3 ) );
-    rectItem->setBrush( Qt::gray );
-    rectItem->boundingRect();
-    activeItem = rectItem;*/
-    activeItem = image;
+        image->setScale(0.15);
+        activeItem = image;
+    }
     if (!activeItem)
         return;
-
-    /** Задаем цвет прямоугольнику */
-    /*  static_cast<QGraphicsPolygonItem *>(activeItem)->setBrush(color);*/
 
     /** Добавляем элемент в сцену */
     activeItem->setZValue(1);

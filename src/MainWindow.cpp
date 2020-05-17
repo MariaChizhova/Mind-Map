@@ -32,6 +32,7 @@ void MainWindow::newProject() {
 
 void MainWindow::newFileButton() {
    newProject();
+   window->newFileButton();
 }
 
 void MainWindow::openFileButton() {

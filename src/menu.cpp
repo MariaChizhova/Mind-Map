@@ -13,6 +13,11 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap wincolorpix(":/icons/wincolor.png");
     QPixmap rectanglepix(":/icons/rectangle.png");
     QPixmap textpix(":/icons/text.png");
+    QPixmap movepix(":/icons/move.png");
+    QPixmap linepix(":/icons/line.png");
+    QPixmap picturepix(":/icons/picture.png");
+    QPixmap addpix(":/icons/add.png");
+    QPixmap linecolorpix(":/icons/linecolor.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
@@ -22,7 +27,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *about = new QAction(helppix, "&About", this);
     QAction *color = new QAction(colorpix, "&Color", this);
     QAction *wincolor = new QAction(wincolorpix, "&WinColor", this);
-    QAction *linecolor = new QAction(wincolorpix, "&LineColor", this);
+    QAction *linecolor = new QAction(linecolorpix, "&LineColor", this);
 
     /** Создаём объект класса QMenu (меню) */
     QMenu *file = menuBar()->addMenu("&File");
@@ -60,22 +65,24 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     color->setShortcut(tr("CTRL+C"));
     wincolor->setShortcut(tr("CTRL+W"));
     about->setShortcut(tr("CTRL+A"));
+    linecolor->setShortcut(tr("CTRL+L"));
 
     /** Панель ToolBar*/
     QToolBar *toolbar = addToolBar("Menu");
-    QAction *addRectangle = toolbar->addAction("Add");
+    QAction *addRectangle = toolbar->addAction(QIcon(addpix),"Add");
+
     connect(addRectangle, &QAction::triggered, this, &Menu::addRect);
 
-    QAction *moveRectangle = toolbar->addAction("Move");
+    QAction *moveRectangle = toolbar->addAction(QIcon(movepix),"Move");
     connect(moveRectangle, &QAction::triggered, this, &Menu::moveRect);
 
     QAction *text = toolbar->addAction(QIcon(textpix), "Text");
     connect(text, &QAction::triggered, this, &Menu::enterText);
 
-    QAction *line = toolbar->addAction("Line");
+    QAction *line = toolbar->addAction(QIcon(linepix),"Line");
     connect(line, &QAction::triggered, this, &Menu::addLine);
 
-    QAction *pix = toolbar->addAction("Pix");
+    QAction *pix = toolbar->addAction(QIcon(picturepix), "Pix");
     connect(pix, &QAction::triggered, this, &Menu::addImage);
 
     QPixmap exp(":/icons/rectangle-png.png");

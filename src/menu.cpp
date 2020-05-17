@@ -89,6 +89,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap exp1(":/icons/exp1.png");
     QPixmap exp2(":/icons/exp2.png");
     QPixmap exp3(":/icons/exp3.png");
+    QPixmap myexp(":/icons/myrect.png");
     QToolBar *lefttoolbar = addToolBar("Cells");
     this->addToolBar(Qt::LeftToolBarArea, lefttoolbar);
     lefttoolbar->setFixedWidth(70);
@@ -101,7 +102,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     connect(rect2, &QAction::triggered, this, &Menu::setCellsPix2);
     QAction *rect3 = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
     connect(rect3, &QAction::triggered, this, &Menu::setCellsPix3);
-    QAction *myrect = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
+    QAction *myrect = lefttoolbar->addAction(QIcon(myexp), "My Rectangle");
     connect(myrect, &QAction::triggered, this, &Menu::setCellsMyPix);
 }
 
@@ -236,9 +237,9 @@ void Menu::addLine() {
 }
 
 void Menu::addImage() {
-    scene.clear();
-    changeWindowColor(Qt::white);
-    view.setScene(&scene);
+    //scene.clear();
+    //changeWindowColor(Qt::white);
+    //view.setScene(&scene);
     QString str = QFileDialog::getOpenFileName(0, "Open Picture", "", "*.jpeg *.jpg *.png");
     qDebug() << str;
     QPixmap pixmap(str);

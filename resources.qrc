@@ -20,5 +20,6 @@
         <file>icons/picture.png</file>
         <file>icons/line.png</file>
         <file>icons/linecolor.png</file>
+        <file>icons/myrect.png</file>
     </qresource>
 </RCC>

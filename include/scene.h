@@ -41,13 +41,13 @@ public:
 
     QGraphicsTextItem *printText();
 
-    QColor color;
+    QColor color = Qt::cyan;
 
     QFont font;
 
     QColor fontcolor;
     QPointF last_pos;
-    QColor linecolor;
+    QColor linecolor = "#8f5ae5";
 
     sceneState state = SDRAW;
 

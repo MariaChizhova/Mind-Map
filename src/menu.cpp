@@ -237,7 +237,11 @@ void Menu::addLine() {
 
 void Menu::addImage() {
     scene.clear();
-    QPixmap pixmap(":/icons/hruu.jpg");
+    changeWindowColor(Qt::white);
+    view.setScene(&scene);
+    QString str = QFileDialog::getOpenFileName(0, "Open Picture", "", "*.jpeg *.jpg *.png");
+    qDebug() << str;
+    QPixmap pixmap(str);
     scene.setBackgroundBrush(pixmap);
 }
 

@@ -21,5 +21,6 @@
         <file>icons/line.png</file>
         <file>icons/linecolor.png</file>
         <file>icons/myrect.png</file>
+        <file>icons/delete.png</file>
     </qresource>
 </RCC>

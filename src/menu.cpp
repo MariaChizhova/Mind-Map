@@ -18,6 +18,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap picturepix(":/icons/picture.png");
     QPixmap addpix(":/icons/add.png");
     QPixmap linecolorpix(":/icons/linecolor.png");
+    QPixmap deletepix(":/icons/delete.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);

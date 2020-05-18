@@ -42,7 +42,7 @@ public:
 
     void setLineColor(QColor newColor);
 
-    void drawLine(pair<int, int> point1, pair<int, int> point2);
+    void drawLine(std::pair<int, int> point1, std::pair<int, int> point2);
 
     QGraphicsTextItem *printText();
 
@@ -68,10 +68,10 @@ public:
     sceneMenu inText;
     QPointF point;
 
-    std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
+    std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = std::make_pair(nullptr, nullptr);
 
-    map<pair<int, int>, vector<QGraphicsPathItem *>> allPath;
-    map<pair<int, int>, vector<pair<int, int>>> allRect;
+    std::map<std::pair<int, int>, std::vector<QGraphicsPathItem *>> allPath;
+    std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> allRect;
 
 protected:
 

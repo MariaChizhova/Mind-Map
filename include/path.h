@@ -36,11 +36,11 @@ public:
         return id;
     }
 
-    vector<int> data; // мб надо запихать в private
+    vector<int> data;
 private:
-    int width, height;
-    int centre;
-    int id;
+    int width{}, height{};
+    int centre{};
+    int id{};
 };
 
 class ShortestPath {
@@ -48,40 +48,39 @@ public:
     ShortestPath(int width, int height, int step = 1);
 
     /** DATA **/
-    void fillGraph(); // создает сетку
-    void showGraph(); // локально для меня отображает результат
+    void fillGraph();
 
     /** SHAPE **/
     void
-    getRectCoord(int x, int y, int w, int h); // по идее должна получать данные от Киры и создавать по ним прямоугольник
-    rectangle getRect(int id, pair<int, int> centre_coord, int w, int h); // по входным данным создает прямоугольник
-    void addShape(rectangle &rect); // добавляет на поле фигуру
-    void deleteShape(rectangle rect); // можно сделать айдишник равный координате центра // удаляет с поля фигуру
-    void dragShape(pair<int, int> old_centre, pair<int, int> new_centre); // тип, кординаты текущие и конечные // перемещает фигуру (мб ненужная)
+    getRectCoord(int x, int y, int w, int h);
 
-    /** ShortestPath **/
-    pair<int, int> findBorderPoint(int id1, int id2); // находит точки, из которых строить путь
-    vector<pair<int, int>> createShortestPath(int x1, int y1, int x2, int y2); // находит путь
-    vector<pair<int, int>> SmoothAngle(vector<pair<int, int>> way);
+    rectangle getRect(int id, pair<int, int> centre_coord, int w, int h);
+
+    void addShape(rectangle &rect);
+
+    void clearShape(rectangle rect);
+
+    void deleteShape(pair<int, int> old_centre);
+
+    void dragShape(pair<int, int> old_centre, pair<int, int> new_centre);
+
+    /** PATH **/
+    pair<int, int> findBorderPoint(int id1, int id2);
+
+    vector<pair<int, int>> createShortestPath(int x1, int y1, int x2, int y2);
+
+    vector<pair<int, int>> smoothAngle(vector<pair<int, int>> &way);
+
+    vector<vector<pair<int, int>>> deletePaths(pair<int, int> centre);
 
     /** CONVERSION **/
-    pair<int, int> convertToPair(int x); // приводит координаты к номеру вершины
-    int convertToNum(pair<int, int>); // приводит координаты к номеру вершины
-    int convertToStep(int x); // сжимает данные в step раз
-    int convertFromStep(int x); // возвращает данные реального размера
+    pair<int, int> convertToPair(int x);
 
-    /** GETTERS **/
-    inline int getWidth() const {
-        return width;
-    }
+    int convertToNum(pair<int, int>);
 
-    inline int getHeight() const {
-        return height;
-    }
+    int convertToStep(int x);
 
-    inline int getSize() const {
-        return size;
-    }
+    int convertFromStep(int x);
 
     inline rectangle getRectData(int idx) const {
         return rectData[idx];
@@ -96,17 +95,30 @@ public:
     }
 
 private:
+
+    struct {
+        bool operator()(pair<int, int> a, pair<int, int> b) const {
+            if (a.first != b.first) {
+                return a.first < b.first;
+            } else {
+                return a.second < b.second;
+            }
+        }
+    } map_comparator;
+
     int width;
     int height;
     int size;
     int step = 1;
     int rect_width = 0;
     int rect_height = 0;
-    vector<vector<int>> data; // тут все вершины и их соседи
-    vector<int> occupied; // занятые ячейки
+    vector<vector<int>> data;
+    vector<int> occupied;
     map<pair<int, int>, int> shapeId;
-    map<pair<int, int>, vector<pair<int, int>>> pathId;
-    vector<int> path;
+    template<typename T>
+    using path_map = map<pair<int, T>, vector<pair<int, int>>>;
+    map<int, vector<pair<int, int>>> singlePathId;
+    path_map<int> pathId;
     vector<rectangle> rectData;
 };
 

@@ -14,9 +14,10 @@
 #include <QFontDialog>
 #include <iostream>
 #include <QScreen>
+#include <algorithm>
 
 enum sceneState {
-    SDRAW, SMOVE, STEXT, SLINE
+    SDRAW, SMOVE, STEXT, SLINE, SDELETE
 };
 
 enum pixState {
@@ -37,7 +38,11 @@ public:
 
     void text();
 
+    void delRect();
+
     void setLineColor(QColor newColor);
+
+    void drawLine(pair<int, int> point1, pair<int, int> point2);
 
     QGraphicsTextItem *printText();
 
@@ -46,7 +51,7 @@ public:
     QFont font;
 
     QColor fontcolor;
-    QPointF last_pos;
+    QPointF lastPos;
     QColor linecolor = "#8f5ae5";
 
     sceneState state = SDRAW;
@@ -64,6 +69,9 @@ public:
     QPointF point;
 
     std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
+
+    map<pair<int, int>, vector<QGraphicsPathItem *>> allPath;
+    map<pair<int, int>, vector<pair<int, int>>> allRect;
 
 protected:
 

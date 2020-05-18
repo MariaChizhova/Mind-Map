@@ -13,6 +13,8 @@ find_package(Qt5Xml REQUIRED)
 
 include_directories(include)
 
+add_compile_options(-O2)
+
 set(src src/main.cpp src/menu.cpp src/scene.cpp src/svgreader.cpp
         src/path.cpp src/sceneMenu.cpp src/svgsaver.cpp src/MainWindow.cpp)
 add_executable(project_hse ${src} resources.qrc)

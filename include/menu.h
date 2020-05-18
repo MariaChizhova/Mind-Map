@@ -73,6 +73,8 @@ private slots:
 
     void addRect();
 
+    void deleteShape();
+
     void moveRect();
 
     void enterText();

@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "scene.h"
+#include <algorithm>
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent),
                                 algo(int(1920), int(1080), 1) {
@@ -10,6 +11,27 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent),
     int diffsize = 0;
     inText.resize(1920 - diffsize, 1080 - diffsize);
     inText.setWindowTitle("Mind Map");
+}
+
+void Scene::drawLine(pair<int, int> point1, pair<int, int> point2) {
+    vector<pair<int, int>> points = algo.createShortestPath(point1.first,
+                                                            point1.second,
+                                                            point2.first,
+                                                            point2.second);
+
+    int step = 5;
+    QPainterPath path;
+    path.moveTo(points[step].first, points[step].second);
+    for (int i = step; i < points.size() - step; i++) {
+        QPointF p(points[i].first, points[i].second);
+        QPointF k(points[i + 1].first, points[i + 1].second);
+        path.quadTo(p, k);
+    }
+    QGraphicsPathItem *pathItem = addPath(path, QPen(linecolor, 5));
+    allPath[point1].push_back(pathItem);
+    allPath[point2].push_back(pathItem);
+    allRect[point1].push_back(point2);
+    allRect[point2].push_back(point1);
 }
 
 void Scene::drawRect(QPointF pos) {
@@ -79,21 +101,8 @@ void Scene::addLine() {
         cout << selectedItem.first->x() << selectedItem.first->y() << endl;
         cout << selectedItem.second->x() << selectedItem.second->y() << endl;
         //Получили вектор с точками
-        vector<pair<int, int>> points = algo.createShortestPath(this->selectedItem.first->pos().rx(),
-                                                                this->selectedItem.first->pos().ry(),
-                                                                this->selectedItem.second->pos().rx(),
-                                                                this->selectedItem.second->pos().ry());
-
-        int step = 5;
-        QPainterPath path;
-        path.moveTo(points[step].first, points[step].second);
-        for (int i = step; i < points.size() - step; i++) {
-            QPointF p(points[i].first, points[i].second);
-            QPointF k(points[i + 1].first, points[i + 1].second);
-            path.quadTo(p, k);
-        }
-        addPath(path, QPen(linecolor, 5));
-
+        drawLine({this->selectedItem.first->pos().rx(), this->selectedItem.first->pos().ry()},
+                 {this->selectedItem.second->pos().rx(), this->selectedItem.second->pos().ry()});
         //Снимаем пометки с выбранных прямоугольников
         selectedItem = make_pair(nullptr, nullptr);
         for (auto &my_item : myItems) {
@@ -133,6 +142,17 @@ void Scene::text() {
     }
 };
 
+void Scene::delRect() {
+    algo.deleteShape({focusItem()->scenePos().rx() + 40, focusItem()->scenePos().ry() + 25});
+    for (auto &path: allPath[{focusItem()->scenePos().rx(), focusItem()->scenePos().ry()}]) {
+        if (path != nullptr) {
+            removeItem(path);
+            path = nullptr;
+        }
+    }
+    focusItem()->hide();
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 
@@ -144,22 +164,36 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (state == STEXT) text();
     if (state == SMOVE) {
         focusItem()->setCursor(QCursor(Qt::ClosedHandCursor));
-        last_pos = focusItem()->scenePos();
+        lastPos = focusItem()->scenePos();
+        for (auto &path: allPath[{lastPos.rx(), lastPos.ry()}]) {
+            if (path != nullptr) {
+                removeItem(path);
+                path = nullptr;
+            }
+        }
+        for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
+            allRect[rect].erase(remove(allRect[rect].begin(), allRect[rect].end(),
+                                       make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
+        }
     }
+    if (state == SDELETE) delRect();
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseMoveEvent(event);
-    cout << focusItem()->scenePos().rx() << " " << focusItem()->scenePos().ry() << endl;
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     if (focusItem() == nullptr) return;
     focusItem()->setCursor(QCursor(Qt::ArrowCursor));
-    if (last_pos != focusItem()->scenePos()) {
-        algo.dragShape(make_pair(last_pos.rx(), last_pos.ry()),
+    if (lastPos != focusItem()->scenePos()) {
+        algo.dragShape(make_pair(lastPos.rx() + 40, lastPos.ry() + 25),
                        make_pair(focusItem()->scenePos().rx() + 40, focusItem()->scenePos().ry() + 25));
         focusItem()->setSelected(false);
+        for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
+            drawLine({focusItem()->scenePos().rx(), focusItem()->scenePos().ry()}, rect);
+        }
+        allRect[{lastPos.rx(), lastPos.ry()}].clear();
     }
     QGraphicsScene::mouseReleaseEvent(event);
 

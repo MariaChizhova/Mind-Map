@@ -18,6 +18,7 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QPixmap picturepix(":/icons/picture.png");
     QPixmap addpix(":/icons/add.png");
     QPixmap linecolorpix(":/icons/linecolor.png");
+    QPixmap deletepix(":/icons/delete.png");
 
     /** Создаём объект класса QAction (действие) с названием пункта меню "Quit" */
     QAction *newfile = new QAction(newpix, "&New", this);
@@ -69,21 +70,24 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
 
     /** Панель ToolBar*/
     QToolBar *toolbar = addToolBar("Menu");
-    QAction *addRectangle = toolbar->addAction(QIcon(addpix),"Add");
+    QAction *addRectangle = toolbar->addAction(QIcon(addpix), "Add");
 
     connect(addRectangle, &QAction::triggered, this, &Menu::addRect);
 
-    QAction *moveRectangle = toolbar->addAction(QIcon(movepix),"Move");
+    QAction *moveRectangle = toolbar->addAction(QIcon(movepix), "Move");
     connect(moveRectangle, &QAction::triggered, this, &Menu::moveRect);
 
     QAction *text = toolbar->addAction(QIcon(textpix), "Text");
     connect(text, &QAction::triggered, this, &Menu::enterText);
 
-    QAction *line = toolbar->addAction(QIcon(linepix),"Line");
+    QAction *line = toolbar->addAction(QIcon(linepix), "Line");
     connect(line, &QAction::triggered, this, &Menu::addLine);
 
     QAction *pix = toolbar->addAction(QIcon(picturepix), "Pix");
     connect(pix, &QAction::triggered, this, &Menu::addImage);
+
+    QAction *del = toolbar->addAction(QIcon(deletepix), "Delete");
+    connect(del, &QAction::triggered, this, &Menu::deleteShape);
 
     QPixmap exp(":/icons/rectangle-png.png");
     QPixmap exp1(":/icons/exp1.png");
@@ -249,6 +253,7 @@ void Menu::addImage() {
 void Menu::setCellsPix() {
     scene.pixstate = PIX;
 }
+
 void Menu::setCellsPix1() {
     scene.pixstate = PIX1;
 }
@@ -275,5 +280,15 @@ void Menu::lineColorButton() {
 
 void Menu::changeLineColor(const QColor &newColor) {
     scene.setLineColor(newColor);
+}
+
+void Menu::deleteShape() {
+    scene.state = SDELETE;
+    for (auto &my_item : scene.myItems) {
+        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    }
 }
 

@@ -205,19 +205,31 @@ void Menu::openButton() {
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
 
-    /** TODO: Вставить цвет из Svgreader */
-    scene.setWindowColor("#c7c7fa");
-
+     scene.setWindowColor(Qt::white);
+    vector<pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
-            foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
-            QGraphicsRectItem *rect = item;
-            QGraphicsItemGroup *group = scene.createItemGroup({});
-            group->addToGroup(rect);
-            group->setHandlesChildEvents(true);
-            group->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            scene.myItems.emplace_back(group);
-            scene.addItem(rect);
-        }
+    foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
+        QGraphicsRectItem *rect = item;
+        QGraphicsItemGroup *group = scene.createItemGroup({});
+        group->addToGroup(rect);
+        group->setHandlesChildEvents(true);
+        group->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        group->setFlag(QGraphicsItem::ItemIsMovable, false);
+       // group->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        scene.myItems.emplace_back(group);
+        scene.addItem(rect);
+        qDebug() <<  rect->scenePos().x()<< " " << rect->scenePos().y();
+        points.emplace_back(rect->scenePos().x(), rect->scenePos().y());
+    }
+    int step = 5;
+    QPainterPath path;
+    path.moveTo(points[step].first, points[step].second);
+    for (int i = step; i < points.size() - step; i++) {
+        QPointF p(points[i].first, points[i].second);
+        QPointF k(points[i + 1].first, points[i + 1].second);
+        path.quadTo(p, k);
+    }
+    scene.addPath(path, QPen(scene.linecolor, 5));
 }
 
 void Menu::enterText() {

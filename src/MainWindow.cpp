@@ -8,13 +8,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     qDebug() << "ScreenSize.height           : " << screenSize.height();
     qreal wr = 200;
     qreal hr = 80;
-    QPushButton *newFile = new QPushButton("New File", this);
+    QPushButton *newFile = new QPushButton(this);
+    newFile->setIcon(QIcon(":/icons/New File.png"));
+    newFile->setIconSize(QSize(200, 80));
     newFile->setGeometry(w2, h2, wr, hr);
     connect(newFile, &QPushButton::clicked, this, &MainWindow::newFileButton);
-    QPushButton *openFile = new QPushButton("Open File", this);
+    QPushButton *openFile = new QPushButton( this);
+    openFile->setIcon(QIcon(":/icons/Open FIle.png"));
+    openFile->setIconSize(QSize(200, 80));
     openFile->setGeometry(w2, h2 + hr , wr, hr);
     connect(openFile, &QPushButton::clicked, this, &MainWindow::openFileButton);
-    QPushButton *quitBtn = new QPushButton("Quit", this);
+    QPushButton *quitBtn = new QPushButton(this);
+    quitBtn->setIcon(QIcon(":/icons/Exit.png"));
+    quitBtn->setIconSize(QSize(200, 80));
     quitBtn->setGeometry(w2, h2 + 2 * hr, wr, hr);
     connect(quitBtn, &QPushButton::clicked, this, QApplication::quit);
 }

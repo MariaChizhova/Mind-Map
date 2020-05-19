@@ -7,7 +7,6 @@
 #include <cassert>
 #include "path.h"
 
-using namespace std;
 static int id = 0;
 // height - длина вертикального столбца, width - горизонтальной строчки
 
@@ -22,7 +21,7 @@ ShortestPath::ShortestPath(int wid, int hei, int step) : step(step) {
 }
 
 void ShortestPath::fillGraph() { // нумерация построчно, начиная с единицы
-    vector<int> used(size, 0);
+    std::vector<int> used(size, 0);
 
     for (int i = 0; i < size; i++) {
         data[i].push_back(i);
@@ -85,14 +84,14 @@ void ShortestPath::fillGraph() { // нумерация построчно, на�
     }
 }
 
-pair<int, int> ShortestPath::convertToPair(int x) {
+std::pair<int, int> ShortestPath::convertToPair(int x) {
     int w, h;
     w = x % width;
     h = x / width;
-    return make_pair(w, h);
+    return {w, h};
 }
 
-int ShortestPath::convertToNum(pair<int, int> coord) {
+int ShortestPath::convertToNum(std::pair<int, int> coord) {
     return coord.first + coord.second * width;
 }
 
@@ -106,41 +105,41 @@ int ShortestPath::convertFromStep(int x) {
     return x * step;
 }
 
-rectangle ShortestPath::getRect(int new_id, pair<int, int> centre_coord, int w, int h) {
-    int centre = convertToStep(convertToNum(centre_coord));
+rectangle ShortestPath::getRect(int newId, std::pair<int, int> centreCoord, int w, int h) {
+    int centre = convertToStep(convertToNum(centreCoord));
     int wid = convertToStep(w);
     int hei = convertToStep(h);
-    rectangle rect(new_id, centre, wid, hei);
-    rectData[new_id] = rect;
+    rectangle rect(newId, centre, wid, hei);
+    rectData[newId] = rect;
     return rect;
 }
 
 void ShortestPath::getRectCoord(int x, int y, int w, int h) {
     shapeId[{x, y}] = id;
-    rectData[id] = getRect(id, make_pair(x, y), w, h);
+    rectData[id] = getRect(id, {x, y}, w, h);
     addShape(rectData[id]);
     ++id;
 }
 
 void ShortestPath::addShape(rectangle &rect) {
-    int left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
-    int right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
-    int GAP = 7;
+    int leftUp = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int rightUp = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int GAP = 10;
     for (int i = GAP * -1; i < rect.getHeight() + GAP; i++) {
-        for (int j = left_up + width * i - GAP; j < right_up + width * i + GAP; j++) {
+        for (int j = leftUp + width * i - GAP; j < rightUp + width * i + GAP; j++) {
             occupied[j] = 1;
         }
     }
-    int left_mid = rect.getCentre() - rect.getWidth() / 2;
-    int right_mid = rect.getCentre() + rect.getWidth() / 2;
+    int leftMid = rect.getCentre() - rect.getWidth() / 2;
+    int rightMid = rect.getCentre() + rect.getWidth() / 2;
     for (int i = -1 * GAP + 2; i < GAP - 2; i++) {
-        int left_cur = left_mid + width * i;
-        int right_cur = right_mid + width * i;
+        int leftCur = leftMid + width * i;
+        int rightCur = rightMid + width * i;
         for (int j = 0; j < GAP + GAP + 1; j++) {
-            occupied[left_cur] = 0;
-            occupied[right_cur] = 0;
-            left_cur--;
-            right_cur++;
+            occupied[leftCur] = 0;
+            occupied[rightCur] = 0;
+            leftCur--;
+            rightCur++;
         }
     }
 }
@@ -149,33 +148,33 @@ void ShortestPath::clearShape(rectangle rect) {
     for (auto i : rect.data) {
         occupied[i] = 0;
     }
-    int left_up = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
-    int right_up = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int leftUp = rect.getCentre() - rect.getWidth() / 2 - width * (rect.getHeight() / 2);
+    int rightUp = rect.getCentre() + rect.getWidth() / 2 - width * (rect.getHeight() / 2);
     int GAP = 10;
     for (int i = GAP * -1; i < rect.getHeight() + GAP; i++) {
-        for (int j = left_up + width * i - GAP; j < right_up + width * i + GAP; j++) {
+        for (int j = leftUp + width * i - GAP; j < rightUp + width * i + GAP; j++) {
             occupied[j] = 0;
         }
     }
 }
 
-void ShortestPath::deleteShape(pair<int, int> old_centre) {
-    int old_id = shapeId[old_centre];
-    clearShape(rectData[old_id]);
+void ShortestPath::deleteShape(std::pair<int, int> oldCentre) {
+    int oldId = shapeId[oldCentre];
+    clearShape(rectData[oldId]);
 }
 
-void ShortestPath::dragShape(pair<int, int> old_centre, pair<int, int> new_centre) {
-    int old_id = shapeId[old_centre];
-    clearShape(rectData[old_id]);
-    getRectCoord(new_centre.first, new_centre.second, rectData[old_id].getWidth(), rectData[old_id].getHeight());
+void ShortestPath::dragShape(std::pair<int, int> oldCentre, std::pair<int, int> newCentre) {
+    int oldId = shapeId[oldCentre];
+    clearShape(rectData[oldId]);
+    getRectCoord(newCentre.first, newCentre.second, rectData[oldId].getWidth(), rectData[oldId].getHeight());
 }
 
-pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
+std::pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
     int coord1 = 0, coord2 = 0;
     rectangle rect1 = getRectData(id1);
     rectangle rect2 = getRectData(id2);
-    pair<int, int> cent1 = convertToPair(rect1.getCentre());
-    pair<int, int> cent2 = convertToPair(rect2.getCentre());
+    std::pair<int, int> cent1 = convertToPair(rect1.getCentre());
+    std::pair<int, int> cent2 = convertToPair(rect2.getCentre());
     if (cent1.first < cent2.first) {
         coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() - rect2.getWidth() / 2;
@@ -186,11 +185,11 @@ pair<int, int> ShortestPath::findBorderPoint(int id1, int id2) {
         coord1 = rect1.getCentre() + rect1.getWidth() / 2;
         coord2 = rect2.getCentre() + rect2.getWidth() / 2;
     }
-    return make_pair(convertToStep(coord1), convertToStep(coord2));
+    return {convertToStep(coord1), convertToStep(coord2)};
 }
 
 struct {
-    bool operator()(pair<int, int> a, pair<int, int> b) const {
+    bool operator()(std::pair<int, int> a, std::pair<int, int> b) const {
         if (a.first != b.first) {
             return a.first < b.first;
         } else {
@@ -201,181 +200,179 @@ struct {
 
 class SafeVec {
 public:
-    vector<pair<int, int>> inner_way;
+    std::vector<std::pair<int, int>> innerWay;
 
-    SafeVec(vector<pair<int, int>> inner_way) : inner_way(std::move(inner_way)) {}
+    SafeVec(std::vector<std::pair<int, int>> innerWay) : innerWay(std::move(innerWay)) {}
 
-    pair<int, int> operator[](int idx) {
-        if (idx < 0 or idx >= inner_way.size()) {
-            cerr << "OutOfBounds: " << idx << " " << inner_way.size() << endl;
-            throw out_of_range("INDEX IS OUT OF BOUNDS");
+    std::pair<int, int> operator[](int idx) {
+        if (idx < 0 or idx >= (int) innerWay.size()) {
+            std::cerr << "OutOfBounds: " << idx << " " << innerWay.size() << std::endl;
+            throw std::out_of_range("INDEX IS OUT OF BOUNDS");
         }
-        return inner_way[idx];
+        return innerWay[idx];
     }
 
     int size() {
-        return inner_way.size();
+        return innerWay.size();
     }
 };
 
-vector<pair<int, int>> ShortestPath::smoothAngle(vector<pair<int, int>> &way) {
-    vector<vector<pair<int, int>>> coords;
-    SafeVec my_way(way);
+bool check(int i, int cn, SafeVec myWay, std::vector<std::pair<int, int>> way) {
+    return ((i - cn - 2 >= 0) and (i + cn + 2 < (int) way.size()) and
+            (myWay[i - cn].first != myWay[i - cn - 2].first) and
+            (myWay[i - cn].second != myWay[i - cn - 2].second) and
+            (myWay[i + cn].first != myWay[i + cn + 2].first) and
+            (myWay[i + cn].second != myWay[i + cn + 2].second));
+}
+
+std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair<int, int>> &way) {
+    std::vector<std::vector<std::pair<int, int>>> coords;
+    SafeVec myWay(way);
     coords.resize(way.size());
     int delta = 1;
     int DEFAULT_WAY_STEP = 60;
     int WAY_STEP = DEFAULT_WAY_STEP;
     int MIN_DIFF = 15;
     int cnt = 0;
-    bool changes_existance = false;
-    bool got_to_cycle = false;
+    bool changesExist = false;
+    bool gotToCycle = false;
     try {
-        for (int i = 1; i < my_way.size() - 1; i++) {
-            if (i < max(MIN_DIFF * 2 + 2, WAY_STEP) or
-                i > (int) my_way.size() - max(MIN_DIFF * 2 + 2, WAY_STEP))
+        for (int i = 1; i < myWay.size() - 1; i++) {
+            if (i < std::max(MIN_DIFF * 2 + 2, WAY_STEP) or
+                i > (int) myWay.size() - std::max(MIN_DIFF * 2 + 2, WAY_STEP))
                 continue;
-            if ((my_way[i - 1].first != my_way[i + 1].first) and (my_way[i - 1].second != way[i + 1].second)) {
-                bool change_delta = false;
-                bool is_upper_angle = false;
-                bool is_draw = false;
-                bool change_made = false;
+            if ((myWay[i - 1].first != myWay[i + 1].first) and (myWay[i - 1].second != way[i + 1].second)) {
+                bool isDelta = false;
+                bool isUp = false;
+                bool isDraw = false;
+                bool isChange = false;
+
                 for (int cn = 0; cn < MIN_DIFF + 4; cn++) {
-                    //cout << convertToNum(my_way[i + cn]) << '\n';
-                    //cout << way[i + cn].first << ' ' << way[i + cn].second << '\n';
-                    if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                        ((occupied[convertToNum(my_way[i - cn])] and occupied[convertToNum(my_way[i - cn - 1])] and
-                          occupied[convertToNum(my_way[i - cn + 1])]) or
-                         (occupied[convertToNum(my_way[i])] and occupied[convertToNum(my_way[i - 1])] and
-                          occupied[convertToNum(my_way[i + 1])]) or
-                         (occupied[convertToNum(my_way[i + cn])] and occupied[convertToNum(my_way[i + cn - 1])] and
-                          occupied[convertToNum(my_way[i + cn + 1])]) or
-                         ((my_way[i - cn].first != my_way[i - cn - 2].first) and
-                          (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                          (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                          (my_way[i + cn].second != my_way[i + cn + 2].second)))) {
-                        if (occupied[convertToNum(my_way[i - cn])])
-                            cout << 1 << ' ' << cn << ' ' << occupied[convertToNum(my_way[i - cn])] << '\n';
-                        else if (occupied[convertToNum(my_way[i])]) cout << 2 << '\n';
-                        else if (occupied[convertToNum(my_way[i + cn])]) cout << 3 << '\n';
-                        else if (my_way[i - cn].first != my_way[i - cn - 2].first) cout << 4 << '\n';
-                        else if (my_way[i - cn].second != my_way[i - cn - 2].second) cout << 5 << '\n';
-                        else if (my_way[i + cn].first != my_way[i + cn + 2].first) cout << 6 << '\n';
-                        else if (my_way[i + cn].second != my_way[i + cn + 2].second) cout << 7 << '\n';
-                        cout << "WHAT A FUCK\n";
-                        for (int f = 1; f < my_way.size() - 1; f++) {
-                            cout << occupied[convertToNum(my_way[i])] << ' ';
+                    if ((i - cn - 2 >= 0) and (i + cn + 2 < (int) way.size()) and
+                        (occupied[convertToNum(myWay[i - cn])] or occupied[convertToNum(myWay[i + cn])] or
+                         occupied[convertToNum({myWay[i - cn].first - 1, myWay[i - cn].second - 1})] or
+                         occupied[convertToNum({myWay[i - cn].first + 1, myWay[i - cn].second + 1})] or
+                         occupied[convertToNum({myWay[i - cn].first - 1, myWay[i - cn].second + 1})] or
+                         occupied[convertToNum({myWay[i - cn].first + 1, myWay[i - cn].second - 1})])) {
+                        WAY_STEP = MIN_DIFF - 2;
+                    }
+                }
+
+                for (int cn = 0; cn < MIN_DIFF + 4; cn++) {
+                    if ((i - cn - 2 >= 0) and (i + cn + 2 < (int) way.size()) and
+                        ((occupied[convertToNum(myWay[i - cn])] and occupied[convertToNum(myWay[i - cn - 1])] and
+                          occupied[convertToNum(myWay[i - cn + 1])]) or
+                         (occupied[convertToNum(myWay[i])] and occupied[convertToNum(myWay[i - 1])] and
+                          occupied[convertToNum(myWay[i + 1])]) or
+                         (occupied[convertToNum(myWay[i + cn])] and occupied[convertToNum(myWay[i + cn - 1])] and
+                          occupied[convertToNum(myWay[i + cn + 1])]) or
+                         ((myWay[i - cn].first != myWay[i - cn - 2].first) and
+                          (myWay[i - cn].second != myWay[i - cn - 2].second) and
+                          (myWay[i + cn].first != myWay[i + cn + 2].first) and
+                          (myWay[i + cn].second != myWay[i + cn + 2].second)))) {
+                        if (occupied[convertToNum(myWay[i - cn])])
+                            std::cout << 1 << ' ' << cn << ' ' << occupied[convertToNum(myWay[i - cn])] << '\n';
+                        else if (occupied[convertToNum(myWay[i])]) std::cout << 2 << '\n';
+                        else if (occupied[convertToNum(myWay[i + cn])]) std::cout << 3 << '\n';
+                        else if (myWay[i - cn].first != myWay[i - cn - 2].first) std::cout << 4 << '\n';
+                        else if (myWay[i - cn].second != myWay[i - cn - 2].second) std::cout << 5 << '\n';
+                        else if (myWay[i + cn].first != myWay[i + cn + 2].first) std::cout << 6 << '\n';
+                        else if (myWay[i + cn].second != myWay[i + cn + 2].second) std::cout << 7 << '\n';
+                        std::cout << "WHAT A FUCK\n";
+                        for (int f = 1; f < (int) myWay.size() - 1; f++) {
+                            std::cout << occupied[convertToNum(myWay[i])] << ' ';
                         }
-                        cout << '\n';
-                        is_draw = true;
+                        std::cout << '\n';
+                        isDraw = true;
                         break;
                     }
                 }
 
-                if (is_draw) continue;
-                cout << "HERE_1" << endl;
+                if (isDraw) continue;
+                std::cout << "HERE_1" << std::endl;
                 for (int cn = 0; cn < 2 * MIN_DIFF + 4; cn++) {
-                    if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                        (my_way[i - cn].first != my_way[i - cn - 2].first) and
-                        (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                        (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                        (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                    if (check(i, cn, myWay, way)) {
                         WAY_STEP = MIN_DIFF;
-                        change_made = true;
+                        isChange = true;
                         break;
                     }
                 }
-                if (!change_made) {
-                    cout << "HERE_2" << endl;
+                if (!isChange) {
+                    std::cout << "HERE_2" << std::endl;
                     for (int cn = 1; cn < 3 * MIN_DIFF + 4; cn++) {
-                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
-                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                        if (check(i, cn, myWay, way)) {
                             WAY_STEP = 2 * MIN_DIFF;
-                            change_made = true;
+                            isChange = true;
                             break;
                         }
                     }
                 }
-                if (!change_made) {
-                    cout << "HERE_3" << endl;
+                if (!isChange) {
+                    std::cout << "HERE_3" << std::endl;
                     for (int cn = 1; cn < 4 * MIN_DIFF; cn++) {
-                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
-                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                        if (check(i, cn, myWay, way)) {
                             WAY_STEP = 2 * MIN_DIFF;
-                            change_made = true;
+                            isChange = true;
                             break;
                         }
                     }
                 }
-                if (!change_made) {
-                    cout << "HERE_4" << endl;
+                if (!isChange) {
+                    std::cout << "HERE_4" << std::endl;
                     for (int cn = 1; cn < 6 * MIN_DIFF; cn++) {
-                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
-                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                        if (check(i, cn, myWay, way)) {
                             WAY_STEP = 3 * MIN_DIFF;
                             break;
                         }
                     }
                 }
-                if (!change_made) {
-                    cout << "HERE_5" << endl;
+                if (!isChange) {
+                    std::cout << "HERE_5" << std::endl;
                     for (int cn = 1; cn < 8 * MIN_DIFF; cn++) {
-                        if ((i - cn - 2 >= 0) and (i + cn + 2 < way.size()) and
-                            (my_way[i - cn].first != my_way[i - cn - 2].first) and
-                            (my_way[i - cn].second != my_way[i - cn - 2].second) and
-                            (my_way[i + cn].first != my_way[i + cn + 2].first) and
-                            (my_way[i + cn].second != my_way[i + cn + 2].second)) {
+                        if (check(i, cn, myWay, way)) {
                             WAY_STEP = 4 * MIN_DIFF;
                             break;
                         }
                     }
                 }
-                cout << "HERE_6" << endl;
-                changes_existance = true;
-                pair<int, int> fir, sec;
-                fir = my_way[i - WAY_STEP];
-                sec = my_way[i + WAY_STEP];
+                std::cout << "HERE_6" << std::endl;
+                changesExist = true;
+                std::pair<int, int> fir, sec;
+                fir = myWay[i - WAY_STEP];
+                sec = myWay[i + WAY_STEP];
                 coords[cnt].emplace_back(fir);
                 coords[cnt].emplace_back(sec);
                 int radius = abs(fir.second - sec.second);
-                pair<int, int> centre;
-                if (is_draw) continue;
-                if (my_way[i - 1].second < my_way[i].second and my_way[i + 1].first > my_way[i].first) { // LD
+                std::pair<int, int> centre;
+                if (isDraw) continue;
+                if (myWay[i - 1].second < myWay[i].second and myWay[i + 1].first > myWay[i].first) { // LD
                     centre = {sec.first, fir.second};
-                    change_delta = true;
-                } else if (my_way[i - 1].first < my_way[i].first and my_way[i + 1].second > my_way[i].second) { // RU
+                    isDelta = true;
+                } else if (myWay[i - 1].first < myWay[i].first and myWay[i + 1].second > myWay[i].second) { // RU
                     centre = {fir.first, sec.second};
-                    is_upper_angle = true;
-                } else if (my_way[i - 1].first < my_way[i].first and my_way[i + 1].second < my_way[i].second) { // RD
+                    isUp = true;
+                } else if (myWay[i - 1].first < myWay[i].first and myWay[i + 1].second < myWay[i].second) { // RD
                     centre = {fir.first, sec.second};
-                } else if (my_way[i - 1].second > my_way[i].second and my_way[i + 1].first > my_way[i].first) { // LU
+                } else if (myWay[i - 1].second > myWay[i].second and myWay[i + 1].first > myWay[i].first) { // LU
                     centre = {sec.first, fir.second};
-                    change_delta = true;
-                    is_upper_angle = true;
+                    isDelta = true;
+                    isUp = true;
                 }
                 int tmp = delta;
                 for (int k = 0; k < radius / tmp - tmp; k++) {
                     int y = 0;
-                    if (change_delta and is_upper_angle) { // LU
+                    if (isDelta and isUp) { // LU
                         y = centre.second - (int) sqrt(
                                 radius * radius -
                                 (centre.first - fir.first - delta) * (centre.first - fir.first - delta));
-                    } else if (!change_delta and is_upper_angle) { // RU
+                    } else if (!isDelta and isUp) { // RU
                         y = centre.second - (int) sqrt(radius * radius - delta * delta);
-                    } else if (change_delta and !is_upper_angle) { // LD
+                    } else if (isDelta and !isUp) { // LD
                         y = (int) sqrt(
                                 radius * radius -
                                 (centre.first - fir.first - delta) * (centre.first - fir.first - delta)) +
                             centre.second;
-                    } else if (!change_delta and !is_upper_angle) { // RD
+                    } else if (!isDelta and !isUp) { // RD
                         y = (int) sqrt(radius * radius - delta * delta) + centre.second;
                     }
 
@@ -383,13 +380,13 @@ vector<pair<int, int>> ShortestPath::smoothAngle(vector<pair<int, int>> &way) {
                     delta += tmp;
                 }
                 sort(coords[cnt].begin(), coords[cnt].end(),
-                     [](pair<int, int> a, pair<int, int> b) { return a.first < b.first; });
+                     [](std::pair<int, int> a, std::pair<int, int> b) { return a.first < b.first; });
                 if (coords[cnt][0].first > coords[cnt][coords[cnt].size() - 1].first) {
                     reverse(coords[cnt].begin(), coords[cnt].end());
                 }
                 delta = tmp;
                 WAY_STEP = DEFAULT_WAY_STEP;
-                while (my_way[i].second != coords[cnt][coords[cnt].size() - 1].second) {
+                while (myWay[i].second != coords[cnt][coords[cnt].size() - 1].second) {
                     i++;
                 }
                 cnt++;
@@ -399,69 +396,69 @@ vector<pair<int, int>> ShortestPath::smoothAngle(vector<pair<int, int>> &way) {
             coords[cnt].resize(100);
             coords[cnt][0] = {-1, -1}; // страшный костыль
             int i = 0;
-            vector<pair<int, int>> new_way;
-            for (int init = 0; init < (int) my_way.size() - 1; init++) {
+            std::vector<std::pair<int, int>> newWay;
+            for (int init = 0; init < (int) myWay.size() - 1; init++) {
                 if ((i < cnt and way[init] == coords[i][0])) {
-                    got_to_cycle = true;
+                    gotToCycle = true;
                     for (auto iter : coords[i]) {
-                        new_way.emplace_back(iter);
+                        newWay.emplace_back(iter);
                     }
-                    while (init < my_way.size() and my_way[init] != coords[i][coords[i].size() - 1]) {
+                    while (init < myWay.size() and myWay[init] != coords[i][coords[i].size() - 1]) {
                         init++;
-                        if (init > my_way.size()) { throw logic_error("ENDLESS CYCLE"); }
+                        if (init > myWay.size()) { throw std::logic_error("std::endlESS CYCLE"); }
                     }
                     i++;
-                } else if (coords[i][0].first == -1 or (i < cnt and my_way[init] != coords[i][0])) {
-                    if (abs(my_way[init].first - my_way[init + 1].first) > 5000 or my_way[init].first < 0 or
-                        my_way[init + 1].first < 0) {
-                        cout << "БЕДА 1: " << my_way[init].first << ' ' << my_way[init + 1].first << '\n';
+                } else if (coords[i][0].first == -1 or (i < cnt and myWay[init] != coords[i][0])) {
+                    if (abs(myWay[init].first - myWay[init + 1].first) > 5000 or myWay[init].first < 0 or
+                        myWay[init + 1].first < 0) {
+                        std::cout << "БЕДА 1_1: " << myWay[init].first << ' ' << myWay[init + 1].first << '\n';
                         continue;
                     }
-                    if (abs(my_way[init].second - my_way[init + 1].second) > 5000 or my_way[init].second < 0 or
-                        my_way[init + 1].second < 0) {
-                        cout << "БЕДА 2: " << my_way[init].second << ' ' << my_way[init + 1].second << '\n';
+                    if (abs(myWay[init].second - myWay[init + 1].second) > 5000 or myWay[init].second < 0 or
+                        myWay[init + 1].second < 0) {
+                        std::cout << "БЕДА 2_1: " << myWay[init].second << ' ' << myWay[init + 1].second << '\n';
                         continue;
                     }
-                    new_way.emplace_back(my_way[init]);
+                    newWay.emplace_back(myWay[init]);
                 }
-                if (!changes_existance and got_to_cycle) {
-                    throw logic_error("NO SMOOTHING OCCURRED BUT SMOOTHED WAY WAS FOUND");
+                if (!changesExist and gotToCycle) {
+                    throw std::logic_error("NO SMOOTHING OCCURRED BUT SMOOTHED WAY WAS FOUND");
                 }
             }
-            if (changes_existance and !got_to_cycle) {
-                throw logic_error("SMOOTHING OCCURRED BUT THE PATH WAS NOT CHANGED");
+            if (changesExist and !gotToCycle) {
+                throw std::logic_error("SMOOTHING OCCURRED BUT THE PATH WAS NOT CHANGED");
             }
-            sort(new_way.begin(), new_way.end(), way_comparator);
-            for (int h = 0; h < new_way.size(); h++) {
-                if (abs(new_way[h].first - new_way[h + 1].first) > 5000 or my_way[h].first < 0 or
-                    my_way[h + 1].first < 0)
-                    cout << "БЕДА 1: " << new_way[h].first << ' ' << new_way[h + 1].first << '\n';
-                if (abs(new_way[h].second - new_way[h + 1].second) > 5000 or my_way[h].second < 0 or
-                    my_way[h + 1].second < 0)
-                    cout << "БЕДА 2: " << new_way[h].second << ' ' << new_way[h + 1].second << '\n';
+            sort(newWay.begin(), newWay.end(), way_comparator);
+            for (int h = 0; h < (int) newWay.size(); h++) {
+                if (abs(newWay[h].first - newWay[h + 1].first) > 5000 or myWay[h].first < 0 or
+                    myWay[h + 1].first < 0)
+                    std::cout << "БЕДА 1: " << newWay[h].first << ' ' << newWay[h + 1].first << '\n';
+                if (abs(newWay[h].second - newWay[h + 1].second) > 5000 or myWay[h].second < 0 or
+                    myWay[h + 1].second < 0)
+                    std::cout << "БЕДА 2: " << newWay[h].second << ' ' << newWay[h + 1].second << '\n';
             }
-            return new_way;
-        } catch (logic_error &e) { throw; }
-    } catch (out_of_range &e) { throw; }
+            return newWay;
+        } catch (std::logic_error &e) { throw; }
+    } catch (std::out_of_range &e) { throw; }
 }
 
-vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
-    int id1 = shapeId[{x1 + rect_width / 2, y1 + rect_height / 2}];
-    int id2 = shapeId[{x2 + rect_width / 2, y2 + rect_height / 2}];
+std::vector<std::pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, int y2) {
+    int id1 = shapeId[{x1 + rectWidth / 2, y1 + rectHeight / 2}];
+    int id2 = shapeId[{x2 + rectWidth / 2, y2 + rectHeight / 2}];
     try {
         if (id1 == id2) {
-            throw logic_error("PATH FROM RECTANGLE TO ITSELF WAS REQUIRED");
+            throw std::logic_error("PATH FROM RECTANGLE TO ITSELF WAS REQUIRED");
         }
-    } catch (logic_error &) { throw; }
-    cerr << "Ids: " << id1 << " " << id2 << endl;
+    } catch (std::logic_error &) { throw; }
+    std::cerr << "Ids: " << id1 << " " << id2 << std::endl;
     int src = findBorderPoint(id1, id2).first;
     int dest = findBorderPoint(id1, id2).second;
-    cerr << "Border points: " << src << "    " << dest << endl;
-    cerr << "Size: " << size << endl;
-    cerr << "Data Size: " << data.size() << endl;
-    queue<int> q;
-    vector<int> dist(size, -1);
-    vector<bool> is(size, false);
+    std::cerr << "Border points: " << src << "    " << dest << std::endl;
+    std::cerr << "Size: " << size << std::endl;
+    std::cerr << "Data Size: " << data.size() << std::endl;
+    std::queue<int> q;
+    std::vector<int> dist(size, -1);
+    std::vector<bool> is(size, false);
     int par[size];
     is[src] = true;
     dist[src] = 0;
@@ -470,10 +467,10 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
     while (!q.empty()) {
         int cur = q.front();
         q.pop();
-        for (int i = 0; i < data[cur].size(); i++) {
+        for (int i = 0; i < (int) data[cur].size(); i++) {
             int u = data[cur][i];
             if (!is[u] and (!occupied[u] or u == dest)) {
-                if (occupied[u] == 1) cout << "THIS IS NOT OK\n";
+                if (occupied[u] == 1) std::cout << "THIS IS NOT OK\n";
                 is[u] = true;
                 q.push(u);
                 dist[u] = dist[cur] + 1;
@@ -482,41 +479,43 @@ vector<pair<int, int>> ShortestPath::createShortestPath(int x1, int y1, int x2, 
         }
     }
 
-    vector<pair<int, int>> ans;
+    std::vector<std::pair<int, int>> ans;
     ans.clear();
 
-    cerr << "backward: ";
+    std::cerr << "backward: ";
     for (int i = dest; i != -1; i = par[i]) {
-        cerr << i << " ";
+        std::cerr << i << " ";
         ans.push_back(convertToPair(convertFromStep(i)));
         if (occupied[i] != 0 and occupied[i + 1] != 0 and occupied[i - 1] != 0 and occupied[i + width] != 0 and
             occupied[i - width] != 0) { //проверка, что текущая и верхняя, нижняя, правая, левая от нее клетки заняты
-            cout << "IS OCCUPIED\n"; // и они реально часто заняты и чтооооооооооо в чем прикол
+            std::cout << "IS OCCUPIED\n"; // и они реально часто заняты и чтооооооооооо в чем прикол
         }
-        if (occupied[i] != 0) cout << "ONLY\n";
+        if (occupied[i] != 0) std::cout << "ONLY\n";
     }
-    cout << '\n';
-    cerr << "-1\n";
+    std::cout << '\n';
+    std::cerr << "-1\n";
     if (ans[0].first > ans[ans.size() - 1].first) {
         reverse(ans.begin(), ans.end());
     }
-    cerr << "Started Smooth, way size = " << ans.size() << endl;
-    vector<pair<int, int>> smooth_ans = smoothAngle(ans);
-    cout << "WAY" << '\n';
+    std::cerr << "Started Smooth, way size = " << ans.size() << std::endl;
+    std::vector<std::pair<int, int>> smoothedWay = smoothAngle(ans);
+    std::cout << "WAY" << '\n';
     for (auto f : ans) {
-        cout << occupied[convertToNum(f)] << ' ';
+        std::cout << occupied[convertToNum(f)] << ' ';
     }
-    cout << '\n';
-    pathId[{id1, id2}] = smooth_ans;
-    cerr << "Completed" << endl;
-    return smooth_ans;
+    std::cout << '\n';
+    pathId[{id1, id2}] = smoothedWay;
+    singlePathId[id1] = smoothedWay;
+    singlePathId[id2] = smoothedWay;
+    std::cerr << "Completed" << std::endl;
+    return smoothedWay;
 }
 
-vector<vector<pair<int, int>>> ShortestPath::deletePaths(pair<int, int> centre) {
-    vector<vector<pair<int, int>>> res;
-    int rect_id = shapeId[centre];
-    for (auto it = singlePathId.lower_bound(rect_id);; it++) {
-        if (it->first != rect_id) {
+std::vector<std::vector<std::pair<int, int>>> ShortestPath::deletePaths(std::pair<int, int> centre) {
+    std::vector<std::vector<std::pair<int, int>>> res;
+    int rectId = shapeId[centre];
+    for (auto it = singlePathId.lower_bound(rectId);; it++) {
+        if (it->first != rectId) {
             break;
         } else {
             res.push_back(it->second);
@@ -524,7 +523,3 @@ vector<vector<pair<int, int>>> ShortestPath::deletePaths(pair<int, int> centre) 
     }
     return res;
 }
-//
-//vector<vector<pair<int, int>>> ShortestPath::deletePaths(pair<int, int> centre) {
-//    int id = shapeId[centre];
-//}

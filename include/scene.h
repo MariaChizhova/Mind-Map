@@ -51,7 +51,7 @@ private:
 
     void delRect();
 
-    void drawLine(pair<int, int> point1, pair<int, int> point2);
+    void drawLine(std::pair<int, int> point1, std::pair<int, int> point2);
 
     sceneState state = SDRAW;
 
@@ -68,10 +68,10 @@ private:
 
     sceneMenu inText;
 
-    std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
+    std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = std::make_pair(nullptr, nullptr);
 
-    map<pair<int, int>, vector<QGraphicsPathItem *>> allPath;
-    map<pair<int, int>, vector<pair<int, int>>> allRect;
+    std::map<std::pair<int, int>, std::vector<QGraphicsPathItem *>> allPath;
+    std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> allRect;
 
     class SceneException : public std::exception {
     private:

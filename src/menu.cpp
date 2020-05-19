@@ -202,13 +202,13 @@ void Menu::openButton() {
     scene.setSceneRect(SvgReader::getSizes(path));
 
     scene.setWindowColor(Qt::white);
-    vector<pair<int, int>> points;
+    std::vector<std::pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
     foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
         int width = 80;
         int height = 50;
-        scene.algo.set_rect_width(width);
-        scene.algo.set_rect_height(height);
+        scene.algo.setRectWidth(width);
+        scene.algo.setRectHeight(height);
         QGraphicsRectItem *rect = item;
         QPointF pos = rect->scenePos();
         scene.addItem(rect);

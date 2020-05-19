@@ -211,17 +211,13 @@ void Menu::openButton() {
             scene.algo.set_rect_height(height);
             QGraphicsRectItem *rect = item;
             QPointF pos = rect->scenePos();
-            rect->setZValue(1);
             scene.addItem(rect);
-            pos.rx() -= width / 2;
-            pos.ry() -= height / 2;
-            rect->setPos(pos);
             scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width,
                               height); // Добавили центр прямоугольника Олесе
 
             rect->setFlag(QGraphicsItem::ItemIsFocusable);
             QGraphicsItemGroup *group = scene.createItemGroup({});
-            group->setPos(rect->pos());
+            group->setPos(rect->scenePos());
             group->addToGroup(rect);
             group->setHandlesChildEvents(true);
             group->setFlag(QGraphicsItem::ItemIsSelectable, false);

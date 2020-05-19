@@ -174,7 +174,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             }
             for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
                 allRect[rect].erase(remove(allRect[rect].begin(), allRect[rect].end(),
-                                           make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
+                                           std::make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
             }
         }
         if (state == SDELETE) delRect();

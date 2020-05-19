@@ -201,33 +201,28 @@ void Menu::openButton() {
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
 
-     scene.setWindowColor(Qt::white);
+    scene.setWindowColor(Qt::white);
     vector<pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
     foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
-            int width = 80;
-            int height = 50;
-            scene.algo.set_rect_width(width);
-            scene.algo.set_rect_height(height);
-            QGraphicsRectItem *rect = item;
-            QPointF pos = rect->scenePos();
-            rect->setZValue(1);
-            scene.addItem(rect);
-            pos.rx() -= width / 2;
-            pos.ry() -= height / 2;
-            rect->setPos(pos);
-            scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width,
-                              height); // Добавили центр прямоугольника Олесе
-
-            rect->setFlag(QGraphicsItem::ItemIsFocusable);
-            QGraphicsItemGroup *group = scene.createItemGroup({});
-            group->setPos(rect->pos());
-            group->addToGroup(rect);
-            group->setHandlesChildEvents(true);
-            group->setFlag(QGraphicsItem::ItemIsSelectable, false);
-            group->setFlag(QGraphicsItem::ItemIsMovable, false);
-            scene.myItems.emplace_back(group);
+        int width = 80;
+        int height = 50;
+        scene.algo.set_rect_width(width);
+        scene.algo.set_rect_height(height);
+        QGraphicsRectItem *rect = item;
+        QPointF pos = rect->scenePos();
+        scene.addItem(rect);
+        scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width, height);
+        rect->setFlag(QGraphicsItem::ItemIsFocusable);
+        QGraphicsItemGroup *group = scene.createItemGroup({});
+        group->setPos(rect->scenePos());
+        group->addToGroup(rect);
+        group->setHandlesChildEvents(true);
+        group->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        group->setFlag(QGraphicsItem::ItemIsMovable, false);
+        scene.myItems.emplace_back(group);
     }
+  //  qDebug() << points.size();
 }
 
 void Menu::addImage() {

@@ -171,23 +171,19 @@ void Menu::saveButton() {
 }
 
 void Menu::addRect() {
-    scene.state = SDRAW;
-    for (auto &my_item : scene.myItems) {
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    }
+    scene.setState(SDRAW);
 }
 
 void Menu::moveRect() {
-    scene.state = SMOVE;
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    }
+    scene.setState(SMOVE);
+}
+
+void Menu::enterText() {
+    scene.setState(STEXT);
+}
+
+void Menu::addLine() {
+    scene.setState(SLINE);
 }
 
 void Menu::openButton() {
@@ -210,6 +206,8 @@ void Menu::openButton() {
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
     foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
         QGraphicsRectItem *rect = item;
+        scene.addItem(rect);
+        //scene.algo.getRectCoord(rect->scenePos().rx() +  40, rect->scenePos().ry() +  25, 80,50); // Добавили центр прямоугольника Олесе
         QGraphicsItemGroup *group = scene.createItemGroup({});
         group->addToGroup(rect);
         group->setHandlesChildEvents(true);
@@ -217,7 +215,6 @@ void Menu::openButton() {
         group->setFlag(QGraphicsItem::ItemIsMovable, false);
        // group->setFlag(QGraphicsItem::ItemIsSelectable, true);
         scene.myItems.emplace_back(group);
-        scene.addItem(rect);
         qDebug() <<  rect->scenePos().x()<< " " << rect->scenePos().y();
         points.emplace_back(rect->scenePos().x(), rect->scenePos().y());
     }
@@ -230,26 +227,6 @@ void Menu::openButton() {
         path.quadTo(p, k);
     }
     scene.addPath(path, QPen(scene.linecolor, 5));
-}
-
-void Menu::enterText() {
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-    }
-    scene.state = STEXT;
-}
-
-void Menu::addLine() {
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-    }
-    scene.state = SLINE;
 }
 
 void Menu::addImage() {
@@ -295,12 +272,6 @@ void Menu::changeLineColor(const QColor &newColor) {
 }
 
 void Menu::deleteShape() {
-    scene.state = SDELETE;
-    for (auto &my_item : scene.myItems) {
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    }
+    scene.setState(SDELETE);
 }
 

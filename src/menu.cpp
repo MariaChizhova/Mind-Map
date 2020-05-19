@@ -121,7 +121,7 @@ void Menu::newScene() {
     qreal height = QGuiApplication::primaryScreen()->size().height();
     qDebug() << "ScreenSize.width           : " << QGuiApplication::primaryScreen()->size().width();
     qDebug() << "ScreenSize.height          : " << QGuiApplication::primaryScreen()->size().height();
-    int diffsize = 60;
+    int diffsize = 0;
     if (ok && width && height)
         scene.setSceneRect(0, 0, width - diffsize, height - diffsize);
     /** Добавляем сцену в основное окно */
@@ -186,6 +186,16 @@ void Menu::addLine() {
     scene.setState(SLINE);
 }
 
+void Menu::restorePath(QList<QPointF> paths) {
+    QPainterPath p;
+    p.moveTo(paths[0]);
+    int i = 0;
+    while (i < paths.size() - 2) {
+        p.quadTo(paths[i], paths[i + 1]);
+        i+=3;
+    }
+    scene.addPath(p, QPen(Qt::black, 5));
+}
 void Menu::openButton() {
     scene.clear();
     changeWindowColor(Qt::white);
@@ -222,13 +232,37 @@ void Menu::openButton() {
         group->setFlag(QGraphicsItem::ItemIsMovable, false);
         scene.myItems.emplace_back(group);
     }
-  //  qDebug() << points.size();
+    QList<QPointF> paths = SvgReader::getCoordofLines(path);
+   /* int i = 0;
+    while (i < paths.size() - 1) {
+        if (!paths[i].rx() && !paths[i].ry())
+            i++;
+        else {
+            scene.drawLine({paths[i].rx(), paths[i].ry()}, {paths[i + 1].rx(), paths[i + 1].ry()});
+            i += 2;
+        }
+    }*/
+    QList<QPointF> tmp;
+    for(int i = 0; i < paths.size(); i++) {
+        if (paths[i] == QPointF(0, 0)) {
+            tmp.push_back(paths[i]);
+            restorePath(tmp);
+            tmp.clear();
+        } else
+            tmp.push_back(paths[i]);
+    }/*
+    QPainterPath p;
+    p.moveTo(paths[0]);
+    int i = 0;
+    while (i < paths.size() - 3) {
+        p.quadTo(paths[i], paths[i + 1]);
+        i+=3;
+    }
+    scene.addPath(p, QPen(Qt::black, 5));
+    qDebug() << paths.size(); */
 }
 
 void Menu::addImage() {
-    //scene.clear();
-    //changeWindowColor(Qt::white);
-    //view.setScene(&scene);
     QString str = QFileDialog::getOpenFileName(0, "Open Picture", "", "*.jpeg *.jpg *.png");
     qDebug() << str;
     QPixmap pixmap(str);

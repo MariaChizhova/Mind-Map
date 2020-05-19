@@ -11,7 +11,7 @@
         <file>icons/text.png</file>
         <file>icons/rectangle-png.png</file>
         <file>icons/hruu.jpg</file>
-        <file>icons/123.jpg</file>
+        <file>icons/123.png</file>
         <file>icons/exp1.png</file>
         <file>icons/exp2.png</file>
         <file>icons/exp3.png</file>
@@ -22,5 +22,8 @@
         <file>icons/linecolor.png</file>
         <file>icons/myrect.png</file>
         <file>icons/delete.png</file>
+        <file>icons/New File.png</file>
+        <file>icons/Exit.png</file>
+        <file>icons/Open FIle.png</file>
     </qresource>
 </RCC>

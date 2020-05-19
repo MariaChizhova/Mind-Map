@@ -88,7 +88,6 @@ void Scene::drawRect(QPointF pos) {
     group->setHandlesChildEvents(true);
     group->setFlag(QGraphicsItem::ItemIsSelectable, false);
     group->setFlag(QGraphicsItem::ItemIsMovable, false);
-    //indexItems[group] = myItems.size();
     myItems.emplace_back(group);
 }
 
@@ -119,7 +118,7 @@ void Scene::text() {
     focusItem()->setSelected(true);
 
     //Открытие меню текста
-    inText.enterText();
+    if (!inText.enterText()) return;
     inText.show();
     inText.hide();
     fontcolor = inText.sceneTextColor;
@@ -160,23 +159,26 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF pos = event->scenePos();
 
     if (state == SDRAW) drawRect(pos);
-    if (state == SLINE) addLine();
-    if (state == STEXT) text();
-    if (state == SMOVE) {
-        focusItem()->setCursor(QCursor(Qt::ClosedHandCursor));
-        lastPos = focusItem()->scenePos();
-        for (auto &path: allPath[{lastPos.rx(), lastPos.ry()}]) {
-            if (path != nullptr) {
-                removeItem(path);
-                path = nullptr;
+    else if (focusItem() == nullptr) throw SceneException("Object not selected");
+    else {
+        if (state == SLINE) addLine();
+        if (state == STEXT) text();
+        if (state == SMOVE) {
+            focusItem()->setCursor(QCursor(Qt::ClosedHandCursor));
+            lastPos = focusItem()->scenePos();
+            for (auto &path: allPath[{lastPos.rx(), lastPos.ry()}]) {
+                if (path != nullptr) {
+                    removeItem(path);
+                    path = nullptr;
+                }
+            }
+            for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
+                allRect[rect].erase(remove(allRect[rect].begin(), allRect[rect].end(),
+                                           make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
             }
         }
-        for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
-            allRect[rect].erase(remove(allRect[rect].begin(), allRect[rect].end(),
-                                       make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
-        }
+        if (state == SDELETE) delRect();
     }
-    if (state == SDELETE) delRect();
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
@@ -196,7 +198,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         allRect[{lastPos.rx(), lastPos.ry()}].clear();
     }
     QGraphicsScene::mouseReleaseEvent(event);
-
 }
 
 void Scene::setColor(QColor newColor) {
@@ -223,4 +224,48 @@ QGraphicsTextItem *Scene::printText() {
     text->setDefaultTextColor(fontcolor);
     text->setFlag(QGraphicsTextItem::ItemIsMovable);
     return text;
+}
+
+void Scene::setState(sceneState newState) {
+    if (newState == SMOVE) {
+        state = SMOVE;
+        for (auto &my_item : myItems) {
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        }
+    } else if (newState == SDRAW) {
+        state = SDRAW;
+        for (auto &my_item : myItems) {
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        }
+    } else if (newState == STEXT) {
+        for (auto &my_item : myItems) {
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+        state = STEXT;
+    } else if (newState == SLINE) {
+        for (auto &my_item : myItems) {
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+        state = SLINE;
+    } else if (newState == SDELETE) {
+        state = SDELETE;
+        for (auto &my_item : myItems) {
+            if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
+                my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+            if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+                my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }
+    }
 }

@@ -28,9 +28,19 @@ class Scene : public QGraphicsScene {
 public:
     explicit Scene(QObject *parent = nullptr);
 
+    void setLineColor(QColor newColor);
+
     void setColor(QColor newColor);
 
     void setWindowColor(QColor newColor);
+
+    void setState(sceneState newState);
+
+    QColor linecolor = "#8f5ae5";
+    pixState pixstate = PIX;
+    ShortestPath algo;
+    std::vector<QGraphicsItemGroup *> myItems;
+private:
 
     void drawRect(QPointF pos);
 
@@ -40,9 +50,9 @@ public:
 
     void delRect();
 
-    void setLineColor(QColor newColor);
-
     void drawLine(pair<int, int> point1, pair<int, int> point2);
+
+    sceneState state = SDRAW;
 
     QGraphicsTextItem *printText();
 
@@ -52,29 +62,26 @@ public:
 
     QColor fontcolor;
     QPointF lastPos;
-    QColor linecolor = "#8f5ae5";
-
-    sceneState state = SDRAW;
-
-    pixState pixstate = PIX;
-
-    std::vector<QGraphicsItemGroup *> myItems;
-    //std::map<QGraphicsItemGroup *, int> indexItems;
 
     QGraphicsPixmapItem *activeItem;
 
-    ShortestPath algo;
-
     sceneMenu inText;
-    QPointF point;
 
     std::pair<QGraphicsItem *, QGraphicsItem *> selectedItem = make_pair(nullptr, nullptr);
 
     map<pair<int, int>, vector<QGraphicsPathItem *>> allPath;
     map<pair<int, int>, vector<pair<int, int>>> allRect;
 
-protected:
+    class SceneException : public std::exception {
+    private:
+        std::string read_error = "";
+    public:
+        explicit SceneException(std::string error) : read_error(std::move(error)) {}
 
+        const char *what() const noexcept override { return read_error.c_str(); }
+    };
+
+protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

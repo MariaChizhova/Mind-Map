@@ -205,28 +205,29 @@ void Menu::openButton() {
     vector<pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
     foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
-        QGraphicsRectItem *rect = item;
-        scene.addItem(rect);
-        //scene.algo.getRectCoord(rect->scenePos().rx() +  40, rect->scenePos().ry() +  25, 80,50); // Добавили центр прямоугольника Олесе
-        QGraphicsItemGroup *group = scene.createItemGroup({});
-        group->addToGroup(rect);
-        group->setHandlesChildEvents(true);
-        group->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        group->setFlag(QGraphicsItem::ItemIsMovable, false);
-       // group->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        scene.myItems.emplace_back(group);
-        qDebug() <<  rect->scenePos().x()<< " " << rect->scenePos().y();
-        points.emplace_back(rect->scenePos().x(), rect->scenePos().y());
+            int width = 80;
+            int height = 50;
+            scene.algo.set_rect_width(width);
+            scene.algo.set_rect_height(height);
+            QGraphicsRectItem *rect = item;
+            QPointF pos = rect->scenePos();
+            rect->setZValue(1);
+            scene.addItem(rect);
+            pos.rx() -= width / 2;
+            pos.ry() -= height / 2;
+            rect->setPos(pos);
+            scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width,
+                              height); // Добавили центр прямоугольника Олесе
+
+            rect->setFlag(QGraphicsItem::ItemIsFocusable);
+            QGraphicsItemGroup *group = scene.createItemGroup({});
+            group->setPos(rect->pos());
+            group->addToGroup(rect);
+            group->setHandlesChildEvents(true);
+            group->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            group->setFlag(QGraphicsItem::ItemIsMovable, false);
+            scene.myItems.emplace_back(group);
     }
-    int step = 5;
-    QPainterPath path;
-    path.moveTo(points[step].first, points[step].second);
-    for (int i = step; i < points.size() - step; i++) {
-        QPointF p(points[i].first, points[i].second);
-        QPointF k(points[i + 1].first, points[i + 1].second);
-        path.quadTo(p, k);
-    }
-    scene.addPath(path, QPen(scene.linecolor, 5));
 }
 
 void Menu::addImage() {

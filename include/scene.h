@@ -40,9 +40,10 @@ public:
     pixState pixstate = PIX;
     ShortestPath algo;
     std::vector<QGraphicsItemGroup *> myItems;
-private:
 
     void drawRect(QPointF pos);
+
+private:
 
     void addLine();
 

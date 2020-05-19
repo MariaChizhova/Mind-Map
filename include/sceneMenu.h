@@ -32,7 +32,7 @@ public:
 
 public slots:
 
-    void enterText();
+    bool enterText();
 };
 
 

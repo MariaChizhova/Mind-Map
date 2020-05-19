@@ -171,23 +171,19 @@ void Menu::saveButton() {
 }
 
 void Menu::addRect() {
-    scene.state = SDRAW;
-    for (auto &my_item : scene.myItems) {
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    }
+    scene.setState(SDRAW);
 }
 
 void Menu::moveRect() {
-    scene.state = SMOVE;
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    }
+    scene.setState(SMOVE);
+}
+
+void Menu::enterText() {
+    scene.setState(STEXT);
+}
+
+void Menu::addLine() {
+    scene.setState(SLINE);
 }
 
 void Menu::openButton() {
@@ -205,39 +201,28 @@ void Menu::openButton() {
     /** Зададим размеры графической сцены */
     scene.setSceneRect(SvgReader::getSizes(path));
 
-    /** TODO: Вставить цвет из Svgreader */
-    scene.setWindowColor("#c7c7fa");
-
+    scene.setWindowColor(Qt::white);
+    vector<pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
-            foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
-            QGraphicsRectItem *rect = item;
-            QGraphicsItemGroup *group = scene.createItemGroup({});
-            group->addToGroup(rect);
-            group->setHandlesChildEvents(true);
-            group->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            scene.myItems.emplace_back(group);
-            scene.addItem(rect);
-        }
-}
-
-void Menu::enterText() {
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
+    foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
+        int width = 80;
+        int height = 50;
+        scene.algo.set_rect_width(width);
+        scene.algo.set_rect_height(height);
+        QGraphicsRectItem *rect = item;
+        QPointF pos = rect->scenePos();
+        scene.addItem(rect);
+        scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width, height);
+        rect->setFlag(QGraphicsItem::ItemIsFocusable);
+        QGraphicsItemGroup *group = scene.createItemGroup({});
+        group->setPos(rect->scenePos());
+        group->addToGroup(rect);
+        group->setHandlesChildEvents(true);
+        group->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        group->setFlag(QGraphicsItem::ItemIsMovable, false);
+        scene.myItems.emplace_back(group);
     }
-    scene.state = STEXT;
-}
-
-void Menu::addLine() {
-    for (auto &my_item : scene.myItems) {
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-    }
-    scene.state = SLINE;
+  //  qDebug() << points.size();
 }
 
 void Menu::addImage() {
@@ -283,12 +268,6 @@ void Menu::changeLineColor(const QColor &newColor) {
 }
 
 void Menu::deleteShape() {
-    scene.state = SDELETE;
-    for (auto &my_item : scene.myItems) {
-        if (my_item->flags().testFlag(QGraphicsItem::ItemIsMovable))
-            my_item->setFlag(QGraphicsItem::ItemIsMovable, false);
-        if (!my_item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-            my_item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    }
+    scene.setState(SDELETE);
 }
 

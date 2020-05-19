@@ -87,6 +87,7 @@ private slots:
     void setCellsPix3();
     void setCellsMyPix();
 
+    void restorePath(QList<QPointF> paths);
 
 
 private:

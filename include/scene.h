@@ -43,6 +43,8 @@ public:
 
     void drawRect(QPointF pos);
 
+    void drawLine(std::pair<int, int> point1, std::pair<int, int> point2);
+
 private:
 
     void addLine();
@@ -50,8 +52,6 @@ private:
     void text();
 
     void delRect();
-
-    void drawLine(std::pair<int, int> point1, std::pair<int, int> point2);
 
     sceneState state = SDRAW;
 

@@ -48,22 +48,27 @@ void Scene::drawRect(QPointF pos) {
         rectItem->boundingRect();
         rectItem->setBrush(color);
         activeItem = reinterpret_cast<QGraphicsPixmapItem *>(rectItem);
-    } else if (pixstate == PIX) {
+    } else if (pixstate == PIX1) {
         QPixmap pix(":/icons/Box01.png");
         image->setPixmap(pix);
         image->setScale(0.15);
         activeItem = image;
-    } else if (pixstate == PIX1) {
+    } else if (pixstate == PIX2) {
         QPixmap pix1(":/icons/Box02.png");
         image->setPixmap(pix1);
         image->setScale(0.15);
         activeItem = image;
-    } else if (pixstate == PIX2) {
+    } else if (pixstate == PIX3) {
         QPixmap pix2(":/icons/Box03.png");
         image->setPixmap(pix2);
         image->setScale(0.15);
         activeItem = image;
-    } else if (pixstate == PIX3) {
+    } else if (pixstate == PIX4) {
+        QPixmap pix3(":/icons/Box04.png");
+        image->setPixmap(pix3);
+        image->setScale(0.15);
+        activeItem = image;
+    } else if (pixstate == PIX5) {
         QPixmap pix3(":/icons/Box05.png");
         image->setPixmap(pix3);
         image->setScale(0.15);
@@ -174,7 +179,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             }
             for (auto &rect:allRect[{lastPos.rx(), lastPos.ry()}]) {
                 allRect[rect].erase(remove(allRect[rect].begin(), allRect[rect].end(),
-                                           std::make_pair(static_cast<int>(lastPos.rx()), static_cast<int>(lastPos.ry()))));
+                                           std::make_pair(static_cast<int>(lastPos.rx()),
+                                                          static_cast<int>(lastPos.ry()))));
             }
         }
         if (state == SDELETE) delRect();

@@ -89,25 +89,29 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *del = toolbar->addAction(QIcon(deletepix), "Delete");
     connect(del, &QAction::triggered, this, &Menu::deleteShape);
 
-    QPixmap Box04(":/icons/Box04.png");
+
     QPixmap Box01(":/icons/Box01.png");
     QPixmap Box02(":/icons/Box02.png");
     QPixmap Box03(":/icons/Box03.png");
+    QPixmap Box04(":/icons/Box04.png");
     QPixmap Box05(":/icons/Box05.png");
+    QPixmap myrectpix(":/icons/myrect.png");
     QToolBar *lefttoolbar = addToolBar("Cells");
     this->addToolBar(Qt::LeftToolBarArea, lefttoolbar);
     lefttoolbar->setFixedWidth(70);
     lefttoolbar->setIconSize(QSize(70, 70));
-    QAction *rect = lefttoolbar->addAction(QIcon(Box01), "Rectangle");
-    connect(rect, &QAction::triggered, this, &Menu::setCellsPix);
-    QAction *rect1 = lefttoolbar->addAction(QIcon(Box02), "Rectangle");
+    QAction *rect = lefttoolbar->addAction(QIcon(myrectpix), "Rectangle");
+    connect(rect, &QAction::triggered, this, &Menu::setCellsMyPix);
+    QAction *rect1 = lefttoolbar->addAction(QIcon(Box01), "Rectangle");
     connect(rect1, &QAction::triggered, this, &Menu::setCellsPix1);
-    QAction *rect2 = lefttoolbar->addAction(QIcon(Box03), "Rectangle");
+    QAction *rect2 = lefttoolbar->addAction(QIcon(Box02), "Rectangle");
     connect(rect2, &QAction::triggered, this, &Menu::setCellsPix2);
-    QAction *rect3 = lefttoolbar->addAction(QIcon(Box05), "Rectangle");
+    QAction *rect3 = lefttoolbar->addAction(QIcon(Box03), "Rectangle");
     connect(rect3, &QAction::triggered, this, &Menu::setCellsPix3);
-    QAction *myrect = lefttoolbar->addAction(QIcon(Box04), "My Rectangle");
-    connect(myrect, &QAction::triggered, this, &Menu::setCellsMyPix);
+    QAction *rect4 = lefttoolbar->addAction(QIcon(Box04), "My Rectangle");
+    connect(rect4, &QAction::triggered, this, &Menu::setCellsPix4);
+    QAction *rect5 = lefttoolbar->addAction(QIcon(Box05), "My Rectangle");
+    connect(rect5, &QAction::triggered, this, &Menu::setCellsPix5);
 }
 
 
@@ -269,10 +273,6 @@ void Menu::addImage() {
     scene.setBackgroundBrush(pixmap);
 }
 
-void Menu::setCellsPix() {
-    scene.pixstate = PIX;
-}
-
 void Menu::setCellsPix1() {
     scene.pixstate = PIX1;
 }
@@ -283,6 +283,14 @@ void Menu::setCellsPix2() {
 
 void Menu::setCellsPix3() {
     scene.pixstate = PIX3;
+}
+
+void Menu::setCellsPix4() {
+    scene.pixstate = PIX4;
+}
+
+void Menu::setCellsPix5() {
+    scene.pixstate = PIX5;
 }
 
 void Menu::setCellsMyPix() {

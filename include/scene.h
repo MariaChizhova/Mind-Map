@@ -21,7 +21,7 @@ enum sceneState {
 };
 
 enum pixState {
-    PIX, PIX1, PIX2, PIX3, MYPIX
+    PIX1, PIX2, PIX3, PIX4, PIX5,  MYPIX
 };
 
 class Scene : public QGraphicsScene {
@@ -37,7 +37,7 @@ public:
     void setState(sceneState newState);
 
     QColor linecolor = "#8f5ae5";
-    pixState pixstate = PIX;
+    pixState pixstate = PIX1;
     ShortestPath algo;
     std::vector<QGraphicsItemGroup *> myItems;
 

@@ -81,11 +81,12 @@ private slots:
 
     void addLine();
 
-    void setCellsPix();
+    void setCellsMyPix();
     void setCellsPix1();
     void setCellsPix2();
     void setCellsPix3();
-    void setCellsMyPix();
+    void setCellsPix4();
+    void setCellsPix5();
 
     void restorePath(QList<QPointF> paths);
 

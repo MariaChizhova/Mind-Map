@@ -25,5 +25,10 @@
         <file>icons/New File.png</file>
         <file>icons/Exit.png</file>
         <file>icons/Open FIle.png</file>
+        <file>icons/Box01.png</file>
+        <file>icons/Box02.png</file>
+        <file>icons/Box03.png</file>
+        <file>icons/Box04.png</file>
+        <file>icons/Box05.png</file>
     </qresource>
 </RCC>

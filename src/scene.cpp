@@ -36,7 +36,7 @@ void Scene::drawLine(std::pair<int, int> point1, std::pair<int, int> point2) {
 
 void Scene::drawRect(QPointF pos) {
     int width = 80;
-    int height = 60;
+    int height = 50;
     algo.setRectWidth(width);
     algo.setRectHeight(height);
     QGraphicsPixmapItem *image = new QGraphicsPixmapItem();

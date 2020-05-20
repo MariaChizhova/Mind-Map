@@ -89,24 +89,24 @@ Menu::Menu(QWidget *parent) : QMainWindow(parent) {
     QAction *del = toolbar->addAction(QIcon(deletepix), "Delete");
     connect(del, &QAction::triggered, this, &Menu::deleteShape);
 
-    QPixmap exp(":/icons/rectangle-png.png");
-    QPixmap exp1(":/icons/exp1.png");
-    QPixmap exp2(":/icons/exp2.png");
-    QPixmap exp3(":/icons/exp3.png");
-    QPixmap myexp(":/icons/myrect.png");
+    QPixmap Box04(":/icons/Box04.png");
+    QPixmap Box01(":/icons/Box01.png");
+    QPixmap Box02(":/icons/Box02.png");
+    QPixmap Box03(":/icons/Box03.png");
+    QPixmap Box05(":/icons/Box05.png");
     QToolBar *lefttoolbar = addToolBar("Cells");
     this->addToolBar(Qt::LeftToolBarArea, lefttoolbar);
     lefttoolbar->setFixedWidth(70);
     lefttoolbar->setIconSize(QSize(70, 70));
-    QAction *rect = lefttoolbar->addAction(QIcon(exp), "Rectangle");
+    QAction *rect = lefttoolbar->addAction(QIcon(Box01), "Rectangle");
     connect(rect, &QAction::triggered, this, &Menu::setCellsPix);
-    QAction *rect1 = lefttoolbar->addAction(QIcon(exp1), "Rectangle");
+    QAction *rect1 = lefttoolbar->addAction(QIcon(Box02), "Rectangle");
     connect(rect1, &QAction::triggered, this, &Menu::setCellsPix1);
-    QAction *rect2 = lefttoolbar->addAction(QIcon(exp2), "Rectangle");
+    QAction *rect2 = lefttoolbar->addAction(QIcon(Box03), "Rectangle");
     connect(rect2, &QAction::triggered, this, &Menu::setCellsPix2);
-    QAction *rect3 = lefttoolbar->addAction(QIcon(exp3), "Rectangle");
+    QAction *rect3 = lefttoolbar->addAction(QIcon(Box05), "Rectangle");
     connect(rect3, &QAction::triggered, this, &Menu::setCellsPix3);
-    QAction *myrect = lefttoolbar->addAction(QIcon(myexp), "My Rectangle");
+    QAction *myrect = lefttoolbar->addAction(QIcon(Box04), "My Rectangle");
     connect(myrect, &QAction::triggered, this, &Menu::setCellsMyPix);
 }
 
@@ -233,15 +233,15 @@ void Menu::openButton() {
         scene.myItems.emplace_back(group);
     }
     QList<QPointF> paths = SvgReader::getCoordofLines(path);
-   /* int i = 0;
-    while (i < paths.size() - 1) {
-        if (!paths[i].rx() && !paths[i].ry())
-            i++;
-        else {
-            scene.drawLine({paths[i].rx(), paths[i].ry()}, {paths[i + 1].rx(), paths[i + 1].ry()});
-            i += 2;
-        }
-    }*/
+    /* int i = 0;
+     while (i < paths.size() - 1) {
+         if (!paths[i].rx() && !paths[i].ry())
+             i++;
+         else {
+             scene.drawLine({paths[i].rx(), paths[i].ry()}, {paths[i + 1].rx(), paths[i + 1].ry()});
+             i += 2;
+         }
+     }*/
     QList<QPointF> tmp;
     for(int i = 0; i < paths.size(); i++) {
         if (paths[i] == QPointF(0, 0)) {

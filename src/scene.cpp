@@ -15,9 +15,9 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent),
 
 void Scene::drawLine(std::pair<int, int> point1, std::pair<int, int> point2) {
     std::vector<std::pair<int, int>> points = algo.createShortestPath(point1.first,
-                                                            point1.second,
-                                                            point2.first,
-                                                            point2.second);
+                                                                      point1.second,
+                                                                      point2.first,
+                                                                      point2.second);
 
     int step = 5;
     QPainterPath path;
@@ -49,22 +49,22 @@ void Scene::drawRect(QPointF pos) {
         rectItem->setBrush(color);
         activeItem = reinterpret_cast<QGraphicsPixmapItem *>(rectItem);
     } else if (pixstate == PIX) {
-        QPixmap pix(":/icons/rectangle-png.png");
+        QPixmap pix(":/icons/Box01.png");
         image->setPixmap(pix);
         image->setScale(0.15);
         activeItem = image;
     } else if (pixstate == PIX1) {
-        QPixmap pix1(":/icons/exp1.png");
+        QPixmap pix1(":/icons/Box02.png");
         image->setPixmap(pix1);
         image->setScale(0.15);
         activeItem = image;
     } else if (pixstate == PIX2) {
-        QPixmap pix2(":/icons/exp2.png");
+        QPixmap pix2(":/icons/Box03.png");
         image->setPixmap(pix2);
         image->setScale(0.15);
         activeItem = image;
     } else if (pixstate == PIX3) {
-        QPixmap pix3(":/icons/exp3.png");
+        QPixmap pix3(":/icons/Box05.png");
         image->setPixmap(pix3);
         image->setScale(0.15);
         activeItem = image;

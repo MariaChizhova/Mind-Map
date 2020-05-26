@@ -99,21 +99,20 @@ QList<QPointF> SvgReader::getCoordofLines(const QString filename) {
             QPointF point;
             QStringList listDotes = pathElement.attribute("d").split(" ");
             QString first = listDotes.at(0);
-            if (flag == 1)
-                flag = 0;
-            else
-                coordList.push_back(QPointF(0, 0));
             QStringList firstElement = first.replace(QString("M"),QString("")).split(",");
             point = QPointF(firstElement.at(0).toInt(), firstElement.at(1).toInt());
             coordList.push_back(point);
+            qDebug() << point;
             QStringList dot;
             for(int i = 1; i < listDotes.length() - 1; i++) {
                 QString other = listDotes.at(i);
                 dot = other.replace(QString("C"),QString("")).split(",");
-                qDebug() << dot;
-                point = QPointF(dot.at(0).toInt(), dot.at(1).toInt());
-                coordList.push_back(point);
+               qDebug() << dot;
+               point = QPointF(dot.at(0).toInt(), dot.at(1).toInt());
+               coordList.push_back(point);
             }
+            coordList.push_back(QPointF(-1, -1));
+            qDebug() << dot;
         }
     }
     file.close();

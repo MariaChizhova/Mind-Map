@@ -194,10 +194,12 @@ void Menu::restorePath(QList<QPointF> paths) {
     QPainterPath p;
     p.moveTo(paths[0]);
     int i = 0;
-    while (i < paths.size() - 2) {
+    while (i < paths.size() - 3) {
         p.quadTo(paths[i], paths[i + 1]);
         i+=3;
+        qDebug() << paths[i];
     }
+    qDebug() << "NEXT";
     scene.addPath(p, QPen(Qt::black, 5));
 }
 void Menu::openButton() {
@@ -237,33 +239,15 @@ void Menu::openButton() {
         scene.myItems.emplace_back(group);
     }
     QList<QPointF> paths = SvgReader::getCoordofLines(path);
-    /* int i = 0;
-     while (i < paths.size() - 1) {
-         if (!paths[i].rx() && !paths[i].ry())
-             i++;
-         else {
-             scene.drawLine({paths[i].rx(), paths[i].ry()}, {paths[i + 1].rx(), paths[i + 1].ry()});
-             i += 2;
-         }
-     }*/
     QList<QPointF> tmp;
     for(int i = 0; i < paths.size(); i++) {
-        if (paths[i] == QPointF(0, 0)) {
-            tmp.push_back(paths[i]);
+        if (paths[i] == QPointF(-1, -1)) {
+            qDebug() << tmp.size();
             restorePath(tmp);
             tmp.clear();
         } else
             tmp.push_back(paths[i]);
-    }/*
-    QPainterPath p;
-    p.moveTo(paths[0]);
-    int i = 0;
-    while (i < paths.size() - 3) {
-        p.quadTo(paths[i], paths[i + 1]);
-        i+=3;
     }
-    scene.addPath(p, QPen(Qt::black, 5));
-    qDebug() << paths.size(); */
 }
 
 void Menu::addImage() {

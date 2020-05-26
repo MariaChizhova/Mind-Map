@@ -138,7 +138,9 @@ void Menu::newFileButton() {
 }
 
 void Menu::helpButton() {
-    QMessageBox::information(this, tr("About"), tr("Помощи не будет!"));
+    QMessageBox::information(this, tr("About"),
+            tr("Может быть использовано для создания своих планов и идей, заданных в виде графа.\n\n"
+                                                   "Авторы: Чижова Мария, Субботина Олеся, Анисимова Карина"));
 }
 
 void Menu::colorButton() {

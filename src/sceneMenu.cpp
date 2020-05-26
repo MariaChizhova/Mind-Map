@@ -11,7 +11,7 @@ bool sceneMenu::enterText() {
         qDebug() << "font family    : " << font.family();
         qDebug() << "font style     : " << font.style();
         qDebug() << "font pointSize : " << font.pointSize();
-    } else{ return false; }
+    } else { return false; }
     sceneTextColor = QColorDialog::getColor(Qt::black, this);
     if (sceneTextColor.isValid()) qDebug() << "Color Chosen : " << sceneTextColor.name();
     else sceneTextColor = Qt::black;

@@ -21,7 +21,7 @@ enum sceneState {
 };
 
 enum pixState {
-    PIX1, PIX2, PIX3, PIX4, PIX5,  MYPIX
+    PIX1, PIX2, PIX3, PIX4, PIX5, MYPIX
 };
 
 class Scene : public QGraphicsScene {

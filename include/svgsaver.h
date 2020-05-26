@@ -11,4 +11,5 @@ public:
 
     static void save(Scene *scene, QString path, int width, int height);
 };
+
 #endif //PROJECT_HSE_SVGSAVER_H

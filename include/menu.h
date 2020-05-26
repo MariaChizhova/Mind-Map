@@ -82,13 +82,18 @@ private slots:
     void addLine();
 
     void setCellsMyPix();
+
     void setCellsPix1();
+
     void setCellsPix2();
+
     void setCellsPix3();
+
     void setCellsPix4();
+
     void setCellsPix5();
 
-    void restorePath(QList<QPointF> paths);
+    void restorePath(QList<QPointF> paths, QList<QColor> &colors, int k);
 
 
 private:

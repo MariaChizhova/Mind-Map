@@ -10,8 +10,7 @@
 #include <QScreen>
 
 
-
-class MainWindow: public QMainWindow {
+class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = 0);
 
@@ -20,6 +19,7 @@ public:
     QSizeF screenSize;
 
 private slots:
+
     void newFileButton();
 
     void openFileButton();
@@ -29,4 +29,5 @@ private slots:
     Menu *window;
 
 };
+
 #endif //PROJECT_HSE_MAINWINDOW_H

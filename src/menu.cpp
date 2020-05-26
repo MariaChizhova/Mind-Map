@@ -190,18 +190,19 @@ void Menu::addLine() {
     scene.setState(SLINE);
 }
 
-void Menu::restorePath(QList<QPointF> paths) {
+void Menu::restorePath(QList<QPointF> paths, QList<QColor> &colors, int k) {
     QPainterPath p;
     p.moveTo(paths[0]);
     int i = 0;
     while (i < paths.size() - 3) {
         p.quadTo(paths[i], paths[i + 1]);
-        i+=3;
+        i += 3;
         qDebug() << paths[i];
     }
     qDebug() << "NEXT";
-    scene.addPath(p, QPen(Qt::black, 5));
+    scene.addPath(p, QPen(colors[k], 5));
 }
+
 void Menu::openButton() {
     scene.clear();
     changeWindowColor(Qt::white);
@@ -220,30 +221,33 @@ void Menu::openButton() {
     scene.setWindowColor(Qt::white);
     std::vector<std::pair<int, int>> points;
     /** Установим на графическую сцену объекты, получив их с помощью метода getElements */
-    foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
-        int width = 80;
-        int height = 50;
-        scene.algo.setRectWidth(width);
-        scene.algo.setRectHeight(height);
-        QGraphicsRectItem *rect = item;
-        QPointF pos = rect->scenePos();
-        scene.addItem(rect);
-        scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width, height);
-        rect->setFlag(QGraphicsItem::ItemIsFocusable);
-        QGraphicsItemGroup *group = scene.createItemGroup({});
-        group->setPos(rect->scenePos());
-        group->addToGroup(rect);
-        group->setHandlesChildEvents(true);
-        group->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        group->setFlag(QGraphicsItem::ItemIsMovable, false);
-        scene.myItems.emplace_back(group);
-    }
-    QList<QPointF> paths = SvgReader::getCoordofLines(path);
+            foreach (QGraphicsRectItem *item, SvgReader::getElements(path)) {
+            int width = 80;
+            int height = 50;
+            scene.algo.setRectWidth(width);
+            scene.algo.setRectHeight(height);
+            QGraphicsRectItem *rect = item;
+            QPointF pos = rect->scenePos();
+            scene.addItem(rect);
+            scene.algo.getRectCoord(pos.rx() + width / 2, pos.ry() + height / 2, width, height);
+            rect->setFlag(QGraphicsItem::ItemIsFocusable);
+            QGraphicsItemGroup *group = scene.createItemGroup({});
+            group->setPos(rect->scenePos());
+            group->addToGroup(rect);
+            group->setHandlesChildEvents(true);
+            group->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            group->setFlag(QGraphicsItem::ItemIsMovable, false);
+            scene.myItems.emplace_back(group);
+        }
+    QPair<QList<QPointF>, QList<QColor>> getpaths = SvgReader::getCoordofLines(path);
+    QList<QPointF> paths = getpaths.first;
+    QList<QColor> colors = getpaths.second;
     QList<QPointF> tmp;
-    for(int i = 0; i < paths.size(); i++) {
+    int k = -1;
+    for (int i = 0; i < paths.size(); i++) {
         if (paths[i] == QPointF(-1, -1)) {
             qDebug() << tmp.size();
-            restorePath(tmp);
+            restorePath(tmp, colors, ++k);
             tmp.clear();
         } else
             tmp.push_back(paths[i]);

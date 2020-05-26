@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     newFile->setIconSize(QSize(200, 80));
     newFile->setGeometry(w2, h2, wr, hr);
     connect(newFile, &QPushButton::clicked, this, &MainWindow::newFileButton);
-    QPushButton *openFile = new QPushButton( this);
+    QPushButton *openFile = new QPushButton(this);
     openFile->setIcon(QIcon(":/icons/Open FIle.png"));
     openFile->setIconSize(QSize(200, 80));
-    openFile->setGeometry(w2, h2 + hr , wr, hr);
+    openFile->setGeometry(w2, h2 + hr, wr, hr);
     connect(openFile, &QPushButton::clicked, this, &MainWindow::openFileButton);
     QPushButton *quitBtn = new QPushButton(this);
     quitBtn->setIcon(QIcon(":/icons/Exit.png"));
@@ -32,14 +32,14 @@ void MainWindow::newProject() {
     window->setWindowTitle("Mind Map");
     window->scene.setBackgroundBrush(Qt::white);
     int diffsize = 0;
-    window->scene.setSceneRect(0,0, screenSize.width() - diffsize, screenSize.height()- diffsize);
+    window->scene.setSceneRect(0, 0, screenSize.width() - diffsize, screenSize.height() - diffsize);
     window->show();
     this->close();
 }
 
 void MainWindow::newFileButton() {
-   newProject();
-   window->newFileButton();
+    newProject();
+    window->newFileButton();
 }
 
 void MainWindow::openFileButton() {

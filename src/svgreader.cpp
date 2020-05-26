@@ -21,7 +21,7 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
             QGraphicsRectItem *rect = new QGraphicsRectItem();
 
             /** Этот флаг делает объект перемещаемым */
-          rect->setFlag(QGraphicsItem::ItemIsMovable);
+            rect->setFlag(QGraphicsItem::ItemIsMovable);
 
             /** Забираем размеры из тега rect */
             QDomElement gElement = gNode.toElement();
@@ -66,8 +66,7 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
                 rectangle.attribute("width").toInt() == 1920 &&
                 rectangle.attribute("height").toInt() == 1080) {
                 rect->setFlag(QGraphicsItem::ItemIsMovable, false);
-            }
-            else {
+            } else {
                 rectList.append(rect);
                 //lcolor = rectangle.attribute("fill");
             }
@@ -77,39 +76,41 @@ QList<QGraphicsRectItem *> SvgReader::getElements(const QString filename) {
     return rectList;
 }
 
-QList<QPointF> SvgReader::getCoordofLines(const QString filename) {
+QPair<QList<QPointF>, QList<QColor>> SvgReader::getCoordofLines(const QString filename) {
     bool flag = 1;
     QList<QPointF> coordList;
+    QList<QColor> colors;
     QDomDocument doc;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file))
-        return coordList;
+        return QPair(coordList, colors);
 
     QDomNodeList pList = doc.elementsByTagName("g");
     for (int i = 0; i < pList.size(); i++) {
         QDomNode pNode = pList.item(i);
         QDomElement pathElement = pNode.firstChildElement("path");
-        if (pathElement.isNull()){
+        if (pathElement.isNull()) {
             continue;
         } else {
             auto pElement = pNode.toElement();
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
-//            color = strokeColor;
+            QColor color = strokeColor;
+            colors.append(color);
             QPointF point;
             QStringList listDotes = pathElement.attribute("d").split(" ");
             QString first = listDotes.at(0);
-            QStringList firstElement = first.replace(QString("M"),QString("")).split(",");
+            QStringList firstElement = first.replace(QString("M"), QString("")).split(",");
             point = QPointF(firstElement.at(0).toInt(), firstElement.at(1).toInt());
             coordList.push_back(point);
             qDebug() << point;
             QStringList dot;
-            for(int i = 1; i < listDotes.length() - 1; i++) {
+            for (int i = 1; i < listDotes.length() - 1; i++) {
                 QString other = listDotes.at(i);
-                dot = other.replace(QString("C"),QString("")).split(",");
-               qDebug() << dot;
-               point = QPointF(dot.at(0).toInt(), dot.at(1).toInt());
-               coordList.push_back(point);
+                dot = other.replace(QString("C"), QString("")).split(",");
+                qDebug() << dot;
+                point = QPointF(dot.at(0).toInt(), dot.at(1).toInt());
+                coordList.push_back(point);
             }
             coordList.push_back(QPointF(-1, -1));
             qDebug() << dot;
@@ -117,7 +118,7 @@ QList<QPointF> SvgReader::getCoordofLines(const QString filename) {
     }
     file.close();
     qDebug() << "LIST SAVER" << coordList.size();
-    return coordList;
+    return QPair(coordList, colors);
 }
 
 

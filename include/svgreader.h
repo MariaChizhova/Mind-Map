@@ -15,10 +15,9 @@ public:
 
     static QList<QGraphicsRectItem *> getElements(const QString filename);
 
-    static QList<QPointF> getCoordofLines(const QString filename);
+    static QPair<QList<QPointF>, QList<QColor>> getCoordofLines(const QString filename);
 
     static QRectF getSizes(const QString filename);
-    static QColor color;
 };
 
 #endif //PROJECT_HSE_SVGREADER_H

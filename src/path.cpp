@@ -26,60 +26,58 @@ void ShortestPath::fillGraph() { // нумерация построчно, на�
     for (int i = 0; i < size; i++) {
         data[i].push_back(i);
     }
-
-    /* углы: левый верх, правый верх, левый низ, правый низ */
-
-    data[0].push_back(data[1][0]); // справа
-    data[0].push_back(data[height][0]); // под
-    data[0].push_back(data[height][1]); // под
+    
+    data[0].push_back(data[1][0]);
+    data[0].push_back(data[height][0]);
+    data[0].push_back(data[height][1]);
     used[0] = 1;
 
-    data[width - 1].push_back(data[width - 2][0]); // слева
-    data[width - 1].push_back(data[width + width - 1][0]); // под
+    data[width - 1].push_back(data[width - 2][0]);
+    data[width - 1].push_back(data[width + width - 1][0]);
     used[width - 1] = 1;
 
-    data[size - height].push_back(data[size - height + 1][0]); // справа
-    data[size - height].push_back(data[size - height - height][0]); // над
+    data[size - height].push_back(data[size - height + 1][0]);
+    data[size - height].push_back(data[size - height - height][0]);
     used[size - height] = 1;
 
-    data[size - 1].push_back(data[size - 2][0]); // слева
-    data[size - 1].push_back(data[size - height - 1][0]); // над
+    data[size - 1].push_back(data[size - 2][0]);
+    data[size - 1].push_back(data[size - height - 1][0]);
     used[size - 1] = 1;
 
-    for (int i = 1; i < width - 1; i++) { // верхняя строчка
-        data[i].push_back(data[i + 1][0]); // справа
-        data[i].push_back(data[i - 1][0]); // слева
-        data[i].push_back(data[i + height][0]); // снизу !?
+    for (int i = 1; i < width - 1; i++) {
+        data[i].push_back(data[i + 1][0]);
+        data[i].push_back(data[i - 1][0]);
+        data[i].push_back(data[i + height][0]);
         used[i] = 1;
     }
 
-    for (int i = width; i != size - width; i += width) { // левый столбец
-        data[i].push_back(data[i + 1][0]); // справа
-        data[i].push_back(data[i - width][0]); // сверху
-        data[i].push_back(data[i + width][0]); // снизу
+    for (int i = width; i != size - width; i += width) {
+        data[i].push_back(data[i + 1][0]);
+        data[i].push_back(data[i - width][0]);
+        data[i].push_back(data[i + width][0]);
         used[i] = 1;
     }
 
-    for (int i = width + width - 1; i < size - 1; i += width) { // правый столбец
-        data[i].push_back(data[i - 1][0]); // слева
-        data[i].push_back(data[i - width][0]); // сверху
-        data[i].push_back(data[i + width][0]); // снизу
+    for (int i = width + width - 1; i < size - 1; i += width) {
+        data[i].push_back(data[i - 1][0]);
+        data[i].push_back(data[i - width][0]);
+        data[i].push_back(data[i + width][0]);
         used[i] = 1;
     }
 
-    for (int i = size - width + 1; i < size - 1; i++) { // нижняя строчка
-        data[i].push_back(data[i + 1][0]); // справа
-        data[i].push_back(data[i - 1][0]); // слева
-        data[i].push_back(data[i - width][0]); // сверху
+    for (int i = size - width + 1; i < size - 1; i++) {
+        data[i].push_back(data[i + 1][0]);
+        data[i].push_back(data[i - 1][0]);
+        data[i].push_back(data[i - width][0]);
         used[i] = 1;
     }
 
-    for (int i = width + 1; i < size - width - 1; i++) { // все остальные вершины
+    for (int i = width + 1; i < size - width - 1; i++) {
         if (!used[i]) {
-            data[i].push_back(data[i + 1][0]); // справа
-            data[i].push_back(data[i - 1][0]); // слева
-            data[i].push_back(data[i - width][0]); // сверху
-            data[i].push_back(data[i + width][0]); // снизу
+            data[i].push_back(data[i + 1][0]);
+            data[i].push_back(data[i - 1][0]);
+            data[i].push_back(data[i - width][0]);
+            data[i].push_back(data[i + width][0]);
         }
     }
 }
@@ -270,26 +268,18 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                           (myWay[i - cn].second != myWay[i - cn - 2].second) and
                           (myWay[i + cn].first != myWay[i + cn + 2].first) and
                           (myWay[i + cn].second != myWay[i + cn + 2].second)))) {
-                        if (occupied[convertToNum(myWay[i - cn])])
-                            std::cout << 1 << ' ' << cn << ' ' << occupied[convertToNum(myWay[i - cn])] << '\n';
-                        else if (occupied[convertToNum(myWay[i])]) std::cout << 2 << '\n';
-                        else if (occupied[convertToNum(myWay[i + cn])]) std::cout << 3 << '\n';
-                        else if (myWay[i - cn].first != myWay[i - cn - 2].first) std::cout << 4 << '\n';
-                        else if (myWay[i - cn].second != myWay[i - cn - 2].second) std::cout << 5 << '\n';
-                        else if (myWay[i + cn].first != myWay[i + cn + 2].first) std::cout << 6 << '\n';
-                        else if (myWay[i + cn].second != myWay[i + cn + 2].second) std::cout << 7 << '\n';
-                        std::cout << "WHAT A FUCK\n";
-                        for (int f = 1; f < (int) myWay.size() - 1; f++) {
-                            std::cout << occupied[convertToNum(myWay[i])] << ' ';
-                        }
-                        std::cout << '\n';
+                        else if (occupied[convertToNum(myWay[i])])
+                        else if (occupied[convertToNum(myWay[i + cn])])
+                        else if (myWay[i - cn].first != myWay[i - cn - 2].first)
+                        else if (myWay[i - cn].second != myWay[i - cn - 2].second)
+                        else if (myWay[i + cn].first != myWay[i + cn + 2].first)
+                        else if (myWay[i + cn].second != myWay[i + cn + 2].second)
                         isDraw = true;
                         break;
                     }
                 }
 
                 if (isDraw) continue;
-                std::cout << "HERE_1" << std::endl;
                 for (int cn = 0; cn < 2 * MIN_DIFF + 4; cn++) {
                     if (check(i, cn, myWay, way)) {
                         WAY_STEP = MIN_DIFF;
@@ -298,7 +288,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                     }
                 }
                 if (!isChange) {
-                    std::cout << "HERE_2" << std::endl;
                     for (int cn = 1; cn < 3 * MIN_DIFF + 4; cn++) {
                         if (check(i, cn, myWay, way)) {
                             WAY_STEP = 2 * MIN_DIFF;
@@ -308,7 +297,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                     }
                 }
                 if (!isChange) {
-                    std::cout << "HERE_3" << std::endl;
                     for (int cn = 1; cn < 4 * MIN_DIFF; cn++) {
                         if (check(i, cn, myWay, way)) {
                             WAY_STEP = 2 * MIN_DIFF;
@@ -318,7 +306,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                     }
                 }
                 if (!isChange) {
-                    std::cout << "HERE_4" << std::endl;
                     for (int cn = 1; cn < 6 * MIN_DIFF; cn++) {
                         if (check(i, cn, myWay, way)) {
                             WAY_STEP = 3 * MIN_DIFF;
@@ -327,7 +314,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                     }
                 }
                 if (!isChange) {
-                    std::cout << "HERE_5" << std::endl;
                     for (int cn = 1; cn < 8 * MIN_DIFF; cn++) {
                         if (check(i, cn, myWay, way)) {
                             WAY_STEP = 4 * MIN_DIFF;
@@ -335,7 +321,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                         }
                     }
                 }
-                std::cout << "HERE_6" << std::endl;
                 changesExist = true;
                 std::pair<int, int> fir, sec;
                 fir = myWay[i - WAY_STEP];
@@ -394,7 +379,7 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
         }
         try {
             coords[cnt].resize(100);
-            coords[cnt][0] = {-1, -1}; // страшный костыль
+            coords[cnt][0] = {-1, -1};
             int i = 0;
             std::vector<std::pair<int, int>> newWay;
             for (int init = 0; init < (int) myWay.size() - 1; init++) {
@@ -409,16 +394,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                     }
                     i++;
                 } else if (coords[i][0].first == -1 or (i < cnt and myWay[init] != coords[i][0])) {
-                    if (abs(myWay[init].first - myWay[init + 1].first) > 5000 or myWay[init].first < 0 or
-                        myWay[init + 1].first < 0) {
-                        std::cout << "БЕДА 1_1: " << myWay[init].first << ' ' << myWay[init + 1].first << '\n';
-                        continue;
-                    }
-                    if (abs(myWay[init].second - myWay[init + 1].second) > 5000 or myWay[init].second < 0 or
-                        myWay[init + 1].second < 0) {
-                        std::cout << "БЕДА 2_1: " << myWay[init].second << ' ' << myWay[init + 1].second << '\n';
-                        continue;
-                    }
                     newWay.emplace_back(myWay[init]);
                 }
                 if (!changesExist and gotToCycle) {
@@ -429,14 +404,6 @@ std::vector<std::pair<int, int>> ShortestPath::smoothAngle(std::vector<std::pair
                 throw std::logic_error("SMOOTHING OCCURRED BUT THE PATH WAS NOT CHANGED");
             }
             sort(newWay.begin(), newWay.end(), way_comparator);
-            for (int h = 0; h < (int) newWay.size(); h++) {
-                if (abs(newWay[h].first - newWay[h + 1].first) > 5000 or myWay[h].first < 0 or
-                    myWay[h + 1].first < 0)
-                    std::cout << "БЕДА 1: " << newWay[h].first << ' ' << newWay[h + 1].first << '\n';
-                if (abs(newWay[h].second - newWay[h + 1].second) > 5000 or myWay[h].second < 0 or
-                    myWay[h + 1].second < 0)
-                    std::cout << "БЕДА 2: " << newWay[h].second << ' ' << newWay[h + 1].second << '\n';
-            }
             return newWay;
         } catch (std::logic_error &e) { throw; }
     } catch (std::out_of_range &e) { throw; }
@@ -470,7 +437,6 @@ std::vector<std::pair<int, int>> ShortestPath::createShortestPath(int x1, int y1
         for (int i = 0; i < (int) data[cur].size(); i++) {
             int u = data[cur][i];
             if (!is[u] and (!occupied[u] or u == dest)) {
-                if (occupied[u] == 1) std::cout << "THIS IS NOT OK\n";
                 is[u] = true;
                 q.push(u);
                 dist[u] = dist[cur] + 1;
@@ -486,23 +452,13 @@ std::vector<std::pair<int, int>> ShortestPath::createShortestPath(int x1, int y1
     for (int i = dest; i != -1; i = par[i]) {
         std::cerr << i << " ";
         ans.push_back(convertToPair(convertFromStep(i)));
-        if (occupied[i] != 0 and occupied[i + 1] != 0 and occupied[i - 1] != 0 and occupied[i + width] != 0 and
-            occupied[i - width] != 0) { //проверка, что текущая и верхняя, нижняя, правая, левая от нее клетки заняты
-            std::cout << "IS OCCUPIED\n"; // и они реально часто заняты и чтооооооооооо в чем прикол
-        }
-        if (occupied[i] != 0) std::cout << "ONLY\n";
     }
-    std::cout << '\n';
     std::cerr << "-1\n";
     if (ans[0].first > ans[ans.size() - 1].first) {
         reverse(ans.begin(), ans.end());
     }
     std::cerr << "Started Smooth, way size = " << ans.size() << std::endl;
     std::vector<std::pair<int, int>> smoothedWay = smoothAngle(ans);
-    std::cout << "WAY" << '\n';
-    for (auto f : ans) {
-        std::cout << occupied[convertToNum(f)] << ' ';
-    }
     std::cout << '\n';
     pathId[{id1, id2}] = smoothedWay;
     singlePathId[id1] = smoothedWay;
